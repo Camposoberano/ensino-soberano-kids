@@ -1,15 +1,18 @@
 /**
- * Controlador Principal da Aplicação Gerador de Atividades Infantis
+ * Controlador Principal da Aplicação - Ensino Soberano Kids (Anime Edition)
  */
 window.KiddoApp = (function () {
   let currentTab = "wordsearch";
   let showAnswers = false;
   let currentData = null;
-  let zoomLevel = "auto"; // 'auto', 1, 0.75, 0.5
+  let zoomLevel = "auto";
+  let currentMascotId = "hikari";
+  let customMascotSpeech = "";
 
   function init() {
     setupTabSwitching();
     setupControls();
+    setupMascotSelector();
     setupZoomAndScaling();
     loadCategoryButtons();
     renderCurrentActivity();
@@ -63,12 +66,74 @@ window.KiddoApp = (function () {
     }
   }
 
+  function setupMascotSelector() {
+    const container = document.getElementById("mascot-picker-container");
+    if (!container || !window.ANIME_MASCOTS) return;
+
+    container.innerHTML = "";
+    Object.keys(window.ANIME_MASCOTS).forEach(mId => {
+      const mascot = window.ANIME_MASCOTS[mId];
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `mascot-choice-btn p-2 rounded-xl border flex flex-col items-center gap-1 transition-all ${
+        mId === currentMascotId ? "border-indigo-600 bg-indigo-50 ring-2 ring-indigo-500" : "border-slate-200 hover:bg-slate-50"
+      }`;
+      btn.innerHTML = `
+        <div class="w-10 h-10">${mascot.svg}</div>
+        <span class="text-[10px] font-bold text-slate-700 text-center">${mascot.nome.split(" ")[0]}</span>
+      `;
+      btn.addEventListener("click", () => {
+        currentMascotId = mId;
+        document.querySelectorAll(".mascot-choice-btn").forEach(b => {
+          b.classList.remove("border-indigo-600", "bg-indigo-50", "ring-2", "ring-indigo-500");
+          b.classList.add("border-slate-200");
+        });
+        btn.classList.add("border-indigo-600", "bg-indigo-50", "ring-2", "ring-indigo-500");
+        btn.classList.remove("border-slate-200");
+
+        const speechInput = document.getElementById("mascot-speech-input");
+        if (speechInput) {
+          speechInput.value = mascot.frasePadrao;
+        }
+        renderMascotOnSheet();
+      });
+      container.appendChild(btn);
+    });
+
+    const speechInput = document.getElementById("mascot-speech-input");
+    if (speechInput) {
+      speechInput.value = window.ANIME_MASCOTS[currentMascotId]?.frasePadrao || "";
+      speechInput.addEventListener("input", (e) => {
+        customMascotSpeech = e.target.value;
+        renderMascotOnSheet();
+      });
+    }
+  }
+
+  function renderMascotOnSheet() {
+    const mascot = window.ANIME_MASCOTS[currentMascotId] || window.ANIME_MASCOTS.hikari;
+    const mascotAvatarContainer = document.getElementById("preview-mascot-avatar");
+    const mascotBubbleText = document.getElementById("preview-mascot-speech");
+    const hankoStampText = document.getElementById("preview-hanko-text");
+
+    if (mascotAvatarContainer) {
+      mascotAvatarContainer.innerHTML = mascot.svg;
+    }
+    if (mascotBubbleText) {
+      const speechInput = document.getElementById("mascot-speech-input");
+      mascotBubbleText.textContent = speechInput?.value || mascot.frasePadrao;
+    }
+    if (hankoStampText) {
+      hankoStampText.innerHTML = `${mascot.carimbo}<br><span class="text-[7px] text-red-500 font-bold">ENSINO SOBERANO</span>`;
+    }
+  }
+
   function setupControls() {
     // Botão Gerar
     document.getElementById("btn-generate").addEventListener("click", () => {
       renderCurrentActivity();
       if (window.confetti) {
-        window.confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
+        window.confetti({ particleCount: 50, spread: 70, origin: { y: 0.7 } });
       }
     });
 
@@ -105,9 +170,9 @@ window.KiddoApp = (function () {
   }
 
   function syncHeader() {
-    const schoolVal = document.getElementById("sheet-school").value || "Escola / Instituição de Ensino";
-    const titleVal = document.getElementById("sheet-title").value || "Atividade Educativa";
-    const instrVal = document.getElementById("sheet-instructions").value || "Resolva a atividade com atenção e capricho.";
+    const schoolVal = document.getElementById("sheet-school")?.value || "Ensino Soberano";
+    const titleVal = document.getElementById("sheet-title")?.value || "Atividade Educativa";
+    const instrVal = document.getElementById("sheet-instructions")?.value || "Resolva a atividade com atenção e capricho.";
 
     const elSchool = document.getElementById("preview-school");
     const elTitle = document.getElementById("preview-title");
@@ -116,6 +181,7 @@ window.KiddoApp = (function () {
     if (elSchool) elSchool.textContent = schoolVal;
     if (elTitle) elTitle.textContent = titleVal;
     if (elInstr) elInstr.textContent = instrVal;
+    renderMascotOnSheet();
   }
 
   function loadCategoryButtons() {
@@ -127,7 +193,7 @@ window.KiddoApp = (function () {
       const cat = window.KIDDO_VOCABULARY[catKey];
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-700 hover:text-indigo-700 border border-slate-200 transition-all flex items-center gap-1.5";
+      btn.className = "px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-pink-100 text-slate-700 hover:text-pink-700 border border-slate-200 transition-all flex items-center gap-1.5";
       btn.innerHTML = `<i data-lucide="${cat.icone}" class="w-3.5 h-3.5"></i> ${cat.nome}`;
       btn.addEventListener("click", () => {
         const wordsTextarea = document.getElementById("ws-words");
@@ -201,8 +267,8 @@ window.KiddoApp = (function () {
 
     // Renderizar tabela do caça-palavras
     const gridEl = document.createElement("div");
-    gridEl.className = "wordsearch-grid my-4";
-    gridEl.style.gridTemplateColumns = `repeat(${size}, 32px)`;
+    gridEl.className = "wordsearch-grid my-3";
+    gridEl.style.gridTemplateColumns = `repeat(${size}, 31px)`;
 
     currentData.grid.forEach((row, r) => {
       row.forEach((letter, c) => {
@@ -220,10 +286,10 @@ window.KiddoApp = (function () {
 
     container.appendChild(gridEl);
 
-    // Banco de palavras a encontrar embaixo
+    // Banco de palavras a encontrar embaixo com badges fofos anime
     const wordsBox = document.createElement("div");
-    wordsBox.className = "mt-6 pt-4 border-t-2 border-slate-200 text-center";
-    wordsBox.innerHTML = `<h4 class="text-sm font-bold text-slate-600 mb-2 uppercase tracking-wide">Palavras para encontrar:</h4>`;
+    wordsBox.className = "mt-4 pt-3 border-t-2 border-slate-100 text-center";
+    wordsBox.innerHTML = `<h4 class="text-xs font-extrabold text-slate-600 mb-2 uppercase tracking-wider font-heading flex items-center justify-center gap-1.5"><span class="text-pink-500">🌸</span> Palavras da Missão:</h4>`;
 
     const badgeContainer = document.createElement("div");
     badgeContainer.className = "flex flex-wrap justify-center gap-2 max-w-lg mx-auto";
@@ -256,17 +322,17 @@ window.KiddoApp = (function () {
     });
 
     const gridEl = document.createElement("div");
-    gridEl.className = "grid grid-cols-4 gap-4 my-4";
+    gridEl.className = "grid grid-cols-4 gap-3 my-3";
 
     currentData.forEach(p => {
       if (layout === "vertical") {
         const card = document.createElement("div");
         card.className = "math-card-vertical";
         card.innerHTML = `
-          <div class="text-xs text-slate-400 w-full mb-1">#${p.id}</div>
+          <div class="text-[10px] text-slate-400 font-bold w-full mb-0.5">#${p.id}</div>
           <div>${p.num1}</div>
           <div class="math-op-line">
-            <span class="text-lg text-slate-500 mr-2">${p.operator}</span>
+            <span class="text-base text-pink-500 mr-2 font-bold">${p.operator}</span>
             <span>${p.num2}</span>
           </div>
           <div class="math-answer-box math-answer-val">${p.answer}</div>
@@ -276,7 +342,7 @@ window.KiddoApp = (function () {
         const card = document.createElement("div");
         card.className = "math-card-horizontal";
         card.innerHTML = `
-          <span class="text-xs text-slate-400 mr-2">#${p.id}</span>
+          <span class="text-[10px] text-slate-400 mr-2 font-bold">#${p.id}</span>
           <span>${p.num1} ${p.operator} ${p.num2} = </span>
           <div class="math-box-answer-h math-answer-val">${p.answer}</div>
         `;
@@ -297,23 +363,23 @@ window.KiddoApp = (function () {
     currentData = window.WordScrambleGenerator.generate(rawWords);
 
     const listEl = document.createElement("div");
-    listEl.className = "grid grid-cols-2 gap-4 my-4";
+    listEl.className = "grid grid-cols-2 gap-3 my-3";
 
     currentData.forEach(item => {
       const card = document.createElement("div");
-      card.className = "p-3 border border-slate-300 rounded-xl bg-slate-50 flex flex-col gap-1";
+      card.className = "p-2.5 border border-slate-200 rounded-xl bg-slate-50/80 flex flex-col gap-1";
       card.innerHTML = `
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">#${item.id}</span>
-          <span class="text-xs text-slate-500 font-semibold">${item.letterCount} letras</span>
+          <span class="text-[10px] font-bold text-slate-400">#${item.id}</span>
+          <span class="text-[10px] text-pink-600 font-bold">${item.letterCount} letras ⭐</span>
         </div>
-        <div class="text-2xl font-bold tracking-widest text-indigo-700 font-heading text-center my-1 bg-white py-1 rounded-lg border border-slate-200">
+        <div class="text-xl font-bold tracking-widest text-indigo-700 font-heading text-center my-1 bg-white py-1 rounded-lg border border-slate-200">
           ${item.scrambled}
         </div>
-        <div class="flex items-center gap-2 mt-2">
-          <span class="text-xs font-bold text-slate-500">Resposta:</span>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-[10px] font-bold text-slate-500">Resposta:</span>
           <div class="scramble-answer-val text-red-600 font-bold hidden">${item.original}</div>
-          <div class="scramble-dotted-line flex-1 border-b-2 border-dotted border-slate-400 h-5"></div>
+          <div class="scramble-dotted-line flex-1 border-b-2 border-dotted border-slate-400 h-4"></div>
         </div>
       `;
       listEl.appendChild(card);
@@ -324,7 +390,7 @@ window.KiddoApp = (function () {
 
   /* ── 4. RENDER CALIGRAFIA & COORDENAÇÃO ── */
   function renderTracing(container) {
-    const lines = (document.getElementById("tracing-lines-input")?.value || "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n1 2 3 4 5 6 7 8 9 10\nO sol brilha no ceu.")
+    const lines = (document.getElementById("tracing-lines-input")?.value || "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n1 2 3 4 5 6 7 8 9 10\nEnsino Soberano brilha!")
       .split("\n")
       .map(w => w.trim())
       .filter(w => w.length > 0);
@@ -332,7 +398,7 @@ window.KiddoApp = (function () {
     const data = window.TracingGenerator.generate(lines);
 
     const guideBox = document.createElement("div");
-    guideBox.className = "flex flex-col gap-3 my-4";
+    guideBox.className = "flex flex-col gap-2.5 my-3";
 
     data.lines.forEach((lineText, idx) => {
       const pauta = document.createElement("div");
@@ -359,9 +425,9 @@ window.KiddoApp = (function () {
     currentData = window.MultiplicationChartGenerator.generate(size, mode);
 
     const table = document.createElement("table");
-    table.className = "multiplication-table my-4";
+    table.className = "multiplication-table my-3";
 
-    // Cabeçalho superior (colunas 1 a N)
+    // Cabeçalho superior
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     headerRow.innerHTML = `<th>×</th>`;
@@ -459,8 +525,8 @@ window.KiddoApp = (function () {
     if (!scalerWrapper || !container) return;
 
     if (zoomLevel === "auto") {
-      const containerWidth = container.clientWidth - 48; // margem
-      const paperWidthPx = 794; // ~210mm a 96DPI
+      const containerWidth = container.clientWidth - 48;
+      const paperWidthPx = 794;
       const scale = Math.min(1, Math.max(0.4, containerWidth / paperWidthPx));
       scalerWrapper.style.transform = `scale(${scale})`;
       scalerWrapper.style.transformOrigin = "top center";
@@ -479,8 +545,8 @@ window.KiddoApp = (function () {
     if (!paper) return;
 
     const opt = {
-      margin: 8,
-      filename: `atividade-${currentTab}-${showAnswers ? "gabarito" : "aluno"}.pdf`,
+      margin: 6,
+      filename: `ensino-soberano-${currentTab}-${showAnswers ? "gabarito" : "aluno"}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
