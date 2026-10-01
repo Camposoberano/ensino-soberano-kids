@@ -1,0 +1,300 @@
+/* ── ESTILOS DA FOLHA DE ATIVIDADES INFANTIS ── */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600&display=swap');
+
+:root {
+  --worksheet-width: 210mm;
+  --worksheet-min-height: 297mm;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+}
+
+.font-heading {
+  font-family: 'Fredoka', 'Quicksand', sans-serif;
+}
+
+.font-handwriting {
+  font-family: 'Caveat', cursive;
+}
+
+/* ── CONTAINER DA FOLHA A4 ── */
+.worksheet-paper {
+  width: 210mm;
+  min-height: 297mm;
+  background-color: #ffffff;
+  color: #1e293b;
+  padding: 12mm 14mm;
+  margin: 0 auto;
+  box-sizing: border-box;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Moldura lúdica com cantos decorados */
+.worksheet-frame {
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 10mm;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex: 1;
+}
+
+/* Cabeçalho de Identificação Escolar */
+.student-header {
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.dotted-line {
+  border-bottom: 1.5px dotted #64748b;
+  display: inline-block;
+  min-width: 120px;
+  height: 1.2em;
+}
+
+/* Caça-Palavras */
+.wordsearch-grid {
+  display: grid;
+  gap: 2px;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.wordsearch-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 4px;
+  background-color: #f8fafc;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+/* Resposta destacada no gabarito */
+.wordsearch-cell.highlight-answer {
+  background-color: #fef08a !important;
+  color: #854d0e !important;
+  border-color: #facc15 !important;
+  font-weight: 900;
+  transform: scale(0.96);
+}
+
+/* Palavras da lista do caça-palavras */
+.word-badge {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #1e293b;
+  display: inline-flex;
+  align-items: center;
+}
+
+.word-badge.found-answer {
+  background-color: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+  text-decoration: line-through;
+}
+
+/* Cartões de Matemática Vertical */
+.math-card-vertical {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 10px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  min-width: 110px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.math-op-line {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2.5px solid #1e293b;
+  padding-bottom: 4px;
+}
+
+.math-answer-box {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: 700;
+  color: transparent;
+}
+
+.math-answer-box.show-answer {
+  color: #dc2626 !important;
+}
+
+/* Cartões de Matemática Horizontal */
+.math-card-horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.math-box-answer-h {
+  width: 50px;
+  height: 32px;
+  border: 1.5px dashed #64748b;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+}
+
+.math-box-answer-h.show-answer {
+  color: #dc2626 !important;
+  font-weight: 700;
+  border-color: #dc2626;
+  background-color: #fee2e2;
+}
+
+/* Pauta caligráfica (Handwriting triple lines) */
+.penmanship-line {
+  position: relative;
+  height: 48px;
+  border-top: 1.5px solid #64748b;
+  border-bottom: 1.5px solid #64748b;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.penmanship-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1.5px dashed #94a3b8;
+}
+
+.trace-text {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 32px;
+  color: rgba(148, 163, 184, 0.6);
+  letter-spacing: 4px;
+  z-index: 2;
+  position: relative;
+}
+
+/* Tabela Pitagórica */
+.multiplication-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.multiplication-table th,
+.multiplication-table td {
+  border: 1.5px solid #94a3b8;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.multiplication-table th {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  font-weight: 700;
+}
+
+.multiplication-table td.missing-cell {
+  background-color: #f8fafc;
+  color: transparent;
+}
+
+.multiplication-table td.missing-cell.show-answer {
+  color: #dc2626 !important;
+  background-color: #fef2f2;
+  font-weight: 700;
+}
+
+/* ── REGRAS EXCLUSIVAS DE IMPRESSÃO (@media print) ── */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  body {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ocultar barra lateral, controles, modais e botões */
+  .no-print,
+  #sidebar-controls,
+  #app-header,
+  #preview-toolbar,
+  #puzzle-view-container {
+    display: none !important;
+  }
+
+  /* Garantir que apenas a folha seja impressa em tela cheia */
+  #preview-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .page-scaler-wrapper {
+    transform: none !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .worksheet-paper {
+    width: 100% !important;
+    min-height: 100% !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 6mm !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .worksheet-frame {
+    padding: 6mm !important;
+  }
+}

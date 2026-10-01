@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Fichas de Atividades Infantis | Kiddo Atividades</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Worksheet CSS -->
+  <link rel="stylesheet" href="css/worksheet.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col antialiased">
+
+  <!-- ── CABEÇALHO SUPERIOR (App Header) ── -->
+  <header id="app-header" class="no-print bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-pink-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900 font-heading tracking-tight flex items-center gap-2">
+            Kiddo Atividades <span class="text-xs bg-indigo-100 text-indigo-700 font-semibold px-2 py-0.5 rounded-full">Pro</span>
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">Gerador Dinâmico de Folhas de Atividades & Puzzles Infantis</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-toggle-answers" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-sm flex items-center">
+          <i data-lucide="eye" class="w-4 h-4 mr-2"></i> Ver Gabarito
+        </button>
+        <button id="btn-print" type="button" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md flex items-center">
+          <i data-lucide="printer" class="w-4 h-4 mr-2"></i> Imprimir A4
+        </button>
+        <button id="btn-download-pdf" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl transition-all shadow-sm flex items-center">
+          <i data-lucide="download" class="w-4 h-4 mr-2"></i> Baixar PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra de Navegação de Atividades (Abas) -->
+    <div class="bg-slate-50 border-t border-slate-200 overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-2">
+        <button type="button" data-tab="wordsearch" class="nav-tab-btn active-tab px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-indigo-600 text-white">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i> Caça-Palavras
+        </button>
+        <button type="button" data-tab="addition" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i> Adição
+        </button>
+        <button type="button" data-tab="subtraction" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="minus" class="w-3.5 h-3.5"></i> Subtração
+        </button>
+        <button type="button" data-tab="multiplication" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i> Multiplicação
+        </button>
+        <button type="button" data-tab="division" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="divide" class="w-3.5 h-3.5"></i> Divisão
+        </button>
+        <button type="button" data-tab="scramble" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Palavras Embaralhadas
+        </button>
+        <button type="button" data-tab="tracing" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Caligrafia & Treino
+        </button>
+        <button type="button" data-tab="multichart" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="grid" class="w-3.5 h-3.5"></i> Tabela Pitagórica
+        </button>
+        <button type="button" data-tab="slidingpuzzle" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="puzzle" class="w-3.5 h-3.5"></i> Quebra-Cabeça Jogo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── CORPO PRINCIPAL (2 Colunas: Controles e Preview) ── -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-6">
+
+    <!-- ── COLUNA ESQUERDA: CONTROLES & CONFIGURAÇÕES ── -->
+    <aside id="sidebar-controls" class="no-print w-full lg:w-96 flex-shrink-0 flex flex-col gap-5">
+
+      <!-- Bloco de Dados do Cabeçalho Escolar -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-500"></i> Informações da Folha
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nome da Escola / Professor</label>
+          <input id="sheet-school" type="text" value="Escola Municipal Pequenos Gênios" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Título da Atividade</label>
+          <input id="sheet-title" type="text" value="Caça-Palavras dos Animais" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Instruções / Enunciado</label>
+          <input id="sheet-instructions" type="text" value="Encontre e circule todas as palavras escondidas na grade abaixo:" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+      </div>
+
+      <!-- PAINEL: CAÇA-PALAVRAS -->
+      <div id="panel-wordsearch" class="control-panel bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i> Configurar Caça-Palavras
+        </h3>
+
+        <!-- Temas Rápidos em Português -->
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1.5">Temas Rápidos Prontos:</label>
+          <div id="preset-categories-container" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Palavras (uma por linha)</label>
+          <textarea id="ws-words" rows="6" class="w-full text-xs font-mono px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase">CACHORRO
+GATO
+LEAO
+ELEFANTE
+GIRAFA
+MACACO
+COELHO
+TARTARUGA</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Tamanho da Grade</label>
+            <select id="ws-grid-size" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="10">10 x 10 (Fácil)</option>
+              <option value="12" selected>12 x 12 (Médio)</option>
+              <option value="14">14 x 14 (Desafio)</option>
+              <option value="16">16 x 16 (Grande)</option>
+            </select>
+          </div>
+          <div class="flex flex-col justify-end gap-1.5">
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input id="ws-diagonal" type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+              Permitir Diagonais
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input id="ws-uppercase" type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+              Letras Maiúsculas
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL: MATEMÁTICA (Adição / Subtração / Multiplicação / Divisão) -->
+      <div id="panel-addition" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-500"></i> Configurar Adição
+        </h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Dígitos</label>
+            <select id="math-digits" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="1" selected>1 Dígito (1 a 9)</option>
+              <option value="2">2 Dígitos (10 a 99)</option>
+              <option value="3">3 Dígitos (Centenas)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Qtd. Questões</label>
+            <select id="math-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="12">12 Questões</option>
+              <option value="16">16 Questões</option>
+              <option value="20" selected>20 Questões</option>
+              <option value="24">24 Questões</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Formato</label>
+            <select id="math-layout" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="vertical" selected>Vertical (Conta Armada)</option>
+              <option value="horizontal">Horizontal (Em Linha)</option>
+            </select>
+          </div>
+          <div class="flex items-center pt-5">
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input id="math-regrouping" type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+              Com Reagrupamento ("Vai um")
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL: SUBTRAÇÃO -->
+      <div id="panel-subtraction" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="minus-circle" class="w-4 h-4 text-rose-500"></i> Configurar Subtração
+        </h3>
+        <p class="text-xs text-slate-500">O gerador garante que o primeiro número seja sempre maior que o segundo, eliminando resultados negativos.</p>
+      </div>
+
+      <!-- PAINEL: MULTIPLICAÇÃO -->
+      <div id="panel-multiplication" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="x-circle" class="w-4 h-4 text-purple-500"></i> Configurar Multiplicação
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tabuada Específica</label>
+          <select id="math-table" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="all" selected>Todas as Tabuadas (2 ao 9)</option>
+            <option value="2">Tabuada do 2</option>
+            <option value="3">Tabuada do 3</option>
+            <option value="4">Tabuada do 4</option>
+            <option value="5">Tabuada do 5</option>
+            <option value="6">Tabuada do 6</option>
+            <option value="7">Tabuada do 7</option>
+            <option value="8">Tabuada do 8</option>
+            <option value="9">Tabuada do 9</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: DIVISÃO -->
+      <div id="panel-division" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="divide-circle" class="w-4 h-4 text-blue-500"></i> Configurar Divisão
+        </h3>
+        <p class="text-xs text-slate-500">Divisões exatas geradas automaticamente a partir de fatores controlados.</p>
+      </div>
+
+      <!-- PAINEL: PALAVRAS EMBARALHADAS -->
+      <div id="panel-scramble" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="shuffle" class="w-4 h-4 text-orange-500"></i> Palavras para Embaralhar
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Palavras (uma por linha)</label>
+          <textarea id="scramble-words" rows="6" class="w-full text-xs font-mono px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase">ESCOLA
+CRIANCA
+CADERNO
+AMIZADE
+PROFESSOR
+BRINCADEIRA</textarea>
+        </div>
+      </div>
+
+      <!-- PAINEL: CALIGRAFIA & TREINO -->
+      <div id="panel-tracing" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="edit-3" class="w-4 h-4 text-cyan-500"></i> Texto para Cobrir (Pauta Tripla)
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Linhas de treino (uma por pauta)</label>
+          <textarea id="tracing-lines-input" rows="5" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">ABCDEFGHIJKLM
+NOPQRSTUVWXYZ
+1 2 3 4 5 6 7 8 9 10
+O sol brilha no ceu.</textarea>
+        </div>
+      </div>
+
+      <!-- PAINEL: TABELA PITAGÓRICA -->
+      <div id="panel-multichart" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="grid" class="w-4 h-4 text-indigo-500"></i> Modo da Tabela Pitagórica
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Modo de Exibição</label>
+          <select id="chart-mode" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="missing" selected>Com Lacunas (Para o Aluno Completar)</option>
+            <option value="complete">Completa (Tabela de Estudo)</option>
+            <option value="blank">Totalmente Vazia (Desafio Máximo)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Dimensão</label>
+          <select id="chart-size" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="10" selected>Até 10 x 10</option>
+            <option value="12">Até 12 x 12</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- BOTÃO GERAR NOVO MODELO -->
+      <button id="btn-generate" type="button" class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-extrabold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
+        <i data-lucide="wand-2" class="w-5 h-5"></i> Gerar / Sortear Novas Atividades
+      </button>
+
+    </aside>
+
+    <!-- ── COLUNA DIREITA: PREVIEW DA FOLHA A4 ── -->
+    <section class="flex-1 flex flex-col items-center">
+
+      <!-- Barra de Controle do Preview (Zoom e Status) -->
+      <div id="preview-toolbar" class="no-print w-full flex items-center justify-between bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm mb-4">
+        <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+          <i data-lucide="file-text" class="w-4 h-4 text-indigo-500"></i>
+          <span>Visualização Prévia (Padrão A4 Impressão)</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> Zoom:
+            <select id="zoom-select" class="text-xs bg-slate-50 border border-slate-200 rounded-md px-2 py-1 font-medium focus:outline-none">
+              <option value="auto" selected>Ajustar à Tela</option>
+              <option value="1">100% (Tamanho Real)</option>
+              <option value="0.75">75%</option>
+              <option value="0.5">50%</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Container Escalado do Preview da Folha -->
+      <div id="preview-wrapper" class="w-full flex justify-center overflow-x-auto pb-8">
+        <div class="page-scaler-wrapper">
+
+          <!-- ── A FOLHA DE ATIVIDADE A4 (WORKSHEET PAPER) ── -->
+          <article class="worksheet-paper">
+            <div class="worksheet-frame">
+
+              <!-- Cabeçalho de Identificação Escolar -->
+              <div class="student-header flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <div id="preview-school" class="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    Escola Municipal Pequenos Gênios
+                  </div>
+                  <div class="text-[10px] font-semibold text-slate-400">
+                    Kiddo Atividades • www.kiddoworksheets.com
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-2 text-xs font-semibold pt-1">
+                  <div class="col-span-7 flex items-baseline gap-1">
+                    <span>Aluno(a):</span>
+                    <span class="dotted-line flex-1"></span>
+                  </div>
+                  <div class="col-span-3 flex items-baseline gap-1">
+                    <span>Data:</span>
+                    <span class="dotted-line flex-1"></span>
+                  </div>
+                  <div class="col-span-2 flex items-baseline gap-1">
+                    <span>Turma:</span>
+                    <span class="dotted-line flex-1"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Título & Enunciado da Atividade -->
+              <div class="text-center my-3">
+                <h2 id="preview-title" class="text-2xl font-extrabold text-slate-800 font-heading tracking-wide">
+                  Caça-Palavras dos Animais
+                </h2>
+                <p id="preview-instructions" class="text-xs text-slate-500 font-medium mt-1">
+                  Encontre e circule todas as palavras escondidas na grade abaixo:
+                </p>
+              </div>
+
+              <!-- Conteúdo Dinâmico Gerado -->
+              <div id="worksheet-dynamic-content" class="flex-1 flex flex-col justify-center">
+                <!-- Injetado via JavaScript de acordo com o gerador ativo -->
+              </div>
+
+              <!-- Rodapé da Folha -->
+              <div class="mt-auto pt-4 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                <span>Material educativo de apoio pedagógico • Uso individual</span>
+                <span>Pontuação: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 10 ]</span>
+              </div>
+
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- ── CONTAINER EXCLUSIVO DO JOGO INTERATIVO (SLIDING PUZZLE) ── -->
+      <div id="puzzle-view-container" class="hidden w-full max-w-md bg-white p-6 rounded-3xl border border-slate-200 shadow-lg flex flex-col items-center gap-4">
+        <div class="text-center">
+          <h2 class="text-2xl font-extrabold font-heading text-slate-800">Quebra-Cabeça Deslizante</h2>
+          <p class="text-xs text-slate-500">Mova as peças até organizá-las na ordem numérica correta!</p>
+        </div>
+
+        <div class="flex items-center justify-between w-full px-4 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-600">
+          <div>Movimentos: <span id="puzzle-moves" class="text-indigo-600 text-sm">0</span></div>
+          <div>Tempo: <span id="puzzle-time" class="text-indigo-600 text-sm">0s</span></div>
+        </div>
+
+        <div id="puzzle-board" class="grid gap-2 w-full aspect-square p-2 bg-slate-200 rounded-2xl">
+          <!-- Peças injetadas via JS -->
+        </div>
+
+        <button type="button" onclick="window.SlidingPuzzle.init(document.getElementById('puzzle-board'), 3)" class="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition shadow">
+          Reiniciar Jogo
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Scripts dos Geradores -->
+  <script src="js/categories.js"></script>
+  <script src="js/wordsearch.js"></script>
+  <script src="js/math.js"></script>
+  <script src="js/scramble.js"></script>
+  <script src="js/tracing.js"></script>
+  <script src="js/multiplication-chart.js"></script>
+  <script src="js/sliding-puzzle.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
