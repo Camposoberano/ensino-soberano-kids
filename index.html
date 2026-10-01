@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ensino Soberano Kids | Gerador de Fichas de Atividades & Apostilas (Edição Anime)</title>
+  <title>Ensino Soberano Kids | Plataforma Pedagógica e Cognitiva Infantil</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -52,12 +52,11 @@
           <h1 class="text-xl font-extrabold text-slate-900 font-heading tracking-tight flex items-center gap-2">
             Ensino Soberano <span class="text-xs bg-pink-100 text-pink-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">🌸 Kids Anime</span>
           </h1>
-          <p class="text-xs text-slate-500 font-medium">Gerador Pedagógico com Mascotes Chibi, Fichas & Apostilas A4</p>
+          <p class="text-xs text-slate-500 font-medium">Plataforma Pedagógica e Cognitiva Infantil • Fichas & Apostilas A4</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <!-- BOTÃO APOSTILA COMPLETA (OPÇÃO 2) -->
         <button id="btn-open-booklet" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-extrabold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-xl transition-all shadow-md flex items-center gap-1.5 active:scale-95">
           <i data-lucide="book-open" class="w-4 h-4"></i> Criar Apostila (Caderno)
         </button>
@@ -74,43 +73,77 @@
       </div>
     </div>
 
-    <!-- Barra de Navegação de Atividades (Abas) -->
-    <div class="bg-slate-50 border-t border-slate-200 overflow-x-auto">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-2">
-        <button type="button" data-tab="wordsearch" class="nav-tab-btn active-tab px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-indigo-600 text-white">
+    <!-- Barra de Navegação Completa (Todas as Categorias do Menu Auditado) -->
+    <div class="bg-slate-50 border-t border-slate-200 overflow-x-auto shadow-inner">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-1.5">
+        <!-- Alfabetos e Vocabulário -->
+        <button type="button" data-tab="wordsearch" class="nav-tab-btn active-tab px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-indigo-600 text-white">
           <i data-lucide="search" class="w-3.5 h-3.5"></i> Caça-Palavras
         </button>
-        <button type="button" data-tab="addition" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+        <button type="button" data-tab="scramble" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Embaralhadas
+        </button>
+        <button type="button" data-tab="tracing" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Linhas de Traço
+        </button>
+
+        <span class="h-4 w-px bg-slate-300 mx-1"></span>
+
+        <!-- Matemática e Números -->
+        <button type="button" data-tab="addition" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i> Adição
         </button>
-        <button type="button" data-tab="subtraction" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+        <button type="button" data-tab="subtraction" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="minus" class="w-3.5 h-3.5"></i> Subtração
         </button>
-        <button type="button" data-tab="multiplication" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+        <button type="button" data-tab="multiplication" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="x" class="w-3.5 h-3.5"></i> Multiplicação
         </button>
-        <button type="button" data-tab="division" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+        <button type="button" data-tab="division" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="divide" class="w-3.5 h-3.5"></i> Divisão
         </button>
-        <button type="button" data-tab="maze" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
-          <i data-lucide="compass" class="w-3.5 h-3.5"></i> Labirinto
+        <button type="button" data-tab="multichart" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="grid" class="w-3.5 h-3.5"></i> Tabela Tabuada
         </button>
-        <button type="button" data-tab="counting" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
-          <i data-lucide="hash" class="w-3.5 h-3.5"></i> Contagem Visual
+
+        <span class="h-4 w-px bg-slate-300 mx-1"></span>
+
+        <!-- Raciocínio Lógico & Pensamento -->
+        <button type="button" data-tab="time" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i> Dizer a Hora
         </button>
-        <button type="button" data-tab="matching" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+        <button type="button" data-tab="patterns" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Padrões & Lógica
+        </button>
+        <button type="button" data-tab="shapes" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="shapes" class="w-3.5 h-3.5"></i> Formas
+        </button>
+        <button type="button" data-tab="counting" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="hash" class="w-3.5 h-3.5"></i> Contagem
+        </button>
+        <button type="button" data-tab="matching" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="git-commit" class="w-3.5 h-3.5"></i> Ligar Colunas
         </button>
-        <button type="button" data-tab="scramble" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
-          <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Palavras Embaralhadas
+        <button type="button" data-tab="maze" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="compass" class="w-3.5 h-3.5"></i> Labirintos
         </button>
-        <button type="button" data-tab="tracing" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
-          <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Caligrafia
+
+        <span class="h-4 w-px bg-slate-300 mx-1"></span>
+
+        <!-- Conhecimentos Gerais (GK) & Atividades Práticas -->
+        <button type="button" data-tab="body" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="user" class="w-3.5 h-3.5"></i> Partes do Corpo
         </button>
-        <button type="button" data-tab="multichart" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
-          <i data-lucide="grid" class="w-3.5 h-3.5"></i> Tabela Pitagórica
+        <button type="button" data-tab="flashcards" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="layers" class="w-3.5 h-3.5"></i> Cartões Estudo
         </button>
-        <button type="button" data-tab="slidingpuzzle" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+        <button type="button" data-tab="coloring" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="palette" class="w-3.5 h-3.5"></i> Coloração
+        </button>
+        <button type="button" data-tab="origami" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="scissors" class="w-3.5 h-3.5"></i> Origami
+        </button>
+        <button type="button" data-tab="slidingpuzzle" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="puzzle" class="w-3.5 h-3.5"></i> Quebra-Cabeça Jogo
         </button>
       </div>
@@ -146,11 +179,11 @@
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Título da Atividade</label>
-          <input id="sheet-title" type="text" value="Missão Ninja: Caça-Palavras dos Animais" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input id="sheet-title" type="text" value="Missão Ninja: Caça-Palavras" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Instruções / Enunciado</label>
-          <input id="sheet-instructions" type="text" value="Encontre e circule todas as palavras escondidas na grade ninja abaixo:" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input id="sheet-instructions" type="text" value="Encontre e circule todas as palavras escondidas na grade abaixo:" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
       </div>
 
@@ -272,10 +305,100 @@ TARTARUGA</textarea>
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="divide-circle" class="w-4 h-4 text-blue-500"></i> Configurar Divisão
         </h3>
-        <p class="text-xs text-slate-500">Divisões exatas geradas a partir de fatores controlados.</p>
+        <p class="text-xs text-slate-500">Divisões exatas estruturadas com divisores entre 2 e 10.</p>
       </div>
 
-      <!-- PAINEL: LABIRINTO (NOVO) -->
+      <!-- PAINEL: DIZER A HORA (NOVO) -->
+      <div id="panel-time" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="clock" class="w-4 h-4 text-indigo-500"></i> Configurar Dizer a Hora
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Dificuldade dos Minutos</label>
+          <select id="time-diff" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="exact">Horas Exatas (ex: 03:00, 08:00)</option>
+            <option value="half" selected>Meias Horas (ex: 04:30, 09:00)</option>
+            <option value="quarter">Quartos de Hora (15, 30, 45 min)</option>
+            <option value="random">De 5 em 5 minutos (Desafio Completo)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Quantidade de Relógios</label>
+          <select id="time-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="6" selected>6 Relógios</option>
+            <option value="9">9 Relógios</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: PADRÕES E LÓGICA (NOVO) -->
+      <div id="panel-patterns" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4 text-pink-500"></i> Padrões & Raciocínio Lógico
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Padrão</label>
+          <select id="patterns-type" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="visual" selected>Padrões Visuais (Figuras e Cores)</option>
+            <option value="numeric">Sequências Numéricas Lógicas (+2, +5, -1)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: FORMAS GEOMÉTRICAS (NOVO) -->
+      <div id="panel-shapes" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="shapes" class="w-4 h-4 text-cyan-500"></i> Formas Geométricas
+        </h3>
+        <p class="text-xs text-slate-500">Estudo de lados, vértices e identificação de figuras planas (Círculo, Triângulo, Quadrado, Retângulo, Losango e Estrela).</p>
+      </div>
+
+      <!-- PAINEL: PARTES DO CORPO & GK (NOVO) -->
+      <div id="panel-body" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="user" class="w-4 h-4 text-rose-500"></i> Partes do Corpo & Sentidos
+        </h3>
+        <p class="text-xs text-slate-500">Desenvolvimento de conhecimentos gerais e biologia infantil (os 5 sentidos humanos e órgãos vitais).</p>
+      </div>
+
+      <!-- PAINEL: CARTÕES DE ESTUDO FLASHCARDS (NOVO) -->
+      <div id="panel-flashcards" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="layers" class="w-4 h-4 text-purple-500"></i> Cartões de Estudo (Flashcards)
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tema dos Cartões</label>
+          <select id="flashcards-type" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="bilingual" selected>Bilinguismo Infantil (Português & Inglês)</option>
+            <option value="multiplication">Tabuada Rápida (Cálculo Mental)</option>
+            <option value="capitals">Conhecimentos Gerais (Países e Capitais)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: ORIGAMI PASSO A PASSO (NOVO) -->
+      <div id="panel-origami" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="scissors" class="w-4 h-4 text-amber-500"></i> Dobraduras e Origami
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Modelo de Dobradura</label>
+          <select id="origami-project" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="fox" selected>Raposinha Origami (Fácil)</option>
+            <option value="boat">Barquinho dos Mares (Médio)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: COLORAÇÃO (NOVO) -->
+      <div id="panel-coloring" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="palette" class="w-4 h-4 text-pink-500"></i> Páginas para Colorir
+        </h3>
+        <p class="text-xs text-slate-500">Traço limpo em alta resolução preparado para pintura com lápis de cor e giz de cera.</p>
+      </div>
+
+      <!-- PAINEL: LABIRINTO -->
       <div id="panel-maze" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="compass" class="w-4 h-4 text-emerald-500"></i> Configurar Labirinto
@@ -288,10 +411,9 @@ TARTARUGA</textarea>
             <option value="18">Desafio Ninja (18 x 18)</option>
           </select>
         </div>
-        <p class="text-xs text-slate-500">O objetivo é levar o Mascote Chibi do início até a Coroa Soberana! O botão "Ver Gabarito" traça o caminho da solução em vermelho.</p>
       </div>
 
-      <!-- PAINEL: CONTAGEM VISUAL (NOVO) -->
+      <!-- PAINEL: CONTAGEM VISUAL -->
       <div id="panel-counting" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="hash" class="w-4 h-4 text-amber-500"></i> Configurar Contagem
@@ -315,7 +437,7 @@ TARTARUGA</textarea>
         </div>
       </div>
 
-      <!-- PAINEL: LIGAR COLUNAS (NOVO) -->
+      <!-- PAINEL: LIGAR COLUNAS -->
       <div id="panel-matching" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="git-commit" class="w-4 h-4 text-purple-500"></i> Configurar Associação
@@ -576,10 +698,7 @@ Ensino Soberano brilha!</textarea>
       </div>
     </div>
 
-    <!-- O Alvo onde todas as páginas da apostila são renderizadas em sequência -->
-    <div id="booklet-render-target" class="w-full max-w-[210mm] flex flex-col items-center">
-      <!-- Páginas injetadas dinamicamente via JS -->
-    </div>
+    <div id="booklet-render-target" class="w-full max-w-[210mm] flex flex-col items-center"></div>
   </div>
 
   <!-- Scripts dos Geradores -->
@@ -590,6 +709,13 @@ Ensino Soberano brilha!</textarea>
   <script src="js/maze.js"></script>
   <script src="js/counting.js"></script>
   <script src="js/matching.js"></script>
+  <script src="js/telling-time.js"></script>
+  <script src="js/patterns.js"></script>
+  <script src="js/shapes.js"></script>
+  <script src="js/body-parts.js"></script>
+  <script src="js/flashcards.js"></script>
+  <script src="js/origami.js"></script>
+  <script src="js/coloring.js"></script>
   <script src="js/scramble.js"></script>
   <script src="js/tracing.js"></script>
   <script src="js/multiplication-chart.js"></script>

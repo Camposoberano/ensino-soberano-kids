@@ -140,7 +140,6 @@ window.KiddoApp = (function () {
     document.getElementById("btn-print").addEventListener("click", () => window.print());
     document.getElementById("btn-download-pdf").addEventListener("click", downloadPDF);
 
-    // Botão de abrir modal de apostila
     const btnOpenBooklet = document.getElementById("btn-open-booklet");
     if (btnOpenBooklet) {
       btnOpenBooklet.addEventListener("click", () => window.BookletBuilder.openModal());
@@ -156,7 +155,7 @@ window.KiddoApp = (function () {
     const btn = document.getElementById("btn-toggle-answers");
     if (!btn) return;
     const icon = showAnswers ? "eye-off" : "eye";
-    btn.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 mr-2"></i> ${showAnswers ? "Ocultar Gabarito" : "Ver Gabarito"}`;
+    btn.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 mr-1.5"></i> ${showAnswers ? "Ocultar Gabarito" : "Ver Gabarito"}`;
     if (window.lucide) window.lucide.createIcons();
   }
 
@@ -221,15 +220,6 @@ window.KiddoApp = (function () {
       case "division":
         renderMath(contentArea, "division");
         break;
-      case "scramble":
-        renderScramble(contentArea);
-        break;
-      case "tracing":
-        renderTracing(contentArea);
-        break;
-      case "multichart":
-        renderMultiplicationChart(contentArea);
-        break;
       case "maze":
         renderMaze(contentArea);
         break;
@@ -238,6 +228,36 @@ window.KiddoApp = (function () {
         break;
       case "matching":
         renderMatching(contentArea);
+        break;
+      case "time":
+        renderTellingTime(contentArea);
+        break;
+      case "patterns":
+        renderPatterns(contentArea);
+        break;
+      case "shapes":
+        renderShapes(contentArea);
+        break;
+      case "body":
+        renderBodyParts(contentArea);
+        break;
+      case "flashcards":
+        renderFlashcards(contentArea);
+        break;
+      case "origami":
+        renderOrigami(contentArea);
+        break;
+      case "coloring":
+        renderColoring(contentArea);
+        break;
+      case "scramble":
+        renderScramble(contentArea);
+        break;
+      case "tracing":
+        renderTracing(contentArea);
+        break;
+      case "multichart":
+        renderMultiplicationChart(contentArea);
         break;
     }
 
@@ -351,7 +371,270 @@ window.KiddoApp = (function () {
     container.appendChild(gridEl);
   }
 
-  /* ── 3. PALAVRAS EMBARALHADAS ── */
+  /* ── 3. LABIRINTO (MAZE) ── */
+  function renderMaze(container) {
+    const size = parseInt(document.getElementById("maze-difficulty")?.value || 14);
+    currentData = window.MazeGenerator.generate(size, size);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col items-center justify-center my-3";
+    const canvas = window.BookletBuilder.renderMazeCanvas(currentData, showAnswers);
+    canvas.id = "worksheet-maze-canvas";
+    wrapper.appendChild(canvas);
+
+    container.appendChild(wrapper);
+  }
+
+  /* ── 4. CONTAGEM VISUAL (COUNTING) ── */
+  function renderCounting(container) {
+    const boxes = parseInt(document.getElementById("counting-boxes")?.value || 6);
+    const maxVal = parseInt(document.getElementById("counting-max")?.value || 10);
+    currentData = window.CountingGenerator.generate(boxes, maxVal);
+
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-3 gap-4 my-3";
+
+    currentData.problems.forEach(p => {
+      let iconsHtml = "";
+      for (let i = 0; i < p.count; i++) {
+        iconsHtml += `<span class="text-2xl select-none leading-none">${p.icon}</span>`;
+      }
+      grid.innerHTML += `
+        <div class="p-3 border-2 border-indigo-100 rounded-2xl bg-slate-50 flex flex-col items-center justify-between min-h-[175px]">
+          <div class="text-xs font-bold text-indigo-700">${p.name}</div>
+          <div class="flex flex-wrap justify-center gap-2 p-2 my-auto max-w-[140px]">${iconsHtml}</div>
+          <div class="w-11 h-11 border-2 border-dashed border-indigo-400 rounded-full flex items-center justify-center font-bold text-xl text-slate-800 bg-white">
+            <span class="counting-ans-val text-red-600 ${showAnswers ? "" : "hidden"}">${p.count}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    container.appendChild(grid);
+  }
+
+  /* ── 5. LIGAR COLUNAS (MATCHING) ── */
+  function renderMatching(container) {
+    const theme = document.getElementById("matching-theme")?.value || "math";
+    currentData = window.MatchingGenerator.generate(theme);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "my-4 max-w-lg mx-auto w-full flex flex-col gap-3";
+
+    currentData.leftItems.forEach((lItem, idx) => {
+      const rItem = currentData.rightItems[idx];
+      wrapper.innerHTML += `
+        <div class="matching-row">
+          <div class="matching-card">
+            <span>${lItem.text}</span>
+          </div>
+          <div class="flex items-center gap-3 flex-1 px-4">
+            <span class="matching-dot"></span>
+            <div class="flex-1 border-b-2 border-dashed border-slate-300"></div>
+            <span class="matching-dot"></span>
+          </div>
+          <div class="matching-card">
+            <span>${rItem.text}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    if (showAnswers) {
+      wrapper.innerHTML += `
+        <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 text-center">
+          Gabarito: ${currentData.leftItems.map(l => `${l.text} ➜ ${currentData.rightItems.find(r => r.matchId === l.id)?.text}`).join(" | ")}
+        </div>
+      `;
+    }
+
+    container.appendChild(wrapper);
+  }
+
+  /* ── 6. DIZER A HORA (TELLING TIME) ── */
+  function renderTellingTime(container) {
+    const count = parseInt(document.getElementById("time-count")?.value || 6);
+    const diff = document.getElementById("time-diff")?.value || "half";
+    currentData = window.TellingTimeGenerator.generateClocks(count, diff);
+
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-3 gap-6 my-4";
+
+    currentData.forEach(c => {
+      const clockSvg = window.TellingTimeGenerator.renderClockSvg(c.hour, c.minute, 130);
+      grid.innerHTML += `
+        <div class="flex flex-col items-center gap-2 p-3 bg-slate-50/80 border border-indigo-100 rounded-2xl">
+          ${clockSvg}
+          <div class="flex items-center gap-2 mt-1">
+            <span class="text-xs font-bold text-slate-500">Horário:</span>
+            <div class="w-20 h-9 border-2 border-dashed border-indigo-400 rounded-xl flex items-center justify-center font-bold text-lg bg-white">
+              <span class="time-ans-val text-red-600 ${showAnswers ? "" : "hidden"}">${c.digital}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.appendChild(grid);
+  }
+
+  /* ── 7. PADRÕES & SEQUÊNCIAS LÓGICAS (PATTERNS) ── */
+  function renderPatterns(container) {
+    const type = document.getElementById("patterns-type")?.value || "visual";
+    currentData = window.PatternsGenerator.generatePatterns(6, type);
+
+    const list = document.createElement("div");
+    list.className = "flex flex-col gap-3 my-4 max-w-xl mx-auto w-full";
+
+    currentData.forEach(p => {
+      let itemsHtml = "";
+      p.items.forEach(it => {
+        if (it === "?") {
+          itemsHtml += `
+            <div class="w-12 h-12 rounded-xl border-2 border-dashed border-pink-400 bg-pink-50 flex items-center justify-center font-bold text-lg text-pink-600">
+              <span class="pattern-ans-val text-red-600 font-extrabold ${showAnswers ? "" : "hidden"}">${p.answer}</span>
+              <span class="pattern-q-val ${showAnswers ? "hidden" : ""}">?</span>
+            </div>
+          `;
+        } else {
+          itemsHtml += `
+            <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center font-bold text-xl select-none">
+              ${it}
+            </div>
+          `;
+        }
+      });
+
+      list.innerHTML += `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-400">#${p.id}</span>
+          <div class="flex items-center gap-2">${itemsHtml}</div>
+        </div>
+      `;
+    });
+
+    container.appendChild(list);
+  }
+
+  /* ── 8. FORMAS GEOMÉTRICAS (SHAPES) ── */
+  function renderShapes(container) {
+    const data = window.ShapesGenerator.generate("properties");
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-3 gap-4 my-4";
+
+    data.shapes.forEach(sh => {
+      grid.innerHTML += `
+        <div class="p-4 border-2 border-indigo-100 rounded-2xl bg-white shadow-sm flex flex-col items-center text-center gap-2">
+          ${sh.svg}
+          <h4 class="font-extrabold text-base text-indigo-950 font-heading">${sh.nome}</h4>
+          <div class="w-full text-xs text-slate-600 bg-slate-50 p-2 rounded-xl flex flex-col gap-1 border border-slate-100">
+            <div class="flex justify-between">
+              <span>Lados:</span>
+              <span class="font-bold text-indigo-600">${showAnswers ? sh.lados : "___"}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Vértices:</span>
+              <span class="font-bold text-indigo-600">${showAnswers ? sh.vertices : "___"}</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400 italic">${sh.curiosidade}</p>
+        </div>
+      `;
+    });
+
+    container.appendChild(grid);
+  }
+
+  /* ── 9. PARTES DO CORPO & CONHECIMENTOS GERAIS ── */
+  function renderBodyParts(container) {
+    const data = window.BodyPartsGenerator.generate("senses");
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-2 gap-4 my-4 max-w-xl mx-auto w-full";
+
+    data.items.forEach(item => {
+      grid.innerHTML += `
+        <div class="p-3 border-2 border-pink-100 rounded-2xl bg-pink-50/40 flex items-center gap-3">
+          <span class="text-4xl select-none">${item.icon}</span>
+          <div class="flex flex-col flex-1">
+            <span class="text-sm font-extrabold text-slate-800 font-heading">${item.nome} (${item.sentido})</span>
+            <span class="text-xs text-slate-500 font-medium">${item.funcao}</span>
+            <div class="mt-1 flex items-center gap-1.5 text-[11px] font-bold">
+              <span class="text-pink-600">Sentido:</span>
+              <span class="border-b border-dotted border-slate-400 flex-1 ${showAnswers ? "text-red-600" : "text-transparent"}">${item.sentido}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.appendChild(grid);
+  }
+
+  /* ── 10. CARTÕES DE ESTUDO (FLASHCARDS) ── */
+  function renderFlashcards(container) {
+    const deckType = document.getElementById("flashcards-type")?.value || "bilingual";
+    const data = window.FlashcardsGenerator.generate(deckType);
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-2 gap-4 my-4";
+
+    data.cards.forEach((card, idx) => {
+      grid.innerHTML += `
+        <div class="border-2 border-dashed border-indigo-300 rounded-2xl p-4 bg-slate-50/60 flex flex-col justify-between min-h-[140px] relative">
+          <span class="absolute top-2 right-2 text-xs text-slate-400 select-none">✂️ recortar</span>
+          <div class="text-xs font-bold text-slate-400">Cartão #${idx + 1}</div>
+          <div class="text-center text-xl font-extrabold text-indigo-900 font-heading my-2">
+            ${card.front}
+          </div>
+          <div class="pt-2 border-t border-dotted border-slate-300 flex justify-between items-center text-xs font-bold text-slate-500">
+            <span>Verso (Resposta):</span>
+            <span class="${showAnswers ? "text-red-600 font-extrabold" : "text-transparent"}">${card.back}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    container.appendChild(grid);
+  }
+
+  /* ── 11. ORIGAMI PASSO A PASSO ── */
+  function renderOrigami(container) {
+    const projectKey = document.getElementById("origami-project")?.value || "fox";
+    const data = window.OrigamiGenerator.generate(projectKey);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col gap-3 my-4 max-w-xl mx-auto w-full";
+    wrapper.innerHTML = `
+      <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-between">
+        <span class="font-extrabold text-amber-900 font-heading text-sm">Projeto: ${data.nome}</span>
+        <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full">${data.nivel}</span>
+      </div>
+    `;
+
+    data.passos.forEach(p => {
+      wrapper.innerHTML += `
+        <div class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-2xl shadow-sm">
+          <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-700 font-extrabold flex items-center justify-center text-xs">
+            ${p.num}
+          </div>
+          <span class="text-2xl select-none">${p.icon}</span>
+          <span class="text-xs font-semibold text-slate-700 flex-1">${p.desc}</span>
+        </div>
+      `;
+    });
+
+    container.appendChild(wrapper);
+  }
+
+  /* ── 12. PÁGINA PARA COLORIR (COLORING) ── */
+  function renderColoring(container) {
+    const data = window.ColoringGenerator.generate("hikari");
+    const wrapper = document.createElement("div");
+    wrapper.className = "my-2 flex flex-col items-center";
+    wrapper.innerHTML = data.svg;
+    container.appendChild(wrapper);
+  }
+
+  /* ── 13. PALAVRAS EMBARALHADAS ── */
   function renderScramble(container) {
     const rawWords = (document.getElementById("scramble-words")?.value || "ESCOLA\nCRIANCA\nPROFESSOR\nCADERNO\nAMIZADE")
       .split("\n")
@@ -385,7 +668,7 @@ window.KiddoApp = (function () {
     container.appendChild(listEl);
   }
 
-  /* ── 4. CALIGRAFIA & TREINO ── */
+  /* ── 14. CALIGRAFIA & TREINO ── */
   function renderTracing(container) {
     const lines = (document.getElementById("tracing-lines-input")?.value || "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n1 2 3 4 5 6 7 8 9 10\nEnsino Soberano brilha!")
       .split("\n")
@@ -412,7 +695,7 @@ window.KiddoApp = (function () {
     container.appendChild(guideBox);
   }
 
-  /* ── 5. TABELA PITAGÓRICA ── */
+  /* ── 15. TABELA PITAGÓRICA ── */
   function renderMultiplicationChart(container) {
     const size = parseInt(document.getElementById("chart-size")?.value || 10);
     const mode = document.getElementById("chart-mode")?.value || "missing";
@@ -451,89 +734,8 @@ window.KiddoApp = (function () {
     container.appendChild(table);
   }
 
-  /* ── 6. LABIRINTO (MAZE) ── */
-  function renderMaze(container) {
-    const size = parseInt(document.getElementById("maze-difficulty")?.value || 14);
-    currentData = window.MazeGenerator.generate(size, size);
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "flex flex-col items-center justify-center my-3";
-    const canvas = window.BookletBuilder.renderMazeCanvas(currentData, showAnswers);
-    canvas.id = "worksheet-maze-canvas";
-    wrapper.appendChild(canvas);
-
-    container.appendChild(wrapper);
-  }
-
-  /* ── 7. CONTAGEM VISUAL (COUNTING) ── */
-  function renderCounting(container) {
-    const boxes = parseInt(document.getElementById("counting-boxes")?.value || 6);
-    const maxVal = parseInt(document.getElementById("counting-max")?.value || 10);
-    currentData = window.CountingGenerator.generate(boxes, maxVal);
-
-    const grid = document.createElement("div");
-    grid.className = "grid grid-cols-3 gap-4 my-3";
-
-    currentData.problems.forEach(p => {
-      let iconsHtml = "";
-      for (let i = 0; i < p.count; i++) {
-        iconsHtml += `<span class="text-2xl select-none leading-none">${p.icon}</span>`;
-      }
-      grid.innerHTML += `
-        <div class="p-3 border-2 border-indigo-100 rounded-2xl bg-slate-50 flex flex-col items-center justify-between min-h-[175px]">
-          <div class="text-xs font-bold text-indigo-700">${p.name}</div>
-          <div class="flex flex-wrap justify-center gap-2 p-2 my-auto max-w-[140px]">${iconsHtml}</div>
-          <div class="w-11 h-11 border-2 border-dashed border-indigo-400 rounded-full flex items-center justify-center font-bold text-xl text-slate-800 bg-white">
-            <span class="counting-ans-val text-red-600 ${showAnswers ? "" : "hidden"}">${p.count}</span>
-          </div>
-        </div>
-      `;
-    });
-
-    container.appendChild(grid);
-  }
-
-  /* ── 8. LIGAR COLUNAS (MATCHING) ── */
-  function renderMatching(container) {
-    const theme = document.getElementById("matching-theme")?.value || "math";
-    currentData = window.MatchingGenerator.generate(theme);
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "my-4 max-w-lg mx-auto w-full flex flex-col gap-3";
-
-    currentData.leftItems.forEach((lItem, idx) => {
-      const rItem = currentData.rightItems[idx];
-      wrapper.innerHTML += `
-        <div class="matching-row">
-          <div class="matching-card">
-            <span>${lItem.text}</span>
-          </div>
-          <div class="flex items-center gap-3 flex-1 px-4">
-            <span class="matching-dot"></span>
-            <div class="flex-1 border-b-2 border-dashed border-slate-300"></div>
-            <span class="matching-dot"></span>
-          </div>
-          <div class="matching-card">
-            <span>${rItem.text}</span>
-          </div>
-        </div>
-      `;
-    });
-
-    if (showAnswers) {
-      wrapper.innerHTML += `
-        <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 text-center">
-          Gabarito: ${currentData.leftItems.map(l => `${l.text} ➜ ${currentData.rightItems.find(r => r.matchId === l.id)?.text}`).join(" | ")}
-        </div>
-      `;
-    }
-
-    container.appendChild(wrapper);
-  }
-
   /* ── GABARITO (EXIBIÇÃO / OCULTAÇÃO) ── */
   function applyAnswersVisibility() {
-    // Caça-Palavras
     document.querySelectorAll(".wordsearch-cell").forEach(cell => {
       if (cell.getAttribute("data-is-answer") === "true") {
         if (showAnswers) cell.classList.add("highlight-answer");
@@ -546,31 +748,41 @@ window.KiddoApp = (function () {
       else badge.classList.remove("found-answer");
     });
 
-    // Matemática
     document.querySelectorAll(".math-answer-val").forEach(el => {
       if (showAnswers) el.classList.add("show-answer");
       else el.classList.remove("show-answer");
     });
 
-    // Palavras Embaralhadas
     document.querySelectorAll(".scramble-answer-val").forEach(el => {
       if (showAnswers) el.classList.remove("hidden");
       else el.classList.add("hidden");
     });
 
-    // Tabela de Multiplicação
     document.querySelectorAll(".missing-cell").forEach(cell => {
       if (showAnswers) cell.classList.add("show-answer");
       else cell.classList.remove("show-answer");
     });
 
-    // Contagem
     document.querySelectorAll(".counting-ans-val").forEach(el => {
       if (showAnswers) el.classList.remove("hidden");
       else el.classList.add("hidden");
     });
 
-    // Labirinto (re-renderiza o canvas com ou sem a linha de solução)
+    document.querySelectorAll(".time-ans-val").forEach(el => {
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    });
+
+    document.querySelectorAll(".pattern-ans-val").forEach(el => {
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    });
+
+    document.querySelectorAll(".pattern-q-val").forEach(el => {
+      if (showAnswers) el.classList.add("hidden");
+      else el.classList.remove("hidden");
+    });
+
     if (currentTab === "maze" && currentData) {
       const container = document.getElementById("worksheet-dynamic-content");
       if (container) {
@@ -584,7 +796,6 @@ window.KiddoApp = (function () {
     }
   }
 
-  /* ── ZOOM & ESCALABILIDADE DO PREVIEW A4 ── */
   function setupZoomAndScaling() {
     const zoomSelector = document.getElementById("zoom-select");
     if (zoomSelector) {
@@ -615,7 +826,6 @@ window.KiddoApp = (function () {
     }
   }
 
-  /* ── DOWNLOAD DE PDF CLIENT-SIDE ── */
   function downloadPDF() {
     const paper = document.querySelector(".worksheet-paper");
     if (!paper) return;
