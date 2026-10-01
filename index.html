@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ensino Soberano Kids | Gerador de Fichas de Atividades (Edição Anime)</title>
+  <title>Ensino Soberano Kids | Gerador de Fichas de Atividades & Apostilas (Edição Anime)</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -52,19 +52,24 @@
           <h1 class="text-xl font-extrabold text-slate-900 font-heading tracking-tight flex items-center gap-2">
             Ensino Soberano <span class="text-xs bg-pink-100 text-pink-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">🌸 Kids Anime</span>
           </h1>
-          <p class="text-xs text-slate-500 font-medium">Gerador Pedagógico com Mascotes Chibi & Impressão A4</p>
+          <p class="text-xs text-slate-500 font-medium">Gerador Pedagógico com Mascotes Chibi, Fichas & Apostilas A4</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="btn-toggle-answers" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-sm flex items-center">
-          <i data-lucide="eye" class="w-4 h-4 mr-2"></i> Ver Gabarito
+        <!-- BOTÃO APOSTILA COMPLETA (OPÇÃO 2) -->
+        <button id="btn-open-booklet" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-extrabold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-xl transition-all shadow-md flex items-center gap-1.5 active:scale-95">
+          <i data-lucide="book-open" class="w-4 h-4"></i> Criar Apostila (Caderno)
         </button>
-        <button id="btn-print" type="button" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 rounded-xl transition-all shadow-md flex items-center">
-          <i data-lucide="printer" class="w-4 h-4 mr-2"></i> Imprimir A4
+
+        <button id="btn-toggle-answers" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-sm flex items-center">
+          <i data-lucide="eye" class="w-4 h-4 mr-1.5"></i> Ver Gabarito
         </button>
-        <button id="btn-download-pdf" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl transition-all shadow-sm flex items-center">
-          <i data-lucide="download" class="w-4 h-4 mr-2"></i> Baixar PDF
+        <button id="btn-print" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 rounded-xl transition-all shadow-md flex items-center">
+          <i data-lucide="printer" class="w-4 h-4 mr-1.5"></i> Imprimir A4
+        </button>
+        <button id="btn-download-pdf" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl transition-all shadow-sm flex items-center">
+          <i data-lucide="download" class="w-4 h-4 mr-1.5"></i> Baixar PDF
         </button>
       </div>
     </div>
@@ -87,11 +92,20 @@
         <button type="button" data-tab="division" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="divide" class="w-3.5 h-3.5"></i> Divisão
         </button>
+        <button type="button" data-tab="maze" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="compass" class="w-3.5 h-3.5"></i> Labirinto
+        </button>
+        <button type="button" data-tab="counting" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="hash" class="w-3.5 h-3.5"></i> Contagem Visual
+        </button>
+        <button type="button" data-tab="matching" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="git-commit" class="w-3.5 h-3.5"></i> Ligar Colunas
+        </button>
         <button type="button" data-tab="scramble" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Palavras Embaralhadas
         </button>
         <button type="button" data-tab="tracing" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
-          <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Caligrafia & Treino
+          <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Caligrafia
         </button>
         <button type="button" data-tab="multichart" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="grid" class="w-3.5 h-3.5"></i> Tabela Pitagórica
@@ -114,9 +128,7 @@
         <h3 class="text-xs font-bold uppercase tracking-wider text-pink-600 flex items-center gap-1.5 font-heading">
           <span>🌸</span> Mascote Chibi da Folha
         </h3>
-        <div id="mascot-picker-container" class="grid grid-cols-4 gap-2">
-          <!-- Botões dos Mascotes gerados via JS -->
-        </div>
+        <div id="mascot-picker-container" class="grid grid-cols-4 gap-2"></div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Frase Motivacional do Mascote:</label>
           <input id="mascot-speech-input" type="text" value="Dê o seu melhor! Você brilha muito! ✨" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
@@ -147,13 +159,10 @@
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i> Configurar Caça-Palavras
         </h3>
-
-        <!-- Temas Rápidos em Português -->
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1.5">Temas Rápidos Prontos:</label>
           <div id="preset-categories-container" class="flex flex-wrap gap-1.5"></div>
         </div>
-
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Palavras (uma por linha)</label>
           <textarea id="ws-words" rows="6" class="w-full text-xs font-mono px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase">CACHORRO
@@ -165,7 +174,6 @@ MACACO
 COELHO
 TARTARUGA</textarea>
         </div>
-
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Tamanho da Grade</label>
@@ -189,7 +197,7 @@ TARTARUGA</textarea>
         </div>
       </div>
 
-      <!-- PAINEL: MATEMÁTICA (Adição / Subtração / Multiplicação / Divisão) -->
+      <!-- PAINEL: ADIÇÃO -->
       <div id="panel-addition" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-500"></i> Configurar Adição
@@ -264,7 +272,63 @@ TARTARUGA</textarea>
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
           <i data-lucide="divide-circle" class="w-4 h-4 text-blue-500"></i> Configurar Divisão
         </h3>
-        <p class="text-xs text-slate-500">Divisões exatas geradas a partir de múltiplos perfeitos.</p>
+        <p class="text-xs text-slate-500">Divisões exatas geradas a partir de fatores controlados.</p>
+      </div>
+
+      <!-- PAINEL: LABIRINTO (NOVO) -->
+      <div id="panel-maze" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="compass" class="w-4 h-4 text-emerald-500"></i> Configurar Labirinto
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Dificuldade / Dimensão</label>
+          <select id="maze-difficulty" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="10">Iniciante (10 x 10)</option>
+            <option value="14" selected>Médio (14 x 14)</option>
+            <option value="18">Desafio Ninja (18 x 18)</option>
+          </select>
+        </div>
+        <p class="text-xs text-slate-500">O objetivo é levar o Mascote Chibi do início até a Coroa Soberana! O botão "Ver Gabarito" traça o caminho da solução em vermelho.</p>
+      </div>
+
+      <!-- PAINEL: CONTAGEM VISUAL (NOVO) -->
+      <div id="panel-counting" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="hash" class="w-4 h-4 text-amber-500"></i> Configurar Contagem
+        </h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Quadrinhos</label>
+            <select id="counting-boxes" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="6" selected>6 Quadrinhos</option>
+              <option value="9">9 Quadrinhos</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Contagem Até</label>
+            <select id="counting-max" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="10" selected>Até 10 (Pré-escola)</option>
+              <option value="15">Até 15</option>
+              <option value="20">Até 20 (Avançado)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL: LIGAR COLUNAS (NOVO) -->
+      <div id="panel-matching" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="git-commit" class="w-4 h-4 text-purple-500"></i> Configurar Associação
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tema da Associação</label>
+          <select id="matching-theme" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="math" selected>Continhas e Resultados</option>
+            <option value="animals">Animais e Características</option>
+            <option value="opposites">Palavras Opostas (Antônimos)</option>
+            <option value="letters">Letras Maiúsculas e Minúsculas</option>
+          </select>
+        </div>
       </div>
 
       <!-- PAINEL: PALAVRAS EMBARALHADAS -->
@@ -329,7 +393,6 @@ Ensino Soberano brilha!</textarea>
     <!-- ── COLUNA DIREITA: PREVIEW DA FOLHA A4 ── -->
     <section class="flex-1 flex flex-col items-center">
 
-      <!-- Barra de Controle do Preview (Zoom e Status) -->
       <div id="preview-toolbar" class="no-print w-full flex items-center justify-between bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm mb-4">
         <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
           <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
@@ -388,17 +451,12 @@ Ensino Soberano brilha!</textarea>
               <!-- Banner do Mascote Chibi com Balão de Fala e Título -->
               <div class="flex items-center justify-between gap-3 my-2 px-2 py-1.5 bg-gradient-to-r from-pink-50/60 via-purple-50/60 to-indigo-50/60 rounded-2xl border border-pink-100">
                 <div class="flex items-center gap-3">
-                  <!-- Avatar Vetorial SVG Anime -->
-                  <div id="preview-mascot-avatar" class="w-14 h-14 flex-shrink-0">
-                    <!-- SVG injetado via JS -->
-                  </div>
-                  <!-- Balão de Fala Anime -->
+                  <div id="preview-mascot-avatar" class="w-14 h-14 flex-shrink-0"></div>
                   <div class="anime-speech-bubble max-w-xs">
                     <span id="preview-mascot-speech">Dê o seu melhor! Você brilha muito! ✨</span>
                   </div>
                 </div>
 
-                <!-- Título Centralizado -->
                 <div class="text-right flex-1 pr-2">
                   <h2 id="preview-title" class="text-xl font-extrabold text-slate-800 font-heading tracking-wide">
                     Missão Ninja: Caça-Palavras
@@ -410,9 +468,7 @@ Ensino Soberano brilha!</textarea>
               </div>
 
               <!-- Conteúdo Dinâmico Gerado -->
-              <div id="worksheet-dynamic-content" class="flex-1 flex flex-col justify-center">
-                <!-- Injetado via JavaScript de acordo com o gerador ativo -->
-              </div>
+              <div id="worksheet-dynamic-content" class="flex-1 flex flex-col justify-center"></div>
 
               <!-- Rodapé da Folha com Carimbo Hanko Anime Soberano -->
               <div class="mt-auto pt-3 border-t-2 border-dashed border-slate-200 flex items-center justify-between">
@@ -421,7 +477,6 @@ Ensino Soberano brilha!</textarea>
                   <span>Avaliação: ⭐ ⭐ ⭐ ⭐ ⭐ &nbsp;•&nbsp; Pontuação: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 10 ]</span>
                 </div>
 
-                <!-- Carimbo / Selo de Aprovação Estilo Japonês Hanko -->
                 <div class="anime-hanko-stamp">
                   <div id="preview-hanko-text">
                     SUGOI! 🌸<br>NOTA 10<br><span class="text-[7px] text-red-500 font-bold">ENSINO SOBERANO</span>
@@ -438,18 +493,6 @@ Ensino Soberano brilha!</textarea>
       <!-- ── CONTAINER EXCLUSIVO DO JOGO INTERATIVO (SLIDING PUZZLE) ── -->
       <div id="puzzle-view-container" class="hidden w-full max-w-md bg-white p-6 rounded-3xl border border-purple-200 shadow-lg flex flex-col items-center gap-4">
         <div class="text-center">
-          <div class="w-16 h-16 mx-auto mb-1">
-            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="60" cy="60" r="50" fill="#fdf2f8" stroke="#f472b6" stroke-width="2"/>
-              <ellipse cx="60" cy="65" rx="28" ry="24" fill="#fed7aa"/>
-              <ellipse cx="48" cy="64" rx="6" ry="8" fill="#881337"/>
-              <circle cx="46" cy="61" r="2.5" fill="#fff"/>
-              <ellipse cx="72" cy="64" rx="6" ry="8" fill="#881337"/>
-              <circle cx="70" cy="61" r="2.5" fill="#fff"/>
-              <path d="M57 74 Q60 78 63 74" stroke="#881337" stroke-width="2" fill="none"/>
-              <polygon points="60,25 72,40 48,40" fill="#f43f5e"/>
-            </svg>
-          </div>
           <h2 class="text-2xl font-extrabold font-heading text-slate-800">Quebra-Cabeça Deslizante</h2>
           <p class="text-xs text-slate-500">Mova as peças numéricas do Ensino Soberano!</p>
         </div>
@@ -459,9 +502,7 @@ Ensino Soberano brilha!</textarea>
           <div>Tempo: <span id="puzzle-time" class="text-purple-900 text-sm">0s</span></div>
         </div>
 
-        <div id="puzzle-board" class="grid gap-2 w-full aspect-square p-2 bg-purple-100 rounded-2xl">
-          <!-- Peças injetadas via JS -->
-        </div>
+        <div id="puzzle-board" class="grid gap-2 w-full aspect-square p-2 bg-purple-100 rounded-2xl"></div>
 
         <button type="button" onclick="window.SlidingPuzzle.init(document.getElementById('puzzle-board'), 3)" class="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-extrabold text-xs rounded-xl hover:from-pink-600 hover:to-purple-700 transition shadow">
           Reiniciar Jogo
@@ -472,15 +513,88 @@ Ensino Soberano brilha!</textarea>
 
   </main>
 
+  <!-- ── MODAL DE CONFIGURAÇÃO DE APOSTILA (BOOKLET BUILDER) ── -->
+  <div id="booklet-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-pink-100 flex flex-col gap-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-extrabold text-slate-900 font-heading flex items-center gap-2">
+          <span>📚</span> Criar Apostila Ensino Soberano
+        </h3>
+        <button type="button" onclick="window.BookletBuilder.closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Título da Apostila / Caderno</label>
+          <input id="booklet-custom-title" type="text" value="Caderno de Férias Soberano" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nome do Aluno(a)</label>
+          <input id="booklet-student-name" type="text" value="Super Aluno(a)" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+        </div>
+
+        <div class="p-3 bg-pink-50/70 border border-pink-100 rounded-2xl text-xs text-slate-600 flex flex-col gap-1.5">
+          <span class="font-extrabold text-pink-700">O que será incluído na apostila completa:</span>
+          <span>• 🌸 Capa Oficial Ensino Soberano com Mascote Chibi</span>
+          <span>• 🔍 Caça-Palavras com Banco de Vocabulário</span>
+          <span>• ➕ 16 Desafios de Adição com Conta Armada</span>
+          <span>• 🌀 Labirinto Ninja do Início até a Coroa</span>
+          <span>• 🔢 Desafio de Contagem Visual com Emojis</span>
+          <span>• 📋 Folha de Gabarito Oficial do Professor no Final</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" onclick="window.BookletBuilder.closeModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl">
+          Cancelar
+        </button>
+        <button type="button" onclick="window.BookletBuilder.generate()" class="px-5 py-2.5 text-xs font-extrabold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-xl shadow-md flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Gerar Apostila Completa Agora
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL DE VISUALIZAÇÃO E IMPRESSÃO DA APOSTILA COMPLETA ── -->
+  <div id="booklet-view-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 p-4 sm:p-8 flex flex-col items-center">
+    <div class="no-print bg-white p-4 rounded-2xl shadow-xl w-full max-w-4xl flex items-center justify-between mb-6 sticky top-4 z-50">
+      <div class="flex items-center gap-2">
+        <span class="text-base font-extrabold text-slate-900 font-heading">📚 Apostila Ensino Soberano Gerada!</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="window.print()" class="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow flex items-center gap-1.5">
+          <i data-lucide="printer" class="w-4 h-4"></i> Imprimir Apostila (A4)
+        </button>
+        <button type="button" onclick="window.BookletBuilder.downloadPDF()" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center gap-1.5">
+          <i data-lucide="download" class="w-4 h-4"></i> Baixar PDF Completo
+        </button>
+        <button type="button" onclick="document.getElementById('booklet-view-modal').classList.add('hidden')" class="px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl">
+          Fechar
+        </button>
+      </div>
+    </div>
+
+    <!-- O Alvo onde todas as páginas da apostila são renderizadas em sequência -->
+    <div id="booklet-render-target" class="w-full max-w-[210mm] flex flex-col items-center">
+      <!-- Páginas injetadas dinamicamente via JS -->
+    </div>
+  </div>
+
   <!-- Scripts dos Geradores -->
   <script src="js/anime-mascots.js"></script>
   <script src="js/categories.js"></script>
   <script src="js/wordsearch.js"></script>
   <script src="js/math.js"></script>
+  <script src="js/maze.js"></script>
+  <script src="js/counting.js"></script>
+  <script src="js/matching.js"></script>
   <script src="js/scramble.js"></script>
   <script src="js/tracing.js"></script>
   <script src="js/multiplication-chart.js"></script>
   <script src="js/sliding-puzzle.js"></script>
+  <script src="js/booklet.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

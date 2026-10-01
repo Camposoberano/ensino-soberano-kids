@@ -7,7 +7,6 @@ window.KiddoApp = (function () {
   let currentData = null;
   let zoomLevel = "auto";
   let currentMascotId = "hikari";
-  let customMascotSpeech = "";
 
   function init() {
     setupTabSwitching();
@@ -49,7 +48,6 @@ window.KiddoApp = (function () {
       activePanel.classList.remove("hidden");
     }
 
-    // Alternar visibilidade do preview vs puzzle interativo
     const previewWrapper = document.getElementById("preview-wrapper");
     const puzzleContainer = document.getElementById("puzzle-view-container");
     const previewToolbar = document.getElementById("preview-toolbar");
@@ -103,8 +101,7 @@ window.KiddoApp = (function () {
     const speechInput = document.getElementById("mascot-speech-input");
     if (speechInput) {
       speechInput.value = window.ANIME_MASCOTS[currentMascotId]?.frasePadrao || "";
-      speechInput.addEventListener("input", (e) => {
-        customMascotSpeech = e.target.value;
+      speechInput.addEventListener("input", () => {
         renderMascotOnSheet();
       });
     }
@@ -116,9 +113,7 @@ window.KiddoApp = (function () {
     const mascotBubbleText = document.getElementById("preview-mascot-speech");
     const hankoStampText = document.getElementById("preview-hanko-text");
 
-    if (mascotAvatarContainer) {
-      mascotAvatarContainer.innerHTML = mascot.svg;
-    }
+    if (mascotAvatarContainer) mascotAvatarContainer.innerHTML = mascot.svg;
     if (mascotBubbleText) {
       const speechInput = document.getElementById("mascot-speech-input");
       mascotBubbleText.textContent = speechInput?.value || mascot.frasePadrao;
@@ -129,7 +124,6 @@ window.KiddoApp = (function () {
   }
 
   function setupControls() {
-    // Botão Gerar
     document.getElementById("btn-generate").addEventListener("click", () => {
       renderCurrentActivity();
       if (window.confetti) {
@@ -137,27 +131,24 @@ window.KiddoApp = (function () {
       }
     });
 
-    // Botão Gabarito (Alternar Respostas)
     document.getElementById("btn-toggle-answers").addEventListener("click", () => {
       showAnswers = !showAnswers;
       updateAnswerButtonText();
       applyAnswersVisibility();
     });
 
-    // Botão Imprimir A4
-    document.getElementById("btn-print").addEventListener("click", () => {
-      window.print();
-    });
-
-    // Botão Baixar PDF
+    document.getElementById("btn-print").addEventListener("click", () => window.print());
     document.getElementById("btn-download-pdf").addEventListener("click", downloadPDF);
 
-    // Inputs do cabeçalho da folha (sincronização em tempo real)
+    // Botão de abrir modal de apostila
+    const btnOpenBooklet = document.getElementById("btn-open-booklet");
+    if (btnOpenBooklet) {
+      btnOpenBooklet.addEventListener("click", () => window.BookletBuilder.openModal());
+    }
+
     ["sheet-school", "sheet-title", "sheet-instructions"].forEach(id => {
       const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener("input", syncHeader);
-      }
+      if (el) el.addEventListener("input", syncHeader);
     });
   }
 
@@ -239,6 +230,15 @@ window.KiddoApp = (function () {
       case "multichart":
         renderMultiplicationChart(contentArea);
         break;
+      case "maze":
+        renderMaze(contentArea);
+        break;
+      case "counting":
+        renderCounting(contentArea);
+        break;
+      case "matching":
+        renderMatching(contentArea);
+        break;
     }
 
     applyAnswersVisibility();
@@ -246,7 +246,7 @@ window.KiddoApp = (function () {
     if (window.lucide) window.lucide.createIcons();
   }
 
-  /* ── 1. RENDER CAÇA-PALAVRAS ── */
+  /* ── 1. CAÇA-PALAVRAS ── */
   function renderWordSearch(container) {
     const rawWords = (document.getElementById("ws-words").value || "")
       .split("\n")
@@ -265,7 +265,6 @@ window.KiddoApp = (function () {
       uppercase: uppercase
     });
 
-    // Renderizar tabela do caça-palavras
     const gridEl = document.createElement("div");
     gridEl.className = "wordsearch-grid my-3";
     gridEl.style.gridTemplateColumns = `repeat(${size}, 31px)`;
@@ -286,7 +285,6 @@ window.KiddoApp = (function () {
 
     container.appendChild(gridEl);
 
-    // Banco de palavras a encontrar embaixo com badges fofos anime
     const wordsBox = document.createElement("div");
     wordsBox.className = "mt-4 pt-3 border-t-2 border-slate-100 text-center";
     wordsBox.innerHTML = `<h4 class="text-xs font-extrabold text-slate-600 mb-2 uppercase tracking-wider font-heading flex items-center justify-center gap-1.5"><span class="text-pink-500">🌸</span> Palavras da Missão:</h4>`;
@@ -306,7 +304,7 @@ window.KiddoApp = (function () {
     container.appendChild(wordsBox);
   }
 
-  /* ── 2. RENDER MATEMÁTICA ── */
+  /* ── 2. MATEMÁTICA ── */
   function renderMath(container, opType) {
     const digits = parseInt(document.getElementById("math-digits")?.value || 1);
     const count = parseInt(document.getElementById("math-count")?.value || 20);
@@ -353,7 +351,7 @@ window.KiddoApp = (function () {
     container.appendChild(gridEl);
   }
 
-  /* ── 3. RENDER PALAVRAS EMBARALHADAS ── */
+  /* ── 3. PALAVRAS EMBARALHADAS ── */
   function renderScramble(container) {
     const rawWords = (document.getElementById("scramble-words")?.value || "ESCOLA\nCRIANCA\nPROFESSOR\nCADERNO\nAMIZADE")
       .split("\n")
@@ -361,7 +359,6 @@ window.KiddoApp = (function () {
       .filter(w => w.length > 0);
 
     currentData = window.WordScrambleGenerator.generate(rawWords);
-
     const listEl = document.createElement("div");
     listEl.className = "grid grid-cols-2 gap-3 my-3";
 
@@ -388,7 +385,7 @@ window.KiddoApp = (function () {
     container.appendChild(listEl);
   }
 
-  /* ── 4. RENDER CALIGRAFIA & COORDENAÇÃO ── */
+  /* ── 4. CALIGRAFIA & TREINO ── */
   function renderTracing(container) {
     const lines = (document.getElementById("tracing-lines-input")?.value || "ABCDEFGHIJKLM\nNOPQRSTUVWXYZ\n1 2 3 4 5 6 7 8 9 10\nEnsino Soberano brilha!")
       .split("\n")
@@ -396,18 +393,16 @@ window.KiddoApp = (function () {
       .filter(w => w.length > 0);
 
     const data = window.TracingGenerator.generate(lines);
-
     const guideBox = document.createElement("div");
     guideBox.className = "flex flex-col gap-2.5 my-3";
 
-    data.lines.forEach((lineText, idx) => {
+    data.lines.forEach(lineText => {
       const pauta = document.createElement("div");
       pauta.className = "penmanship-line";
       pauta.innerHTML = `<span class="trace-text">${lineText}</span>`;
       guideBox.appendChild(pauta);
     });
 
-    // Pautas extras em branco para treino livre da criança
     for (let i = 0; i < 3; i++) {
       const blankPauta = document.createElement("div");
       blankPauta.className = "penmanship-line";
@@ -417,17 +412,15 @@ window.KiddoApp = (function () {
     container.appendChild(guideBox);
   }
 
-  /* ── 5. RENDER TABELA PITAGÓRICA ── */
+  /* ── 5. TABELA PITAGÓRICA ── */
   function renderMultiplicationChart(container) {
     const size = parseInt(document.getElementById("chart-size")?.value || 10);
     const mode = document.getElementById("chart-mode")?.value || "missing";
 
     currentData = window.MultiplicationChartGenerator.generate(size, mode);
-
     const table = document.createElement("table");
     table.className = "multiplication-table my-3";
 
-    // Cabeçalho superior
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     headerRow.innerHTML = `<th>×</th>`;
@@ -437,7 +430,6 @@ window.KiddoApp = (function () {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    // Linhas da tabela
     const tbody = document.createElement("tbody");
     currentData.rows.forEach(r => {
       const tr = document.createElement("tr");
@@ -459,53 +451,137 @@ window.KiddoApp = (function () {
     container.appendChild(table);
   }
 
+  /* ── 6. LABIRINTO (MAZE) ── */
+  function renderMaze(container) {
+    const size = parseInt(document.getElementById("maze-difficulty")?.value || 14);
+    currentData = window.MazeGenerator.generate(size, size);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col items-center justify-center my-3";
+    const canvas = window.BookletBuilder.renderMazeCanvas(currentData, showAnswers);
+    canvas.id = "worksheet-maze-canvas";
+    wrapper.appendChild(canvas);
+
+    container.appendChild(wrapper);
+  }
+
+  /* ── 7. CONTAGEM VISUAL (COUNTING) ── */
+  function renderCounting(container) {
+    const boxes = parseInt(document.getElementById("counting-boxes")?.value || 6);
+    const maxVal = parseInt(document.getElementById("counting-max")?.value || 10);
+    currentData = window.CountingGenerator.generate(boxes, maxVal);
+
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-3 gap-4 my-3";
+
+    currentData.problems.forEach(p => {
+      let iconsHtml = "";
+      for (let i = 0; i < p.count; i++) {
+        iconsHtml += `<span class="text-2xl select-none leading-none">${p.icon}</span>`;
+      }
+      grid.innerHTML += `
+        <div class="p-3 border-2 border-indigo-100 rounded-2xl bg-slate-50 flex flex-col items-center justify-between min-h-[175px]">
+          <div class="text-xs font-bold text-indigo-700">${p.name}</div>
+          <div class="flex flex-wrap justify-center gap-2 p-2 my-auto max-w-[140px]">${iconsHtml}</div>
+          <div class="w-11 h-11 border-2 border-dashed border-indigo-400 rounded-full flex items-center justify-center font-bold text-xl text-slate-800 bg-white">
+            <span class="counting-ans-val text-red-600 ${showAnswers ? "" : "hidden"}">${p.count}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    container.appendChild(grid);
+  }
+
+  /* ── 8. LIGAR COLUNAS (MATCHING) ── */
+  function renderMatching(container) {
+    const theme = document.getElementById("matching-theme")?.value || "math";
+    currentData = window.MatchingGenerator.generate(theme);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "my-4 max-w-lg mx-auto w-full flex flex-col gap-3";
+
+    currentData.leftItems.forEach((lItem, idx) => {
+      const rItem = currentData.rightItems[idx];
+      wrapper.innerHTML += `
+        <div class="matching-row">
+          <div class="matching-card">
+            <span>${lItem.text}</span>
+          </div>
+          <div class="flex items-center gap-3 flex-1 px-4">
+            <span class="matching-dot"></span>
+            <div class="flex-1 border-b-2 border-dashed border-slate-300"></div>
+            <span class="matching-dot"></span>
+          </div>
+          <div class="matching-card">
+            <span>${rItem.text}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    if (showAnswers) {
+      wrapper.innerHTML += `
+        <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 text-center">
+          Gabarito: ${currentData.leftItems.map(l => `${l.text} ➜ ${currentData.rightItems.find(r => r.matchId === l.id)?.text}`).join(" | ")}
+        </div>
+      `;
+    }
+
+    container.appendChild(wrapper);
+  }
+
   /* ── GABARITO (EXIBIÇÃO / OCULTAÇÃO) ── */
   function applyAnswersVisibility() {
     // Caça-Palavras
     document.querySelectorAll(".wordsearch-cell").forEach(cell => {
       if (cell.getAttribute("data-is-answer") === "true") {
-        if (showAnswers) {
-          cell.classList.add("highlight-answer");
-        } else {
-          cell.classList.remove("highlight-answer");
-        }
+        if (showAnswers) cell.classList.add("highlight-answer");
+        else cell.classList.remove("highlight-answer");
       }
     });
 
     document.querySelectorAll(".word-badge").forEach(badge => {
-      if (showAnswers) {
-        badge.classList.add("found-answer");
-      } else {
-        badge.classList.remove("found-answer");
-      }
+      if (showAnswers) badge.classList.add("found-answer");
+      else badge.classList.remove("found-answer");
     });
 
     // Matemática
     document.querySelectorAll(".math-answer-val").forEach(el => {
-      if (showAnswers) {
-        el.classList.add("show-answer");
-      } else {
-        el.classList.remove("show-answer");
-      }
+      if (showAnswers) el.classList.add("show-answer");
+      else el.classList.remove("show-answer");
     });
 
     // Palavras Embaralhadas
     document.querySelectorAll(".scramble-answer-val").forEach(el => {
-      if (showAnswers) {
-        el.classList.remove("hidden");
-      } else {
-        el.classList.add("hidden");
-      }
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
     });
 
     // Tabela de Multiplicação
     document.querySelectorAll(".missing-cell").forEach(cell => {
-      if (showAnswers) {
-        cell.classList.add("show-answer");
-      } else {
-        cell.classList.remove("show-answer");
-      }
+      if (showAnswers) cell.classList.add("show-answer");
+      else cell.classList.remove("show-answer");
     });
+
+    // Contagem
+    document.querySelectorAll(".counting-ans-val").forEach(el => {
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    });
+
+    // Labirinto (re-renderiza o canvas com ou sem a linha de solução)
+    if (currentTab === "maze" && currentData) {
+      const container = document.getElementById("worksheet-dynamic-content");
+      if (container) {
+        container.innerHTML = "";
+        const wrapper = document.createElement("div");
+        wrapper.className = "flex flex-col items-center justify-center my-3";
+        const canvas = window.BookletBuilder.renderMazeCanvas(currentData, showAnswers);
+        wrapper.appendChild(canvas);
+        container.appendChild(wrapper);
+      }
+    }
   }
 
   /* ── ZOOM & ESCALABILIDADE DO PREVIEW A4 ── */
@@ -560,7 +636,8 @@ window.KiddoApp = (function () {
   }
 
   return {
-    init: init
+    init: init,
+    getCurrentMascot: () => currentMascotId
   };
 })();
 

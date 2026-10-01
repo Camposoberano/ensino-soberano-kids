@@ -170,7 +170,6 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Resposta destacada no gabarito */
 .wordsearch-cell.highlight-answer {
   background-color: #fef08a !important;
   color: #854d0e !important;
@@ -179,7 +178,6 @@ body {
   transform: scale(0.96);
 }
 
-/* Palavras da lista do caça-palavras */
 .word-badge {
   background-color: #f1f5f9;
   border: 1px solid #cbd5e1;
@@ -332,6 +330,42 @@ body {
   font-weight: 700;
 }
 
+/* Ligar Colunas (Matching Items) */
+.matching-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.matching-card {
+  padding: 8px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  font-weight: 700;
+  font-size: 14px;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  min-width: 140px;
+}
+
+.matching-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #6366f1;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1.5px #6366f1;
+}
+
+/* ── REGRAS MULTI-PÁGINA (APOSTILAS / LIVRETOS) ── */
+.booklet-page {
+  page-break-after: always;
+  break-after: page;
+}
+
 /* ── REGRAS EXCLUSIVAS DE IMPRESSÃO (@media print) ── */
 @media print {
   @page {
@@ -352,11 +386,29 @@ body {
   #sidebar-controls,
   #app-header,
   #preview-toolbar,
-  #puzzle-view-container {
+  #puzzle-view-container,
+  #booklet-modal,
+  .modal-backdrop {
     display: none !important;
   }
 
-  /* Garantir que apenas a folha seja impressa em tela cheia */
+  /* Se a visualização de apostila estiver aberta, imprime ela */
+  body:has(#booklet-view-modal:not(.hidden)) #preview-wrapper {
+    display: none !important;
+  }
+
+  body:has(#booklet-view-modal:not(.hidden)) #booklet-view-modal {
+    display: block !important;
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  body:has(#booklet-view-modal:not(.hidden)) #booklet-render-target {
+    display: block !important;
+    width: 100% !important;
+  }
+
   #preview-wrapper {
     padding: 0 !important;
     margin: 0 !important;
@@ -376,8 +428,12 @@ body {
     box-shadow: none !important;
     border-radius: 0 !important;
     padding: 5mm !important;
-    page-break-after: avoid;
-    break-after: avoid;
+  }
+
+  .booklet-page {
+    page-break-after: always !important;
+    break-after: page !important;
+    height: 100% !important;
   }
 
   .worksheet-frame {
