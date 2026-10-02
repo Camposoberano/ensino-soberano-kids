@@ -122,6 +122,14 @@ Saída esperada:
 ## 🌐 Publicação em Produção
 
 O projeto está pronto para deploy instantâneo em:
+- **Portainer (Docker Stack)**:
+  1. No painel do Portainer, acesse **Stacks** $\rightarrow$ **Add stack**.
+  2. Escolha o método **Repository**:
+     - Repository URL: `https://github.com/Camposoberano/ensino-soberano-kids.git`
+     - Repository reference: `refs/heads/master`
+     - Compose path: `docker-compose.yml`
+     - Authentication: ative e informe seu Personal Access Token do GitHub (por ser repositório privado).
+  3. Clique em **Deploy the stack**. O Portainer fará o build do container Nginx Alpine e subirá na porta `8080` (ou na porta que definir na variável `PORT`).
 - **Cloudflare Pages**: Conecte o repositório no painel do Cloudflare (Build command: vazio, Output directory: `/`).
 - **Vercel / Netlify**: Importe o repositório com 1 clique.
 - **GitHub Pages**: Vá em *Settings* $\rightarrow$ *Pages* $\rightarrow$ selecione o branch `master` e raiz `/`.
@@ -131,3 +139,4 @@ O projeto está pronto para deploy instantâneo em:
 ## 📄 Licença
 
 Propriedade do ecossistema **Ensino Soberano**. Todos os direitos reservados.
+

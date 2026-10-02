@@ -1,0 +1,41 @@
+services:
+  ensino-soberano-kids:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ensino-soberano-kids:latest
+    container_name: ensino-soberano-kids
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:80"
+    environment:
+      - TZ=America/Sao_Paulo
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+
+    # ── DICA PARA PROXY REVERSO NO PORTAINER (Traefik / Nginx Proxy Manager) ──
+    # Se você utiliza Traefik ou NPM no Portainer, descomente as linhas abaixo e defina sua rede:
+    # networks:
+    #   - proxy_network
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.ensino-soberano.rule=Host(`kids.ensinosoberano.com.br`)"
+    #   - "traefik.http.routers.ensino-soberano.entrypoints=websecure"
+    #   - "traefik.http.routers.ensino-soberano.tls.certresolver=letsencrypt"
+    #   - "traefik.http.services.ensino-soberano.loadbalancer.server.port=80"
+
+# networks:
+#   proxy_network:
+#     external: true
