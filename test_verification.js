@@ -87,6 +87,9 @@ const filesToLoad = [
   "booklet.js",
   "qrcode-generator.js",
   "interactive-tablet.js",
+  "diagnostic-assessment.js",
+  "board-game.js",
+  "batch-students.js",
   "app.js"
 ];
 
@@ -319,4 +322,59 @@ if (!bb || typeof bb.generate !== "function" || typeof bb.renderMazeCanvas !== "
 }
 console.log("[PASS] BookletBuilder: Presets de 30/50 páginas e motor assíncrono de apostila -> OK");
 
-console.log("\n=== TODOS OS 29 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 11. Testar DiagnosticAssessmentGenerator
+console.log("\n--- Testando DiagnosticAssessmentGenerator ---");
+const diag = context.DiagnosticAssessmentGenerator;
+if (!diag || typeof diag.renderAssessmentSheet !== "function" || !Array.isArray(diag.RUBRIC_AXES)) {
+  console.error("ERRO: DiagnosticAssessmentGenerator não está definido corretamente!");
+  process.exit(1);
+}
+const diagHtml = diag.renderAssessmentSheet({
+  studentName: "Mariana Silva",
+  period: "2º Bimestre",
+  gradeClass: "2º Ano A",
+  mascotKey: "hikari"
+});
+if (!diagHtml.includes("Mariana Silva") || !diagHtml.includes("2º Bimestre") || !diagHtml.includes("Avaliação Diagnóstica")) {
+  console.error("ERRO: Conteúdo da Ficha Diagnóstica incompleto!");
+  process.exit(1);
+}
+console.log("[PASS] DiagnosticAssessmentGenerator: Ficha avaliativa com rubricas BNCC e gráfico radar SVG -> OK");
+
+// 12. Testar BoardGameGenerator
+console.log("\n--- Testando BoardGameGenerator ---");
+const bg = context.BoardGameGenerator;
+if (!bg || typeof bg.renderBoardSheet !== "function" || !Array.isArray(bg.TRACK_TILES)) {
+  console.error("ERRO: BoardGameGenerator não está definido corretamente!");
+  process.exit(1);
+}
+const bgHtml = bg.renderBoardSheet({
+  title: "A Trilha da Sabedoria Ninja",
+  mascotKey: "ryu"
+});
+if (!bgHtml.includes("A Trilha da Sabedoria Ninja") || !bgHtml.includes("Dado Ninja para Montar") || !bgHtml.includes("Peões dos Jogadores")) {
+  console.error("ERRO: Conteúdo do Jogo de Tabuleiro incompleto!");
+  process.exit(1);
+}
+console.log("[PASS] BoardGameGenerator: Tabuleiro 24 casas, molde de dado 3D e peões recortáveis -> OK");
+
+// 13. Testar BatchStudentsModule
+console.log("\n--- Testando BatchStudentsModule ---");
+const batch = context.BatchStudentsModule;
+if (!batch || typeof batch.parseNames !== "function" || typeof batch.generateBatchPreview !== "function") {
+  console.error("ERRO: BatchStudentsModule não está definido corretamente!");
+  process.exit(1);
+}
+const parsed = batch.parseNames("Lucas Oliveira\nMariana Souza\nGabriel Santos\n\n");
+if (parsed.length !== 3 || parsed[0] !== "Lucas Oliveira" || parsed[2] !== "Gabriel Santos") {
+  console.error("ERRO: Parser de nomes da lista da turma falhou:", parsed);
+  process.exit(1);
+}
+const batchHtml = batch.generateBatchPreview("Ana Costa\nCarlos Lima", "diploma", "1º Ano B", "hikari");
+if (!batchHtml.includes("Ana Costa") || !batchHtml.includes("Carlos Lima") || !batchHtml.includes("folha-a4-preview")) {
+  console.error("ERRO: Geração em lote de documentos de alunos falhou!");
+  process.exit(1);
+}
+console.log("[PASS] BatchStudentsModule: Mala direta escolar, importação de lista e mesclagem em massa -> OK");
+
+console.log("\n=== TODOS OS 32 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

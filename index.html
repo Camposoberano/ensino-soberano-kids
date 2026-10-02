@@ -65,6 +65,10 @@
           <i data-lucide="book-open" class="w-4 h-4"></i> Criar Apostila (30/50 Págs)
         </button>
 
+        <button id="btn-open-batch" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl transition-all shadow-sm flex items-center gap-1.5 active:scale-95">
+          <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i> Turma em Massa
+        </button>
+
         <button id="btn-toggle-answers" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-sm flex items-center">
           <i data-lucide="eye" class="w-4 h-4 mr-1.5"></i> Ver Gabarito
         </button>
@@ -163,11 +167,15 @@
           <i data-lucide="puzzle" class="w-3.5 h-3.5"></i> Quebra-Cabeça Jogo
         </button>
 
-        <span class="h-4 w-px bg-slate-300 mx-1"></span>
-
-        <!-- Conquistas & Reconhecimento -->
+        <!-- Conquistas, Avaliação & Jogos -->
         <button type="button" data-tab="certificate" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i> Diplomas & Selos
+        </button>
+        <button type="button" data-tab="diagnostic" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="clipboard-check" class="w-3.5 h-3.5 text-emerald-600"></i> Avaliação BNCC
+        </button>
+        <button type="button" data-tab="boardgame" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="dices" class="w-3.5 h-3.5 text-purple-600"></i> Tabuleiro Ninja
         </button>
       </div>
     </div>
@@ -691,6 +699,39 @@ Ensino Soberano brilha!</textarea>
         </div>
       </div>
 
+      <!-- PAINEL: AVALIAÇÃO DIAGNÓSTICA BNCC -->
+      <div id="panel-diagnostic" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="clipboard-check" class="w-4 h-4 text-emerald-500"></i> Opções da Avaliação Diagnóstica
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nome do(a) Aluno(a)</label>
+          <input type="text" id="diag-student-name" value="Lucas Oliveira" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Bimestre / Período</label>
+            <input type="text" id="diag-period" value="1º Bimestre" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Turma</label>
+            <input type="text" id="diag-grade" value="1º Ano B" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL: JOGO DE TABULEIRO A4 -->
+      <div id="panel-boardgame" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="dices" class="w-4 h-4 text-purple-500"></i> Opções do Tabuleiro Ninja
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Título do Tabuleiro</label>
+          <input type="text" id="board-title" value="A Trilha da Sabedoria Ninja" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+        </div>
+        <p class="text-[11px] text-slate-500">Gera um tabuleiro A4 completo para 2 a 4 jogadores, com desafios cognitivos, peões recortáveis e dado 3D.</p>
+      </div>
+
       <!-- BOTÃO GERAR NOVO MODELO -->
       <button id="btn-generate" type="button" class="w-full py-3.5 px-4 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
         <i data-lucide="sparkles" class="w-5 h-5 text-amber-300"></i> Gerar Nova Atividade Anime
@@ -1118,6 +1159,100 @@ Ensino Soberano brilha!</textarea>
     <div id="booklet-render-target" class="w-full max-w-[210mm] flex flex-col items-center"></div>
   </div>
 
+  <!-- ── MODAL: MALA DIRETA ESCOLAR (TURMA EM MASSA) ── -->
+  <div id="batch-students-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-2 border-emerald-300 flex flex-col gap-4 my-8">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-extrabold text-slate-900 font-heading flex items-center gap-2">
+          <span>👥</span> Mala Direta Escolar (Turma em Massa)
+        </h3>
+        <button type="button" onclick="window.BatchStudentsModule.closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">Tipo de Documento a Gerar:</label>
+          <select id="batch-doc-type" class="w-full font-bold text-emerald-900 px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/50">
+            <option value="certificate" selected>🏆 Diplomas de Honra ao Mérito Individuais</option>
+            <option value="diagnostic">📋 Fichas de Avaliação Diagnóstica & BNCC com Nome</option>
+            <option value="passport">🌟 Passaportes de Conquistas & Missões</option>
+            <option value="cover">📕 Capas Personalizadas para Cadernos da Turma</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">Título / Reconhecimento</label>
+          <input type="text" id="batch-custom-title" value="Mestre do Conhecimento & Raciocínio Lógico" class="w-full font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">Lista de Alunos da Turma (um por linha):</label>
+          <textarea id="batch-names-input" rows="7" class="w-full font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 font-sans" placeholder="Alice Santos&#10;Bernardo Lima&#10;Carlos Eduardo&#10;Davi Silva&#10;Helena Costa...">Alice Santos
+Bernardo Lima
+Carlos Eduardo
+Davi Silva
+Helena Costa
+Isabela Rocha
+Lucas Oliveira
+Manuela Ferreira
+Pedro Henrique
+Sophia Martins</textarea>
+          <span class="text-[10px] text-slate-400">Cole a chamada da sua turma. Cada linha gerará uma página personalizada no mesmo arquivo.</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="window.BatchStudentsModule.closeModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl">
+          Cancelar
+        </button>
+        <button type="button" onclick="window.BatchStudentsModule.generate()" class="px-5 py-2.5 text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl shadow-md flex items-center gap-1.5 active:scale-95 transition-all">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Gerar para Toda a Turma
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: PROGRESSO DA MALA DIRETA ── -->
+  <div id="batch-progress-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-2 border-emerald-300 flex flex-col items-center gap-4 text-center">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl animate-bounce">
+        🖨️
+      </div>
+      <div>
+        <h3 class="text-lg font-extrabold text-slate-900 font-heading">Gerando Documentos da Turma...</h3>
+        <p id="batch-progress-text" class="text-xs text-slate-500 mt-1">Diagramando páginas personalizadas...</p>
+      </div>
+
+      <div class="w-full bg-slate-100 rounded-full h-3.5 p-0.5 border border-slate-200 overflow-hidden">
+        <div id="batch-progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-600 h-full rounded-full transition-all duration-150" style="width: 10%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: VISUALIZAÇÃO E IMPRESSÃO DA TURMA EM MASSA ── -->
+  <div id="batch-view-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 p-4 sm:p-8 flex flex-col items-center">
+    <div class="no-print bg-white p-4 rounded-2xl shadow-xl w-full max-w-4xl flex items-center justify-between mb-6 sticky top-4 z-50">
+      <div class="flex items-center gap-2">
+        <span class="text-base font-extrabold text-slate-900 font-heading">👥 Documentos da Turma Prontos!</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="window.print()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow flex items-center gap-1.5">
+          <i data-lucide="printer" class="w-4 h-4"></i> Imprimir Turma Completa
+        </button>
+        <button type="button" onclick="window.BatchStudentsModule.downloadPDF()" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center gap-1.5">
+          <i data-lucide="download" class="w-4 h-4"></i> Baixar PDF da Turma
+        </button>
+        <button type="button" onclick="document.getElementById('batch-view-modal').classList.add('hidden')" class="px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl">
+          Fechar
+        </button>
+      </div>
+    </div>
+
+    <div id="batch-render-target" class="w-full max-w-[210mm] flex flex-col items-center"></div>
+  </div>
+
   <!-- ── MODAL: CENTRAL DO ALUNO NINJA (GABARITO DIGITAL & ÁUDIO DO MASCOTE) ── -->
   <div id="digital-solution-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-2 border-indigo-200 flex flex-col gap-4">
@@ -1203,6 +1338,9 @@ Ensino Soberano brilha!</textarea>
   <script src="js/cryptogram.js"></script>
   <script src="js/color-by-math.js"></script>
   <script src="js/whitelabel.js"></script>
+  <script src="js/diagnostic-assessment.js"></script>
+  <script src="js/board-game.js"></script>
+  <script src="js/batch-students.js"></script>
   <script src="js/booklet.js"></script>
   <script src="js/qrcode-generator.js"></script>
   <script src="js/interactive-tablet.js"></script>

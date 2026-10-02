@@ -101,7 +101,7 @@ window.KiddoApp = (function () {
           speechInput.value = mascot.frasePadrao;
         }
         renderMascotOnSheet();
-        if (currentTab === "certificate") {
+        if (currentTab === "certificate" || currentTab === "diagnostic" || currentTab === "boardgame") {
           renderCurrentActivity();
         }
       });
@@ -155,6 +155,13 @@ window.KiddoApp = (function () {
       btnOpenBooklet.addEventListener("click", () => window.BookletBuilder.openModal());
     }
 
+    const btnOpenBatch = document.getElementById("btn-open-batch");
+    if (btnOpenBatch) {
+      btnOpenBatch.addEventListener("click", () => {
+        if (window.BatchStudentsModule) window.BatchStudentsModule.openModal();
+      });
+    }
+
     ["sheet-school", "sheet-title", "sheet-instructions"].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", syncHeader);
@@ -171,6 +178,28 @@ window.KiddoApp = (function () {
         });
       }
     });
+
+    ["diag-student-name", "diag-period", "diag-grade"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("input", () => {
+          if (currentTab === "diagnostic") renderCurrentActivity();
+        });
+        el.addEventListener("change", () => {
+          if (currentTab === "diagnostic") renderCurrentActivity();
+        });
+      }
+    });
+
+    const boardTitleEl = document.getElementById("board-title");
+    if (boardTitleEl) {
+      boardTitleEl.addEventListener("input", () => {
+        if (currentTab === "boardgame") renderCurrentActivity();
+      });
+      boardTitleEl.addEventListener("change", () => {
+        if (currentTab === "boardgame") renderCurrentActivity();
+      });
+    }
 
     ["sp-operation", "sp-difficulty", "sp-count"].forEach(id => {
       const el = document.getElementById(id);
@@ -595,7 +624,7 @@ window.KiddoApp = (function () {
     }
 
     if (bnccContainer) {
-      if (showBnccTag && currentTab !== "certificate") {
+      if (showBnccTag && currentTab !== "certificate" && currentTab !== "diagnostic" && currentTab !== "boardgame") {
         bnccContainer.classList.remove("hidden");
       } else {
         bnccContainer.classList.add("hidden");
@@ -644,6 +673,46 @@ window.KiddoApp = (function () {
           customWrapper.innerHTML = window.CertificateGenerator.renderPassport(studentName, currentMascotId);
         } else {
           customWrapper.innerHTML = window.CertificateGenerator.renderCertificate(studentName, courseTitle, currentMascotId);
+        }
+      }
+      applyScaling();
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
+
+    if (currentTab === "diagnostic") {
+      if (standardArticle) standardArticle.classList.add("hidden");
+      if (customWrapper) {
+        customWrapper.classList.remove("hidden");
+        const studentName = document.getElementById("diag-student-name")?.value || "Lucas Oliveira";
+        const period = document.getElementById("diag-period")?.value || "1º Bimestre";
+        const gradeClass = document.getElementById("diag-grade")?.value || "1º Ano B";
+
+        if (window.DiagnosticAssessmentGenerator) {
+          customWrapper.innerHTML = window.DiagnosticAssessmentGenerator.renderAssessmentSheet({
+            studentName,
+            period,
+            gradeClass,
+            mascotKey: currentMascotId
+          });
+        }
+      }
+      applyScaling();
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
+
+    if (currentTab === "boardgame") {
+      if (standardArticle) standardArticle.classList.add("hidden");
+      if (customWrapper) {
+        customWrapper.classList.remove("hidden");
+        const title = document.getElementById("board-title")?.value || "A Trilha da Sabedoria Ninja";
+
+        if (window.BoardGameGenerator) {
+          customWrapper.innerHTML = window.BoardGameGenerator.renderBoardSheet({
+            title,
+            mascotKey: currentMascotId
+          });
         }
       }
       applyScaling();
@@ -738,7 +807,7 @@ window.KiddoApp = (function () {
     const qrTarget = document.getElementById("worksheet-qr-code");
     if (!qrContainer || !qrTarget) return;
 
-    if (!showQrCode || currentTab === "certificate") {
+    if (!showQrCode || currentTab === "certificate" || currentTab === "diagnostic" || currentTab === "boardgame") {
       qrContainer.classList.add("hidden");
       return;
     }
@@ -930,7 +999,9 @@ window.KiddoApp = (function () {
       certificate: { t: "Diploma de Honra ao Mérito Soberano", i: "Reconhecimento oficial de excelência, dedicação e aprendizado." },
       sudoku: { t: "Desafio Sudoku Kids: Raciocínio Ninja", i: "Preencha os espaços vazios sem repetir nenhum elemento na mesma linha, coluna ou bloco:" },
       cryptogram: { t: "Criptograma Ninja: Código Secreto", i: "Use a tabela de símbolos para decifrar a mensagem secreta dos mestres:" },
-      colorbymath: { t: "Pinte por Matemática: Mosaico das Cores", i: "Resolva as operações em cada quadrinho e pinte com a cor indicada na legenda:" }
+      colorbymath: { t: "Pinte por Matemática: Mosaico das Cores", i: "Resolva as operações em cada quadrinho e pinte com a cor indicada na legenda:" },
+      diagnostic: { t: "Ficha de Avaliação Diagnóstica & Rubricas BNCC", i: "Instrumento pedagógico bimestral de acompanhamento e sondagem de competências:" },
+      boardgame: { t: "A Trilha da Sabedoria Ninja: Jogo de Tabuleiro", i: "Jogo de tabuleiro pedagógico imprimível com desafios de raciocínio, peões e dado 3D:" }
     };
 
     if (defaults[tab]) {
