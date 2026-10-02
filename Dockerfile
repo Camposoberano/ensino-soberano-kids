@@ -3,6 +3,8 @@ FROM nginx:alpine
 LABEL maintainer="Ensino Soberano <contato@ensinosoberano.com.br>"
 LABEL description="Ensino Soberano Kids - Plataforma de Atividades e Apostilas Pedagógicas"
 
+RUN apk add --no-cache curl
+
 # Substituir configuração padrão do Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -20,7 +22,7 @@ RUN rm -rf /usr/share/nginx/html/Dockerfile \
 
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:80/ || exit 1
+HEALTHCHECK --interval=10s --timeout=3s --start-period=3s --retries=3 \
+  CMD curl -f http://127.0.0.1:80/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
