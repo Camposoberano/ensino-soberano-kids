@@ -10,6 +10,7 @@ window.KiddoApp = (function () {
   let currentGradeLevel = "1ano";
   let showBnccTag = true;
   let customBnccText = null;
+  let showQrCode = true;
 
   function init() {
     setupTabSwitching();
@@ -232,6 +233,105 @@ window.KiddoApp = (function () {
         if (currentTab === "colorbymath") renderCurrentActivity();
       });
     });
+
+    // ── Controles do Eixo 3: QR Code Inteligente & Lousa Digital ──
+    const showQrToggle = document.getElementById("show-qrcode-toggle");
+    if (showQrToggle) {
+      showQrToggle.addEventListener("change", () => {
+        showQrCode = showQrToggle.checked;
+        updateQRCode();
+      });
+    }
+
+    const btnTabletMode = document.getElementById("btn-tablet-mode");
+    if (btnTabletMode) {
+      btnTabletMode.addEventListener("click", () => {
+        if (window.InteractiveTablet) {
+          window.InteractiveTablet.toggleTabletMode();
+        }
+      });
+    }
+
+    const btnOpenDigitalModal = document.getElementById("btn-open-digital-modal");
+    if (btnOpenDigitalModal) {
+      btnOpenDigitalModal.addEventListener("click", openDigitalSolutionModal);
+    }
+
+    const qrContainer = document.getElementById("worksheet-qr-container");
+    if (qrContainer) {
+      qrContainer.addEventListener("click", openDigitalSolutionModal);
+    }
+
+    document.querySelectorAll(".tablet-tool-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tool = btn.getAttribute("data-tool");
+        if (window.InteractiveTablet && tool) {
+          window.InteractiveTablet.setTool(tool);
+        }
+      });
+    });
+
+    const btnTabletUndo = document.getElementById("btn-tablet-undo");
+    if (btnTabletUndo) {
+      btnTabletUndo.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.undo();
+      });
+    }
+
+    const btnTabletClear = document.getElementById("btn-tablet-clear");
+    if (btnTabletClear) {
+      btnTabletClear.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.clearCanvas();
+      });
+    }
+
+    const btnTabletVoice = document.getElementById("btn-tablet-voice");
+    if (btnTabletVoice) {
+      btnTabletVoice.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.readCurrentWorksheetVoice();
+      });
+    }
+
+    const btnTabletCelebrate = document.getElementById("btn-tablet-celebrate");
+    if (btnTabletCelebrate) {
+      btnTabletCelebrate.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.celebrateActivity();
+      });
+    }
+
+    const btnTabletClose = document.getElementById("btn-tablet-close");
+    if (btnTabletClose) {
+      btnTabletClose.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.toggleTabletMode(false);
+      });
+    }
+
+    const btnModalSpeak = document.getElementById("btn-modal-speak");
+    if (btnModalSpeak) {
+      btnModalSpeak.addEventListener("click", speakModalInstructions);
+    }
+
+    const btnModalStopSpeak = document.getElementById("btn-modal-stop-speak");
+    if (btnModalStopSpeak) {
+      btnModalStopSpeak.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.stopSpeech();
+      });
+    }
+
+    const btnModalOpenTablet = document.getElementById("btn-modal-open-tablet");
+    if (btnModalOpenTablet) {
+      btnModalOpenTablet.addEventListener("click", () => {
+        document.getElementById("digital-solution-modal")?.classList.add("hidden");
+        if (window.InteractiveTablet) window.InteractiveTablet.toggleTabletMode(true);
+      });
+    }
+
+    const btnModalFanfare = document.getElementById("btn-modal-fanfare");
+    if (btnModalFanfare) {
+      btnModalFanfare.addEventListener("click", () => {
+        if (window.InteractiveTablet) window.InteractiveTablet.playVictorySound();
+      });
+    }
   }
 
   function updateAnswerButtonText() {
@@ -439,8 +539,178 @@ window.KiddoApp = (function () {
     }
 
     applyAnswersVisibility();
+    updateQRCode();
     applyScaling();
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  function updateQRCode() {
+    const qrContainer = document.getElementById("worksheet-qr-container");
+    const qrTarget = document.getElementById("worksheet-qr-code");
+    if (!qrContainer || !qrTarget) return;
+
+    if (!showQrCode || currentTab === "certificate") {
+      qrContainer.classList.add("hidden");
+      return;
+    }
+    qrContainer.classList.remove("hidden");
+
+    if (window.QRCodeGenerator) {
+      const payload = `https://ensinosoberano.com.br/gabarito?tab=${encodeURIComponent(currentTab)}&grade=${encodeURIComponent(currentGradeLevel)}&mascot=${encodeURIComponent(currentMascotId)}`;
+      window.QRCodeGenerator.renderToElement(qrTarget, payload, { size: 48, quietZone: 1 }, () => {
+        openDigitalSolutionModal();
+      });
+    }
+  }
+
+  function speakModalInstructions() {
+    const titleVal = document.getElementById("sheet-title")?.value || "Atividade Soberana";
+    const instrVal = document.getElementById("sheet-instructions")?.value || "";
+    let mascotName = "Mascote Soberano";
+    let frase = "Dê o seu melhor!";
+    if (window.ANIME_MASCOTS && window.ANIME_MASCOTS[currentMascotId]) {
+      mascotName = window.ANIME_MASCOTS[currentMascotId].nome;
+      frase = window.ANIME_MASCOTS[currentMascotId].frasePadrao;
+    }
+    const text = `Olá! Eu sou ${mascotName}. Nossa atividade de hoje é: ${titleVal}. Instruções: ${instrVal}. Lembre-se: ${frase}. Vamos conferir o gabarito com dedicação!`;
+    if (window.InteractiveTablet) {
+      window.InteractiveTablet.speakText(text);
+    }
+  }
+
+  function openDigitalSolutionModal() {
+    const modal = document.getElementById("digital-solution-modal");
+    if (!modal) return;
+
+    const avatarEl = document.getElementById("modal-mascot-avatar");
+    const speechEl = document.getElementById("modal-mascot-speech");
+    if (window.ANIME_MASCOTS && window.ANIME_MASCOTS[currentMascotId]) {
+      const mascot = window.ANIME_MASCOTS[currentMascotId];
+      if (avatarEl) avatarEl.innerHTML = mascot.svg;
+      if (speechEl) speechEl.textContent = `"${mascot.frasePadrao}"`;
+    }
+
+    const solEl = document.getElementById("modal-solution-content");
+    if (solEl) {
+      solEl.innerHTML = getFormattedSolutionHtml();
+    }
+
+    modal.classList.remove("hidden");
+    if (window.lucide) window.lucide.createIcons();
+    if (window.InteractiveTablet) window.InteractiveTablet.playClickSound();
+  }
+
+  function getFormattedSolutionHtml() {
+    if (!currentData) {
+      return `<p class="text-slate-500 italic">Folha pronta! Use a lousa interativa ou ative o botão "Ver Gabarito" para conferir cada questão na folha.</p>`;
+    }
+
+    switch (currentTab) {
+      case "wordsearch": {
+        const words = currentData.words || [];
+        return `
+          <div class="flex flex-col gap-1.5">
+            <span class="font-bold text-indigo-700">Palavras escondidas (${words.length}):</span>
+            <div class="flex flex-wrap gap-1.5">
+              ${words.map(w => `<span class="bg-indigo-100 text-indigo-800 font-mono font-bold px-2 py-0.5 rounded text-xs">${w}</span>`).join("")}
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Dica: Todas as palavras estão destacadas em verde na folha ao clicar em 'Ver Gabarito'!</p>
+          </div>
+        `;
+      }
+
+      case "addition":
+      case "subtraction":
+      case "multiplication":
+      case "division": {
+        const ops = Array.isArray(currentData) ? currentData : [];
+        if (ops.length === 0) return `<p>Operações resolvidas diretamente na folha.</p>`;
+        return `
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            ${ops.map(o => `
+              <div class="bg-white p-2 rounded-lg border border-slate-200 text-center font-mono font-bold text-xs">
+                ${o.num1} ${o.symbol} ${o.num2} = <span class="text-emerald-600 font-extrabold text-sm">${o.answer}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      case "storyproblems": {
+        const probs = Array.isArray(currentData) ? currentData : [];
+        return `
+          <div class="flex flex-col gap-2">
+            ${probs.map(p => `
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="font-bold text-indigo-900 block text-xs">#${p.id} • ${p.mascote}</span>
+                <span class="text-[11px] text-slate-600 block my-0.5">Cálculo: <strong>${p.calculo}</strong></span>
+                <span class="text-xs font-bold text-emerald-700 block">Resposta: ${p.respostaCompleta}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      case "sudoku": {
+        return `
+          <div class="flex flex-col gap-2 text-center py-2">
+            <span class="font-bold text-indigo-800">Sudoku Kids Soberano (${currentData.size}x${currentData.size})</span>
+            <p class="text-xs text-slate-600">A matriz resolvida completa já está disponível na folha. Clique em <strong>'Ver Gabarito'</strong> na barra superior para revelar os números ou emojis faltantes em verde!</p>
+          </div>
+        `;
+      }
+
+      case "cryptogram": {
+        const phrase = currentData.cleanPhrase || "CÓDIGO SECRETO";
+        return `
+          <div class="flex flex-col gap-2 p-2 bg-amber-50 rounded-xl border border-amber-200">
+            <span class="font-bold text-amber-900 text-xs">Mensagem Secreta Decodificada:</span>
+            <p class="text-base font-extrabold text-indigo-950 font-heading tracking-wider">"${phrase}"</p>
+            <span class="text-[10px] text-slate-500">Parabéns! Você utilizou a sabedoria da Tabela de Cifra Ninja.</span>
+          </div>
+        `;
+      }
+
+      case "colorbymath": {
+        const legend = currentData.legend || [];
+        return `
+          <div class="flex flex-col gap-1.5">
+            <span class="font-bold text-pink-700">Guia de Cores & Resultados do Mosaico:</span>
+            <div class="grid grid-cols-2 gap-2">
+              ${legend.map(item => `
+                <div class="flex items-center gap-2 bg-white p-1.5 rounded-lg border border-slate-200">
+                  <span class="w-4 h-4 rounded-full border border-slate-300" style="background-color: ${item.hex}"></span>
+                  <span class="text-xs font-bold">${item.name}: <strong>Resultado ${item.target}</strong></span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      case "scramble": {
+        const words = currentData.words || [];
+        return `
+          <div class="grid grid-cols-2 gap-1.5">
+            ${words.map(w => `
+              <div class="bg-white p-1.5 rounded-lg border border-slate-200 text-xs">
+                <span class="text-slate-400 font-mono">${w.scrambled}</span> ➔ <strong class="text-indigo-700">${w.original}</strong>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      default: {
+        return `
+          <div class="p-3 text-center text-xs text-slate-600">
+            <span class="text-base">✨</span>
+            <p class="font-bold text-slate-800 my-1">Atividade pronta para treino ou impressão!</p>
+            <p>Clique em <strong>'Ver Gabarito'</strong> na barra superior para alternar a visualização das respostas na própria folha, ou utilize a <strong>Lousa Interativa</strong> para desenhar.</p>
+          </div>
+        `;
+      }
+    }
   }
 
   function setDefaultHeaderForTab(tab) {

@@ -36,7 +36,9 @@ const mockWindow = {
     })
   },
   ANIME_MASCOTS: {},
-  KIDDO_VOCABULARY: {}
+  KIDDO_VOCABULARY: {},
+  setTimeout: setTimeout,
+  clearTimeout: clearTimeout
 };
 mockWindow.window = mockWindow;
 mockWindow.document.defaultView = mockWindow;
@@ -70,6 +72,8 @@ const filesToLoad = [
   "cryptogram.js",
   "color-by-math.js",
   "booklet.js",
+  "qrcode-generator.js",
+  "interactive-tablet.js",
   "app.js"
 ];
 
@@ -220,6 +224,47 @@ if (!cbmCrown || !cbmCrown.palette || cbmCrown.grid.length !== 7 || cbmCrown.gri
   console.error("ERRO: Falha no ColorByMathGenerator:", cbmCrown);
   process.exit(1);
 }
-console.log(`[PASS] ColorByMathGenerator: Mosaico ${cbmCrown.template.nome} (${cbmCrown.template.rows}x${cbmCrown.template.cols}) -> OK`);
+// 7. Testar QRCodeGenerator
+console.log("\n--- Testando QRCodeGenerator ---");
+const qrGen = context.QRCodeGenerator;
+if (!qrGen || typeof qrGen.generateSVG !== "function" || typeof qrGen.generateMatrix !== "function") {
+  console.error("ERRO: QRCodeGenerator não está definido corretamente!");
+  process.exit(1);
+}
+const qrSvg = qrGen.generateSVG("https://ensinosoberano.com.br/gabarito?tab=math&grade=1ano");
+if (!qrSvg || !qrSvg.includes("<svg") || !qrSvg.includes("<rect")) {
+  console.error("ERRO: Falha ao gerar SVG do QR Code:", qrSvg);
+  process.exit(1);
+}
+console.log("[PASS] QRCodeGenerator: Geração vetorial SVG puro e offline -> OK");
 
-console.log("\n=== TODOS OS 26 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 8. Testar InteractiveTablet
+console.log("\n--- Testando InteractiveTablet ---");
+const tablet = context.InteractiveTablet;
+if (!tablet || typeof tablet.toggleTabletMode !== "function" || typeof tablet.setTool !== "function") {
+  console.error("ERRO: InteractiveTablet não está definido corretamente!");
+  process.exit(1);
+}
+tablet.setTool("pencil");
+if (tablet.state.currentTool !== "pencil") {
+  console.error("ERRO: Falha ao selecionar ferramenta pencil:", tablet.state);
+  process.exit(1);
+}
+tablet.setTool("highlighter");
+if (tablet.state.currentTool !== "highlighter") {
+  console.error("ERRO: Falha ao selecionar ferramenta highlighter:", tablet.state);
+  process.exit(1);
+}
+const activated = tablet.toggleTabletMode(true);
+if (!activated || !tablet.isActive()) {
+  console.error("ERRO: Falha ao ativar modo tablet:", tablet.isActive());
+  process.exit(1);
+}
+tablet.toggleTabletMode(false);
+if (tablet.isActive()) {
+  console.error("ERRO: Falha ao desativar modo tablet:", tablet.isActive());
+  process.exit(1);
+}
+console.log("[PASS] InteractiveTablet: Alternância de ferramentas e ciclo de vida da Lousa Digital -> OK");
+
+console.log("\n=== TODOS OS 28 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

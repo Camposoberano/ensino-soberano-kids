@@ -480,6 +480,58 @@ body {
   text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
+/* ── QR CODE INTELIGENTE & CENTRAL DIGITAL ── */
+#worksheet-qr-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 5px 8px;
+  transition: all 0.2s ease;
+}
+
+#worksheet-qr-container:hover {
+  background-color: #fdf2f8;
+  border-color: #f472b6;
+  transform: translateY(-1px);
+}
+
+#worksheet-qr-code svg {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+}
+
+/* ── MODO TABLET INTERATIVO (LOUSA DIGITAL) ── */
+.tablet-overlay-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  border-radius: 16px;
+  z-index: 35;
+}
+
+#tablet-floating-toolbar {
+  animation: fadeInDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ── REGRAS MULTI-PÁGINA (APOSTILAS / LIVRETOS) ── */
 .booklet-page {
   page-break-after: always;
@@ -506,6 +558,8 @@ body {
   #sidebar-controls,
   #app-header,
   #preview-toolbar,
+  #tablet-floating-toolbar,
+  #digital-solution-modal,
   #puzzle-view-container,
   #booklet-modal,
   .modal-backdrop {

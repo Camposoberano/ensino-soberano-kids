@@ -238,6 +238,13 @@
           </button>
         </div>
 
+        <div class="pt-0.5">
+          <label class="text-xs font-bold text-slate-700 flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="show-qrcode-toggle" checked class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            Imprimir QR Code Inteligente (Gabarito & Áudio)
+          </label>
+        </div>
+
         <div id="bncc-skill-container">
           <label class="block text-[11px] font-bold text-slate-500 mb-1">Habilidade / Competência BNCC:</label>
           <textarea id="bncc-skill-text" rows="2" class="w-full text-[11px] text-slate-700 font-medium px-2.5 py-1.5 border border-indigo-100 rounded-lg bg-indigo-50/40 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
@@ -695,8 +702,20 @@ Ensino Soberano brilha!</textarea>
           <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
           <span>Ensino Soberano Kids • Visualização A4</span>
         </div>
-        <div class="flex items-center gap-3">
-          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+        <div class="flex items-center gap-2">
+          <!-- Botão Modo Tablet / Lousa Interativa -->
+          <button id="btn-tablet-mode" type="button" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-indigo-50 hover:text-indigo-700 border border-slate-300 hover:border-indigo-300 rounded-xl transition-all shadow-xs flex items-center gap-1.5">
+            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-indigo-600"></i>
+            <span>Lousa Interativa</span>
+          </button>
+
+          <!-- Botão Gabarito Digital & Áudio -->
+          <button id="btn-open-digital-modal" type="button" class="px-3 py-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl transition-all shadow-xs flex items-center gap-1.5">
+            <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+            <span>Gabarito Digital & Áudio</span>
+          </button>
+
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 ml-2 border-l border-slate-200 pl-3">
             <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> Zoom:
             <select id="zoom-select" class="text-xs bg-slate-50 border border-slate-200 rounded-md px-2 py-1 font-medium focus:outline-none">
               <option value="auto" selected>Ajustar à Tela</option>
@@ -705,6 +724,51 @@ Ensino Soberano brilha!</textarea>
               <option value="0.5">50%</option>
             </select>
           </label>
+        </div>
+      </div>
+
+      <!-- ── BARRA FLUTUANTE DO MODO TABLET (LOUSA DIGITAL) ── -->
+      <div id="tablet-floating-toolbar" class="no-print hidden sticky top-16 z-40 bg-white/95 backdrop-blur border-2 border-indigo-500 shadow-xl rounded-2xl px-4 py-2.5 mb-3 flex flex-wrap items-center justify-between gap-3 w-full max-w-2xl transition-all">
+        <div class="flex items-center gap-1.5 border-r border-slate-200 pr-3">
+          <span class="text-xs font-extrabold text-indigo-900 flex items-center gap-1">
+            <span>✏️</span> Lousa Digital
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button type="button" data-tool="pencil" class="tablet-tool-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-indigo-100 ring-2 ring-indigo-600 border-indigo-400 flex items-center gap-1" title="Lápis Grafite">
+            ✏️ Grafite
+          </button>
+          <button type="button" data-tool="blue_pen" class="tablet-tool-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-blue-700 hover:bg-blue-50 flex items-center gap-1" title="Caneta Azul">
+            🖊️ Azul
+          </button>
+          <button type="button" data-tool="red_pen" class="tablet-tool-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-red-600 hover:bg-red-50 flex items-center gap-1" title="Caneta Vermelha">
+            🔴 Vermelho
+          </button>
+          <button type="button" data-tool="highlighter" class="tablet-tool-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-amber-600 hover:bg-amber-50 flex items-center gap-1" title="Marca-texto Amarelo">
+            🖍️ Marca-texto
+          </button>
+          <button type="button" data-tool="eraser" class="tablet-tool-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 flex items-center gap-1" title="Borracha">
+            🧹 Borracha
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="btn-tablet-undo" class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100" title="Desfazer">
+            <i data-lucide="undo-2" class="w-4 h-4"></i>
+          </button>
+          <button type="button" id="btn-tablet-clear" class="p-1.5 rounded-lg border border-slate-200 text-red-500 hover:bg-red-50" title="Limpar Tudo">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+          <button type="button" id="btn-tablet-voice" class="px-2.5 py-1.5 rounded-lg bg-pink-50 text-pink-700 border border-pink-200 font-bold text-xs hover:bg-pink-100 flex items-center gap-1" title="Ouvir Enunciado">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Ouvir
+          </button>
+          <button type="button" id="btn-tablet-celebrate" class="px-2.5 py-1.5 rounded-lg bg-emerald-500 text-white font-extrabold text-xs hover:bg-emerald-600 shadow-sm flex items-center gap-1" title="Concluir e Comemorar">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Concluir!
+          </button>
+          <button type="button" id="btn-tablet-close" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100" title="Fechar Lousa">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
         </div>
       </div>
 
@@ -777,6 +841,15 @@ Ensino Soberano brilha!</textarea>
                     </span>
                   </div>
                   <span>Avaliação: ⭐ ⭐ ⭐ ⭐ ⭐ &nbsp;•&nbsp; Pontuação: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 10 ]</span>
+                </div>
+
+                <!-- QR Code Inteligente A4 (Gabarito & Áudio) -->
+                <div id="worksheet-qr-container" class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5 cursor-pointer hover:bg-pink-50 hover:border-pink-300 transition-all shadow-xs" title="Clique ou escaneie com o celular para ouvir o áudio e ver o gabarito">
+                  <div id="worksheet-qr-code" class="w-12 h-12 bg-white p-0.5 rounded-lg border border-slate-200 flex items-center justify-center flex-shrink-0"></div>
+                  <div class="flex flex-col text-[8.5px] leading-tight text-slate-600 max-w-[105px]">
+                    <span class="font-extrabold text-indigo-700 flex items-center gap-0.5">📱 Dica & Áudio</span>
+                    <span class="text-[7.5px] text-slate-500">Escaneie ou clique para ouvir o mascote</span>
+                  </div>
                 </div>
 
                 <div class="anime-hanko-stamp">
@@ -882,6 +955,65 @@ Ensino Soberano brilha!</textarea>
     <div id="booklet-render-target" class="w-full max-w-[210mm] flex flex-col items-center"></div>
   </div>
 
+  <!-- ── MODAL: CENTRAL DO ALUNO NINJA (GABARITO DIGITAL & ÁUDIO DO MASCOTE) ── -->
+  <div id="digital-solution-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-2 border-indigo-200 flex flex-col gap-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-extrabold text-slate-900 font-heading flex items-center gap-2">
+          <span>📱</span> Gabarito Digital & Voz do Mascote
+        </h3>
+        <button type="button" onclick="document.getElementById('digital-solution-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Card do Mascote com Áudio -->
+      <div class="bg-gradient-to-r from-pink-50 via-purple-50 to-indigo-50 p-4 rounded-2xl border border-pink-100 flex items-center gap-3">
+        <div id="modal-mascot-avatar" class="w-14 h-14 flex-shrink-0"></div>
+        <div class="flex flex-col gap-1 flex-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-pink-700 font-heading">Orientador Pedagógico Soberano</span>
+            <span class="text-[9px] bg-white px-2 py-0.5 rounded-full border border-pink-200 font-bold text-slate-500">pt-BR</span>
+          </div>
+          <p id="modal-mascot-speech" class="text-xs text-slate-700 italic">"Olá pequeno ninja! Ouça as dicas e confira sua resposta abaixo!"</p>
+          <div class="flex items-center gap-2 pt-1">
+            <button type="button" id="btn-modal-speak" class="px-3 py-1 bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-1 active:scale-95 transition-all">
+              <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Ouvir Voz do Mascote
+            </button>
+            <button type="button" id="btn-modal-stop-speak" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs border border-slate-200 rounded-lg">
+              Parar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo do Gabarito -->
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Gabarito Oficial da Folha:
+        </span>
+        <div id="modal-solution-content" class="max-h-56 overflow-y-auto bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 space-y-1">
+          <!-- Conteúdo gerado dinamicamente -->
+        </div>
+      </div>
+
+      <!-- Ações do Modal -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+        <button type="button" id="btn-modal-open-tablet" class="px-3.5 py-2 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl flex items-center gap-1.5">
+          <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Resolver na Lousa
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-modal-fanfare" class="px-3 py-2 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl flex items-center gap-1">
+            🎺 Fanfarra Ninja
+          </button>
+          <button type="button" onclick="document.getElementById('digital-solution-modal').classList.add('hidden')" class="px-4 py-2 text-xs font-bold text-white bg-slate-800 hover:bg-slate-900 rounded-xl shadow">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts dos Geradores -->
   <script src="js/anime-mascots.js"></script>
   <script src="js/categories.js"></script>
@@ -908,6 +1040,8 @@ Ensino Soberano brilha!</textarea>
   <script src="js/cryptogram.js"></script>
   <script src="js/color-by-math.js"></script>
   <script src="js/booklet.js"></script>
+  <script src="js/qrcode-generator.js"></script>
+  <script src="js/interactive-tablet.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
