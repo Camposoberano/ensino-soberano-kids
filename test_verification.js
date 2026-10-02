@@ -44,13 +44,17 @@ const mockWindow = {
   KIDDO_VOCABULARY: {},
   setTimeout: setTimeout,
   clearTimeout: clearTimeout,
+  setInterval: setInterval,
+  clearInterval: clearInterval,
   localStorage: {
     _data: {},
     getItem(k) { return this._data[k] || null; },
     setItem(k, v) { this._data[k] = String(v); },
     removeItem(k) { delete this._data[k]; },
     clear() { this._data = {}; }
-  }
+  },
+  addEventListener: () => {},
+  removeEventListener: () => {}
 };
 mockWindow.window = mockWindow;
 mockWindow.document.defaultView = mockWindow;
@@ -90,6 +94,7 @@ const filesToLoad = [
   "diagnostic-assessment.js",
   "board-game.js",
   "batch-students.js",
+  "classroom-quiz.js",
   "app.js"
 ];
 
@@ -342,21 +347,37 @@ if (!diagHtml.includes("Mariana Silva") || !diagHtml.includes("2º Bimestre") ||
 console.log("[PASS] DiagnosticAssessmentGenerator: Ficha avaliativa com rubricas BNCC e gráfico radar SVG -> OK");
 
 // 12. Testar BoardGameGenerator
-console.log("\n--- Testando BoardGameGenerator ---");
+console.log("\n--- Testando BoardGameGenerator e Biblioteca de Temas ---");
 const bg = context.BoardGameGenerator;
-if (!bg || typeof bg.renderBoardSheet !== "function" || !Array.isArray(bg.TRACK_TILES)) {
+if (!bg || typeof bg.renderBoardSheet !== "function" || !Array.isArray(bg.TRACK_TILES) || !bg.THEMES) {
   console.error("ERRO: BoardGameGenerator não está definido corretamente!");
   process.exit(1);
 }
-const bgHtml = bg.renderBoardSheet({
-  title: "A Trilha da Sabedoria Ninja",
-  mascotKey: "ryu"
-});
-if (!bgHtml.includes("A Trilha da Sabedoria Ninja") || !bgHtml.includes("Dado Ninja para Montar") || !bgHtml.includes("Peões dos Jogadores")) {
-  console.error("ERRO: Conteúdo do Jogo de Tabuleiro incompleto!");
+// Teste Tema Ninja (Padrão)
+const bgNinja = bg.renderBoardSheet({ themeKey: "ninja", mascotKey: "ryu" });
+if (!bgNinja.includes("A Trilha da Sabedoria Ninja") || !bgNinja.includes("Dado Ninja para Montar") || !bgNinja.includes("Peões dos Jogadores")) {
+  console.error("ERRO: Tema Ninja do Tabuleiro incompleto!");
   process.exit(1);
 }
-console.log("[PASS] BoardGameGenerator: Tabuleiro 24 casas, molde de dado 3D e peões recortáveis -> OK");
+// Teste Tema Medieval
+const bgMedieval = bg.renderBoardSheet({ themeKey: "medieval" });
+if (!bgMedieval.includes("A Jornada pelo Reino Encantado") || !bgMedieval.includes("PORTÃO 🏰") || !bgMedieval.includes("Dado Real para Montar")) {
+  console.error("ERRO: Tema Medieval do Tabuleiro incompleto!");
+  process.exit(1);
+}
+// Teste Tema Espaço Cósmico
+const bgSpace = bg.renderBoardSheet({ themeKey: "space" });
+if (!bgSpace.includes("Missão Cósmica") || !bgSpace.includes("BASE 🚀") || !bgSpace.includes("Dado Cósmico para Montar")) {
+  console.error("ERRO: Tema Espacial do Tabuleiro incompleto!");
+  process.exit(1);
+}
+// Teste Tema Safári Selvagem
+const bgSafari = bg.renderBoardSheet({ themeKey: "safari" });
+if (!bgSafari.includes("Grande Safári") || !bgSafari.includes("JEEP 🚙") || !bgSafari.includes("Dado da Selva para Montar")) {
+  console.error("ERRO: Tema Safári do Tabuleiro incompleto!");
+  process.exit(1);
+}
+console.log("[PASS] BoardGameGenerator: Biblioteca com 4 temas visuais (Ninja, Medieval, Espaço, Safári), 24 casas e dados 3D -> OK");
 
 // 13. Testar BatchStudentsModule
 console.log("\n--- Testando BatchStudentsModule ---");
@@ -377,4 +398,37 @@ if (!batchHtml.includes("Ana Costa") || !batchHtml.includes("Carlos Lima") || !b
 }
 console.log("[PASS] BatchStudentsModule: Mala direta escolar, importação de lista e mesclagem em massa -> OK");
 
-console.log("\n=== TODOS OS 32 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 14. Testar ClassroomQuizModule
+console.log("\n--- Testando ClassroomQuizModule (Lousa & Projetor) ---");
+const quiz = context.ClassroomQuizModule;
+if (!quiz || !Array.isArray(quiz.QUESTION_BANK) || typeof quiz.startQuiz !== "function" || typeof quiz.answerQuestion !== "function") {
+  console.error("ERRO: ClassroomQuizModule não está definido corretamente!");
+  process.exit(1);
+}
+if (quiz.QUESTION_BANK.length < 15) {
+  console.error("ERRO: Banco de perguntas insuficiente:", quiz.QUESTION_BANK.length);
+  process.exit(1);
+}
+const mathQuestions = quiz.selectQuestions("math", 5);
+if (mathQuestions.length !== 5 || !mathQuestions.every(q => q.category === "math")) {
+  console.error("ERRO: Filtro de perguntas por categoria falhou:", mathQuestions);
+  process.exit(1);
+}
+quiz.startQuiz("all");
+if (!quiz.state.isRunning || quiz.state.questions.length !== 5) {
+  console.error("ERRO: Falha ao inicializar o Quiz Show:", quiz.state);
+  process.exit(1);
+}
+const correctAns = quiz.state.questions[0].answer;
+quiz.answerQuestion(correctAns);
+if (quiz.state.score !== 1 || quiz.state.streak !== 1) {
+  console.error("ERRO: Pontuação do Quiz não computada corretamente:", quiz.state);
+  process.exit(1);
+}
+if (typeof quiz.playTickSound !== "function" || typeof quiz.playCorrectSound !== "function" || typeof quiz.playWrongSound !== "function") {
+  console.error("ERRO: Efeitos sonoros do sintetizador Web Audio ausentes!");
+  process.exit(1);
+}
+console.log("[PASS] ClassroomQuizModule: Game show interativo com sintetizador de áudio, temporizador e banco multidisciplinar -> OK");
+
+console.log("\n=== TODOS OS 33 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

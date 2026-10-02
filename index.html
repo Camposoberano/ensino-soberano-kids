@@ -723,8 +723,17 @@ Ensino Soberano brilha!</textarea>
       <!-- PAINEL: JOGO DE TABULEIRO A4 -->
       <div id="panel-boardgame" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <i data-lucide="dices" class="w-4 h-4 text-purple-500"></i> Opções do Tabuleiro Ninja
+          <i data-lucide="dices" class="w-4 h-4 text-purple-500"></i> Opções do Tabuleiro
         </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tema Visual & Desafios</label>
+          <select id="board-theme" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-slate-50">
+            <option value="ninja" selected>🥷 Trilha da Sabedoria Ninja (Padrão)</option>
+            <option value="medieval">🏰 A Jornada pelo Reino Encantado (Medieval)</option>
+            <option value="space">🚀 Missão Cósmica: Rumo às Estrelas (Espaço)</option>
+            <option value="safari">🦁 Grande Safári: Expedição Selvagem (Selva)</option>
+          </select>
+        </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Título do Tabuleiro</label>
           <input type="text" id="board-title" value="A Trilha da Sabedoria Ninja" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
@@ -810,6 +819,9 @@ Ensino Soberano brilha!</textarea>
           </button>
           <button type="button" id="btn-tablet-celebrate" class="px-2.5 py-1.5 rounded-lg bg-emerald-500 text-white font-extrabold text-xs hover:bg-emerald-600 shadow-sm flex items-center gap-1" title="Concluir e Comemorar">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Concluir!
+          </button>
+          <button type="button" id="btn-tablet-quiz" class="px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white font-extrabold text-xs hover:bg-indigo-700 shadow-sm flex items-center gap-1" title="Iniciar Quiz Show na Lousa">
+            <i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> Quiz Show!
           </button>
           <button type="button" id="btn-tablet-close" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100" title="Fechar Lousa">
             <i data-lucide="x" class="w-4 h-4"></i>
@@ -1312,6 +1324,22 @@ Sophia Martins</textarea>
     </div>
   </div>
 
+  <!-- ── MODAL QUIZ INTERATIVO SHOW (SALA DE AULA & PROJETOR) ── -->
+  <div id="classroom-quiz-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 no-print">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border-4 border-indigo-200 flex flex-col relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Botão Fechar -->
+      <button type="button" onclick="window.ClassroomQuizModule.closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Conteúdo do Quiz Show Injetado Dinamicamente -->
+      <div id="classroom-quiz-content" class="w-full">
+        <!-- Renderizado por window.ClassroomQuizModule -->
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts dos Geradores -->
   <script src="js/anime-mascots.js"></script>
   <script src="js/categories.js"></script>
@@ -1341,6 +1369,7 @@ Sophia Martins</textarea>
   <script src="js/diagnostic-assessment.js"></script>
   <script src="js/board-game.js"></script>
   <script src="js/batch-students.js"></script>
+  <script src="js/classroom-quiz.js"></script>
   <script src="js/booklet.js"></script>
   <script src="js/qrcode-generator.js"></script>
   <script src="js/interactive-tablet.js"></script>

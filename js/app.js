@@ -201,6 +201,19 @@ window.KiddoApp = (function () {
       });
     }
 
+    const boardThemeEl = document.getElementById("board-theme");
+    if (boardThemeEl) {
+      boardThemeEl.addEventListener("change", () => {
+        if (window.BoardGameGenerator && window.BoardGameGenerator.THEMES) {
+          const theme = window.BoardGameGenerator.THEMES[boardThemeEl.value];
+          if (theme && boardTitleEl) {
+            boardTitleEl.value = theme.defaultTitle;
+          }
+        }
+        if (currentTab === "boardgame") renderCurrentActivity();
+      });
+    }
+
     ["sp-operation", "sp-difficulty", "sp-count"].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
@@ -326,6 +339,21 @@ window.KiddoApp = (function () {
     if (btnTabletCelebrate) {
       btnTabletCelebrate.addEventListener("click", () => {
         if (window.InteractiveTablet) window.InteractiveTablet.celebrateActivity();
+      });
+    }
+
+    const btnTabletQuiz = document.getElementById("btn-tablet-quiz");
+    if (btnTabletQuiz) {
+      btnTabletQuiz.addEventListener("click", () => {
+        if (window.ClassroomQuizModule) {
+          let cat = "all";
+          if (["addition", "subtraction", "multiplication", "division", "multichart", "storyproblems"].includes(currentTab)) {
+            cat = "math";
+          } else if (["wordsearch", "scramble", "tracing", "matching"].includes(currentTab)) {
+            cat = "words";
+          }
+          window.ClassroomQuizModule.openModal(cat);
+        }
       });
     }
 
@@ -706,11 +734,13 @@ window.KiddoApp = (function () {
       if (standardArticle) standardArticle.classList.add("hidden");
       if (customWrapper) {
         customWrapper.classList.remove("hidden");
-        const title = document.getElementById("board-title")?.value || "A Trilha da Sabedoria Ninja";
+        const themeKey = document.getElementById("board-theme")?.value || "ninja";
+        const title = document.getElementById("board-title")?.value;
 
         if (window.BoardGameGenerator) {
           customWrapper.innerHTML = window.BoardGameGenerator.renderBoardSheet({
             title,
+            themeKey,
             mascotKey: currentMascotId
           });
         }
