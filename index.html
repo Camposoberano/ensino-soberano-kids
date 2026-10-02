@@ -197,6 +197,44 @@
         </div>
       </div>
 
+      <!-- Bloco 3: Alinhamento Pedagógico & BNCC -->
+      <div class="bg-white p-5 rounded-2xl border border-indigo-200 shadow-sm flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-1.5 font-heading">
+            <i data-lucide="book-check" class="w-4 h-4 text-indigo-600"></i> Alinhamento Pedagógico BNCC
+          </h3>
+          <span class="text-[9px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+            Brasil 🇧🇷
+          </span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Faixa Etária / Série Escolar</label>
+          <select id="grade-level-select" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+            <option value="all">🌟 Todos os Níveis (Livre)</option>
+            <option value="infantil">🧸 Educação Infantil (4 - 5 anos)</option>
+            <option value="1ano" selected>🎒 1º Ano Fundamental (6 - 7 anos)</option>
+            <option value="2ano">🚀 2º Ano Fundamental (7 - 8 anos)</option>
+            <option value="3ano_5ano">👑 3º ao 5º Ano Fundamental (8 - 11 anos)</option>
+          </select>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <label class="text-xs font-bold text-slate-700 flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="show-bncc-toggle" checked class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            Imprimir Código BNCC na Folha
+          </label>
+          <button id="btn-reset-bncc" type="button" class="text-[10px] text-slate-400 hover:text-indigo-600 font-bold underline">
+            Restaurar Padrão
+          </button>
+        </div>
+
+        <div id="bncc-skill-container">
+          <label class="block text-[11px] font-bold text-slate-500 mb-1">Habilidade / Competência BNCC:</label>
+          <textarea id="bncc-skill-text" rows="2" class="w-full text-[11px] text-slate-700 font-medium px-2.5 py-1.5 border border-indigo-100 rounded-lg bg-indigo-50/40 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+      </div>
+
       <!-- PAINEL: CAÇA-PALAVRAS -->
       <div id="panel-wordsearch" class="control-panel bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
@@ -661,6 +699,11 @@ Ensino Soberano brilha!</textarea>
               <div class="mt-auto pt-3 border-t-2 border-dashed border-slate-200 flex items-center justify-between">
                 <div class="flex flex-col text-[10px] text-slate-400 font-medium">
                   <span class="font-bold text-slate-600">Ensino Soberano Kids • Material de Apoio Pedagógico</span>
+                  <div id="preview-bncc-container" class="my-0.5 max-w-md">
+                    <span id="preview-bncc-tag" class="text-[8.5px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded inline-block">
+                      🏛️ BNCC: EF01LP02 • Escrever palavras com correspondência fonema-grafema regular.
+                    </span>
+                  </div>
                   <span>Avaliação: ⭐ ⭐ ⭐ ⭐ ⭐ &nbsp;•&nbsp; Pontuação: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 10 ]</span>
                 </div>
 
@@ -770,6 +813,7 @@ Ensino Soberano brilha!</textarea>
   <!-- Scripts dos Geradores -->
   <script src="js/anime-mascots.js"></script>
   <script src="js/categories.js"></script>
+  <script src="js/bncc.js"></script>
   <script src="js/wordsearch.js"></script>
   <script src="js/math.js"></script>
   <script src="js/maze.js"></script>

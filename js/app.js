@@ -7,6 +7,9 @@ window.KiddoApp = (function () {
   let currentData = null;
   let zoomLevel = "auto";
   let currentMascotId = "hikari";
+  let currentGradeLevel = "1ano";
+  let showBnccTag = true;
+  let customBnccText = null;
 
   function init() {
     setupTabSwitching();
@@ -32,6 +35,7 @@ window.KiddoApp = (function () {
 
         currentTab = btn.getAttribute("data-tab");
         showAnswers = false;
+        customBnccText = null;
         updateAnswerButtonText();
         switchControlPanels();
         setDefaultHeaderForTab(currentTab);
@@ -174,6 +178,39 @@ window.KiddoApp = (function () {
         });
       }
     });
+
+    const levelSelect = document.getElementById("grade-level-select");
+    if (levelSelect) {
+      levelSelect.addEventListener("change", () => {
+        currentGradeLevel = levelSelect.value;
+        customBnccText = null;
+        syncBncc();
+      });
+    }
+
+    const showBnccToggle = document.getElementById("show-bncc-toggle");
+    if (showBnccToggle) {
+      showBnccToggle.addEventListener("change", () => {
+        showBnccTag = showBnccToggle.checked;
+        syncBncc();
+      });
+    }
+
+    const bnccTextArea = document.getElementById("bncc-skill-text");
+    if (bnccTextArea) {
+      bnccTextArea.addEventListener("input", (e) => {
+        customBnccText = e.target.value;
+        syncBncc();
+      });
+    }
+
+    const btnResetBncc = document.getElementById("btn-reset-bncc");
+    if (btnResetBncc) {
+      btnResetBncc.addEventListener("click", () => {
+        customBnccText = null;
+        syncBncc();
+      });
+    }
   }
 
   function updateAnswerButtonText() {
@@ -197,6 +234,7 @@ window.KiddoApp = (function () {
     if (elTitle) elTitle.textContent = titleVal;
     if (elInstr) elInstr.textContent = instrVal;
     renderMascotOnSheet();
+    syncBncc();
   }
 
   function loadCategoryButtons() {
@@ -221,6 +259,61 @@ window.KiddoApp = (function () {
       container.appendChild(btn);
     });
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  function syncBncc() {
+    const bnccContainer = document.getElementById("preview-bncc-container");
+    const bnccTag = document.getElementById("preview-bncc-tag");
+    const bnccTextArea = document.getElementById("bncc-skill-text");
+    const showToggle = document.getElementById("show-bncc-toggle");
+    const levelSelect = document.getElementById("grade-level-select");
+
+    if (levelSelect) currentGradeLevel = levelSelect.value;
+    if (showToggle) showBnccTag = showToggle.checked;
+
+    if (!window.BNCCModule) return;
+
+    const defaultSkill = window.BNCCModule.getSkill(currentTab, currentGradeLevel);
+    const fullText = customBnccText !== null ? customBnccText : `🏛️ BNCC: ${defaultSkill.code} • ${defaultSkill.desc}`;
+
+    if (bnccTextArea && document.activeElement !== bnccTextArea) {
+      bnccTextArea.value = customBnccText !== null ? customBnccText : `${defaultSkill.code} • ${defaultSkill.desc}`;
+    }
+
+    if (bnccTag) {
+      bnccTag.textContent = fullText;
+    }
+
+    if (bnccContainer) {
+      if (showBnccTag && currentTab !== "certificate") {
+        bnccContainer.classList.remove("hidden");
+      } else {
+        bnccContainer.classList.add("hidden");
+      }
+    }
+
+    highlightRecommendedTabs();
+  }
+
+  function highlightRecommendedTabs() {
+    if (!window.BNCCModule) return;
+    const recommended = window.BNCCModule.RECOMMENDED_TABS[currentGradeLevel] || [];
+
+    document.querySelectorAll(".nav-tab-btn").forEach(btn => {
+      const tab = btn.getAttribute("data-tab");
+      const existingBadge = btn.querySelector(".recommended-grade-badge");
+      if (existingBadge) existingBadge.remove();
+
+      if (currentGradeLevel !== "all" && recommended.includes(tab)) {
+        btn.classList.add("ring-2", "ring-emerald-400", "ring-offset-1");
+        const dot = document.createElement("span");
+        dot.className = "recommended-grade-badge w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block ml-1 animate-pulse";
+        dot.title = "Recomendado para esta série / faixa etária";
+        btn.appendChild(dot);
+      } else {
+        btn.classList.remove("ring-2", "ring-emerald-400", "ring-offset-1");
+      }
+    });
   }
 
   function renderCurrentActivity() {

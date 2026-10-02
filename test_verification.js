@@ -47,6 +47,7 @@ const context = vm.createContext(mockWindow);
 const filesToLoad = [
   "anime-mascots.js",
   "categories.js",
+  "bncc.js",
   "wordsearch.js",
   "math.js",
   "maze.js",
@@ -140,4 +141,33 @@ if (!passportHtml.includes("Explorador Soberano") || !passportHtml.includes("PAS
 }
 console.log("[PASS] CertificateGenerator.renderPassport -> OK");
 
-console.log("\n=== TODOS OS 22 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 3. Testar BNCCModule
+console.log("\n--- Testando BNCCModule ---");
+const bncc = context.BNCCModule;
+if (!bncc || typeof bncc.getSkill !== "function") {
+  console.error("ERRO: BNCCModule não está definido!");
+  process.exit(1);
+}
+
+const mathSkill = bncc.getSkill("addition", "1ano");
+if (!mathSkill || !mathSkill.code || mathSkill.code !== "EF01MA06") {
+  console.error("ERRO: Falha ao obter competência BNCC de adição 1º ano:", mathSkill);
+  process.exit(1);
+}
+console.log(`[PASS] BNCCModule: Adição 1º Ano -> ${mathSkill.code}: ${mathSkill.desc}`);
+
+const storySkill = bncc.getSkill("storyproblems", "2ano");
+if (!storySkill || !storySkill.code || storySkill.code !== "EF02MA06") {
+  console.error("ERRO: Falha ao obter competência BNCC de probleminhas 2º ano:", storySkill);
+  process.exit(1);
+}
+console.log(`[PASS] BNCCModule: Probleminhas 2º Ano -> ${storySkill.code}: ${storySkill.desc}`);
+
+const kinderSkill = bncc.getSkill("counting", "infantil");
+if (!kinderSkill || !kinderSkill.code || kinderSkill.code !== "EI03ET07") {
+  console.error("ERRO: Falha ao obter competência BNCC de contagem infantil:", kinderSkill);
+  process.exit(1);
+}
+console.log(`[PASS] BNCCModule: Contagem Ed. Infantil -> ${kinderSkill.code}: ${kinderSkill.desc}`);
+
+console.log("\n=== TODOS OS 23 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

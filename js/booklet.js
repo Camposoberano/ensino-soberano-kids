@@ -79,7 +79,7 @@ window.BookletBuilder = (function () {
     container.appendChild(coverPage);
 
     // ── 2. PÁGINA: CAÇA-PALAVRAS ──
-    const page2 = createBookletPage("Página 2", "Caça-Palavras Ninja", "Encontre as palavras temáticas na grade:");
+    const page2 = createBookletPage("Página 2", "Caça-Palavras Ninja", "Encontre as palavras temáticas na grade:", "EF01LP02");
     const wsData = window.WordSearchGenerator.generate({
       rows: 12,
       cols: 12,
@@ -106,7 +106,7 @@ window.BookletBuilder = (function () {
     container.appendChild(page2.page);
 
     // ── 3. PÁGINA: DESAFIOS MATEMÁTICOS ──
-    const page3 = createBookletPage("Página 3", "Academia dos Números", "Resolva as operações com atenção:");
+    const page3 = createBookletPage("Página 3", "Academia dos Números", "Resolva as operações com atenção:", "EF01MA06");
     const mathGrid = document.createElement("div");
     mathGrid.className = "grid grid-cols-4 gap-3 my-4";
     const mathProbs = window.MathWorksheetGenerator.generateProblems("addition", 16, { digits: 2, allowRegrouping: true });
@@ -127,7 +127,7 @@ window.BookletBuilder = (function () {
     container.appendChild(page3.page);
 
     // ── 4. PÁGINA: LABIRINTO DO HERÓI ──
-    const page4 = createBookletPage("Página 4", "Labirinto da Sabedoria", "Ajude o pequeno herói a encontrar o caminho até a coroa:");
+    const page4 = createBookletPage("Página 4", "Labirinto da Sabedoria", "Ajude o pequeno herói a encontrar o caminho até a coroa:", "EF01MA12");
     const mazeData = window.MazeGenerator.generate(14, 14);
     const mazeWrapper = document.createElement("div");
     mazeWrapper.className = "my-4 flex flex-col items-center";
@@ -136,7 +136,7 @@ window.BookletBuilder = (function () {
     container.appendChild(page4.page);
 
     // ── 5. PÁGINA: CONTAGEM VISUAL ──
-    const page5 = createBookletPage("Página 5", "Missão de Contagem", "Conte quantos itens há em cada quadrinho e anote no círculo:");
+    const page5 = createBookletPage("Página 5", "Missão de Contagem", "Conte quantos itens há em cada quadrinho e anote no círculo:", "EF01MA01");
     const countData = window.CountingGenerator.generate(6, 12);
     const countGrid = document.createElement("div");
     countGrid.className = "grid grid-cols-3 gap-4 my-4";
@@ -157,7 +157,7 @@ window.BookletBuilder = (function () {
     container.appendChild(page5.page);
 
     // ── 6. PÁGINA: PROBLEMINHAS CONTEXTUALIZADOS ──
-    const page6 = createBookletPage("Página 6", "Probleminhas do Cotidiano", "Leia cada historinha com atenção, raciocine e responda:");
+    const page6 = createBookletPage("Página 6", "Probleminhas do Cotidiano", "Leia cada historinha com atenção, raciocine e responda:", "EF01MA08");
     const storyData = window.StoryProblemsGenerator.generate({ count: 2, difficulty: "medio" });
     const storyList = document.createElement("div");
     storyList.className = "flex flex-col gap-3 my-2";
@@ -227,15 +227,19 @@ window.BookletBuilder = (function () {
     closeBookletModal();
   }
 
-  function createBookletPage(pageTag, title, instruction) {
+  function createBookletPage(pageTag, title, instruction, bnccCode) {
     const page = document.createElement("div");
     page.className = "booklet-page worksheet-paper mb-8";
+    const bnccHtml = bnccCode ? `<span class="text-[8px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">🏛️ BNCC: ${bnccCode}</span>` : "";
     page.innerHTML = `
       <div class="worksheet-frame">
         <div class="student-header flex flex-col gap-1">
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-indigo-900 uppercase font-heading">👑 Ensino Soberano</span>
-            <span class="text-[10px] font-bold text-pink-600">${pageTag}</span>
+            <div class="flex items-center gap-2">
+              ${bnccHtml}
+              <span class="text-[10px] font-bold text-pink-600">${pageTag}</span>
+            </div>
           </div>
         </div>
         <div class="text-center my-2">
