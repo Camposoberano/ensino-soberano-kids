@@ -22,7 +22,7 @@ Todo o código foi auditado, testado de ponta a ponta e encapsulado em contêine
 | 02 | Categorias Pedagógicas | `js/categories.js` | ✅ Aprovado | Taxonomia curricular dividida por faixa etária e matéria |
 | 03 | Matriz BNCC | `js/bncc.js` | ✅ Aprovado | Códigos e habilidades oficiais (EI03ET07, EF01MA06, etc.) |
 | 04 | Caça-Palavras | `js/wordsearch.js` | ✅ Aprovado | Gerador de grades com gabarito automático e vocabulário |
-| 05 | Matemática Divertida | `js/math.js` | ✅ Aprovado | Adição, subtração, multiplicação e divisão com apoio visual |
+| 05 | Matemática Divertida | `js/math.js` | ✅ Aprovado | Adição (2 e 3 linhas / parcelas), subtração, multiplicação e divisão |
 | 06 | Labirintos Adaptativos | `js/maze.js` | ✅ Aprovado | Algoritmo DFS com níveis Fácil, Médio e Difícil |
 | 07 | Contagem Ilustrada | `js/counting.js` | ✅ Aprovado | Agrupamento de itens e contagem para Educação Infantil |
 | 08 | Ligue os Pontos / Sombras | `js/matching.js` | ✅ Aprovado | Associação de pares, silhuetas e vocabulário |
@@ -39,7 +39,7 @@ Todo o código foi auditado, testado de ponta a ponta e encapsulado em contêine
 | 19 | Quebra-Cabeça Deslizante | `js/sliding-puzzle.js` | ✅ Aprovado | Puzzle de 8 e 15 peças para desenvolvimento lógico |
 | 20 | Certificados & Passaportes | `js/certificate.js` | ✅ Aprovado | Diplomas de conquista e passaporte de missões com carimbos |
 | 21 | Probleminhas Ilustrados | `js/story-problems.js` | ✅ Aprovado | Situações-problema contextualizadas com as 4 operações |
-| 22 | Sudoku Kids | `js/sudoku.js` | ✅ Aprovado | Sudoku 4x4 (emojis) e 6x6 (números) com solução |
+| 22 | Sudoku Kids Clássico | `js/sudoku.js` | ✅ Aprovado | 4x4 (emojis), 6x6 e 9x9 completo (1 a 9 com blocos 3x3) |
 | 23 | Criptograma Secreto | `js/cryptogram.js` | ✅ Aprovado | Cifra de substituição simbólica com tabela de decodificação |
 | 24 | Pintura Numérica | `js/color-by-math.js` | ✅ Aprovado | Colorir regiões por meio do resultado de contas |
 | 25 | White-Label Institucional | `js/whitelabel.js` | ✅ Aprovado | Personalização com logo da escola, professor, cidade e perfil |

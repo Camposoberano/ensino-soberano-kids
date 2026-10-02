@@ -315,11 +315,21 @@ TARTARUGA</textarea>
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Dígitos</label>
             <select id="math-digits" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="1" selected>1 Dígito (1 a 9)</option>
-              <option value="2">2 Dígitos (10 a 99)</option>
-              <option value="3">3 Dígitos (Centenas)</option>
+              <option value="1">1 Dígito (1 a 9)</option>
+              <option value="2" selected>2 Dígitos (10 a 99 - Dezenas)</option>
+              <option value="3">3 Dígitos (100 a 999 - Centenas)</option>
             </select>
           </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Linhas da Conta (Parcelas)</label>
+            <select id="math-terms" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="2" selected>2 Linhas (2 Parcelas: A + B)</option>
+              <option value="3">3 Linhas (3 Parcelas: A + B + C)</option>
+              <option value="misto">Misto (2 e 3 Linhas)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Qtd. Questões</label>
             <select id="math-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -329,8 +339,6 @@ TARTARUGA</textarea>
               <option value="24">24 Questões</option>
             </select>
           </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Formato</label>
             <select id="math-layout" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -338,12 +346,12 @@ TARTARUGA</textarea>
               <option value="horizontal">Horizontal (Em Linha)</option>
             </select>
           </div>
-          <div class="flex items-center pt-5">
-            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
-              <input id="math-regrouping" type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-500">
-              Com Reagrupamento ("Vai um")
-            </label>
-          </div>
+        </div>
+        <div class="flex items-center pt-1">
+          <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+            <input id="math-regrouping" type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-500">
+            Com Reagrupamento ("Vai um")
+          </label>
         </div>
       </div>
 
@@ -644,22 +652,24 @@ Ensino Soberano brilha!</textarea>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Tamanho da Grade</label>
           <select id="sudoku-size" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="4" selected>4 x 4 (Blocos 2x2 - Ideal para Iniciantes)</option>
+            <option value="4">4 x 4 (Blocos 2x2 - Ideal para Iniciantes)</option>
             <option value="6">6 x 6 (Blocos 2x3 - Desafio Médio)</option>
+            <option value="9" selected>9 x 9 (Blocos 3x3 - Completo de 1 a 9!)</option>
           </select>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Elemento (na Grade 4x4)</label>
           <select id="sudoku-mode" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="emoji" selected>Emojis Chibi (🌸, ⭐, 🍎, ⚡)</option>
-            <option value="numbers">Números (1, 2, 3, 4)</option>
+            <option value="numbers">Números (1 a 4)</option>
           </select>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Dificuldade (Lacunas)</label>
           <select id="sudoku-difficulty" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="facil" selected>Fácil (Mais pistas preenchidas)</option>
-            <option value="medio">Médio (Mais espaços para pensar)</option>
+            <option value="medio">Médio (Desafio equilibrado)</option>
+            <option value="dificil">Difícil (Desafio Mestre Ninja)</option>
           </select>
         </div>
       </div>

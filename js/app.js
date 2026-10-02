@@ -277,6 +277,17 @@ window.KiddoApp = (function () {
       });
     });
 
+    ["math-digits", "math-terms", "math-count", "math-layout", "math-regrouping", "math-table"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("change", () => {
+          if (["addition", "subtraction", "multiplication", "division"].includes(currentTab)) {
+            renderCurrentActivity();
+          }
+        });
+      }
+    });
+
     // ── Controles do Eixo 3: QR Code Inteligente & Lousa Digital ──
     const showQrToggle = document.getElementById("show-qrcode-toggle");
     if (showQrToggle) {
@@ -1114,8 +1125,8 @@ window.KiddoApp = (function () {
 
   /* ── 20. SUDOKU KIDS ── */
   function renderSudoku(container) {
-    const size = parseInt(document.getElementById("sudoku-size")?.value) || 4;
-    const mode = document.getElementById("sudoku-mode")?.value || "emoji";
+    const size = parseInt(document.getElementById("sudoku-size")?.value) || 9;
+    const mode = document.getElementById("sudoku-mode")?.value || "numbers";
     const diff = document.getElementById("sudoku-difficulty")?.value || "facil";
 
     const data = window.SudokuGenerator.generate({ size: size, mode: mode, difficulty: diff });
@@ -1129,11 +1140,17 @@ window.KiddoApp = (function () {
       legend.className = "flex items-center gap-3 mb-4 p-2.5 bg-indigo-50/70 border border-indigo-200 rounded-xl text-xs font-bold text-indigo-900";
       legend.innerHTML = `<span>Símbolos desta missão:</span> <div class="flex gap-2 text-lg">${data.symbols.map(s => `<span class="bg-white p-1 rounded-md shadow-xs border border-indigo-100">${s}</span>`).join("")}</div>`;
       wrapper.appendChild(legend);
+    } else if (size === 9) {
+      const legend = document.createElement("div");
+      legend.className = "flex items-center gap-2 sm:gap-3 mb-3 p-2 sm:p-2.5 bg-indigo-50/80 border border-indigo-200 rounded-xl text-xs font-bold text-indigo-900";
+      legend.innerHTML = `<span>Números desta missão (1 a 9):</span> <div class="flex gap-1 sm:gap-1.5 text-xs sm:text-sm font-extrabold text-indigo-700">${data.symbols.map(s => `<span class="bg-white px-2 py-0.5 rounded-md shadow-xs border border-indigo-100">${s}</span>`).join("")}</div>`;
+      wrapper.appendChild(legend);
     }
 
     const grid = document.createElement("div");
     grid.className = "sudoku-grid";
-    const cellSize = size === 4 ? 60 : 44;
+    const cellSize = size === 4 ? 60 : (size === 6 ? 44 : 36);
+    const fontSize = size === 4 ? 26 : (size === 6 ? 20 : 16);
     grid.style.gridTemplateColumns = `repeat(${size}, ${cellSize}px)`;
 
     for (let r = 0; r < size; r++) {
@@ -1144,6 +1161,7 @@ window.KiddoApp = (function () {
         cell.className = "sudoku-cell";
         cell.style.width = `${cellSize}px`;
         cell.style.height = `${cellSize}px`;
+        cell.style.fontSize = `${fontSize}px`;
 
         if ((c + 1) % data.blockSizeC === 0 && c !== size - 1) cell.classList.add("sudoku-border-r");
         if ((r + 1) % data.blockSizeR === 0 && r !== size - 1) cell.classList.add("sudoku-border-b");
@@ -1330,13 +1348,15 @@ window.KiddoApp = (function () {
 
   /* ── 2. MATEMÁTICA ── */
   function renderMath(container, opType) {
-    const digits = parseInt(document.getElementById("math-digits")?.value || 1);
+    const digits = parseInt(document.getElementById("math-digits")?.value || 2);
     const count = parseInt(document.getElementById("math-count")?.value || 20);
     const layout = document.getElementById("math-layout")?.value || "vertical";
+    const terms = document.getElementById("math-terms")?.value || 2;
     const allowRegrouping = document.getElementById("math-regrouping")?.checked !== false;
 
     currentData = window.MathWorksheetGenerator.generateProblems(opType, count, {
       digits: digits,
+      terms: terms,
       allowRegrouping: allowRegrouping,
       allowBorrowing: allowRegrouping,
       table: document.getElementById("math-table")?.value || "all",
@@ -1350,24 +1370,45 @@ window.KiddoApp = (function () {
       if (layout === "vertical") {
         const card = document.createElement("div");
         card.className = "math-card-vertical";
-        card.innerHTML = `
-          <div class="text-[10px] text-slate-400 font-bold w-full mb-0.5">#${p.id}</div>
-          <div>${p.num1}</div>
-          <div class="math-op-line">
-            <span class="text-base text-pink-500 mr-2 font-bold">${p.operator}</span>
-            <span>${p.num2}</span>
-          </div>
-          <div class="math-answer-box math-answer-val">${p.answer}</div>
-        `;
+        if (p.termsCount === 3) {
+          card.innerHTML = `
+            <div class="text-[10px] text-slate-400 font-bold w-full mb-0.5">#${p.id}</div>
+            <div>${p.num1}</div>
+            <div>${p.num2}</div>
+            <div class="math-op-line">
+              <span class="text-base text-pink-500 mr-2 font-bold">${p.operator}</span>
+              <span>${p.num3}</span>
+            </div>
+            <div class="math-answer-box math-answer-val">${p.answer}</div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="text-[10px] text-slate-400 font-bold w-full mb-0.5">#${p.id}</div>
+            <div>${p.num1}</div>
+            <div class="math-op-line">
+              <span class="text-base text-pink-500 mr-2 font-bold">${p.operator}</span>
+              <span>${p.num2}</span>
+            </div>
+            <div class="math-answer-box math-answer-val">${p.answer}</div>
+          `;
+        }
         gridEl.appendChild(card);
       } else {
         const card = document.createElement("div");
         card.className = "math-card-horizontal";
-        card.innerHTML = `
-          <span class="text-[10px] text-slate-400 mr-2 font-bold">#${p.id}</span>
-          <span>${p.num1} ${p.operator} ${p.num2} = </span>
-          <div class="math-box-answer-h math-answer-val">${p.answer}</div>
-        `;
+        if (p.termsCount === 3) {
+          card.innerHTML = `
+            <span class="text-[10px] text-slate-400 mr-2 font-bold">#${p.id}</span>
+            <span>${p.num1} + ${p.num2} + ${p.num3} = </span>
+            <div class="math-box-answer-h math-answer-val">${p.answer}</div>
+          `;
+        } else {
+          card.innerHTML = `
+            <span class="text-[10px] text-slate-400 mr-2 font-bold">#${p.id}</span>
+            <span>${p.num1} ${p.operator} ${p.num2} = </span>
+            <div class="math-box-answer-h math-answer-val">${p.answer}</div>
+          `;
+        }
         gridEl.appendChild(card);
       }
     });

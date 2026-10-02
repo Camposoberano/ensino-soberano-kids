@@ -219,6 +219,55 @@ if (!s6 || s6.size !== 6 || s6.puzzle.length !== 6 || s6.solution.length !== 6) 
 }
 console.log("[PASS] SudokuGenerator: 6x6 Numérico -> OK");
 
+const s9 = sudoku.generate({ size: 9, difficulty: "facil" });
+if (!s9 || s9.size !== 9 || s9.puzzle.length !== 9 || s9.solution.length !== 9 || s9.blockSizeR !== 3 || s9.blockSizeC !== 3) {
+  console.error("ERRO: Falha ao gerar Sudoku 9x9:", s9);
+  process.exit(1);
+}
+// Validar que a solução 9x9 é válida em todas as linhas e colunas
+for (let r = 0; r < 9; r++) {
+  if (new Set(s9.solution[r]).size !== 9) {
+    console.error("ERRO: Linha inválida na solução do Sudoku 9x9:", s9.solution[r]);
+    process.exit(1);
+  }
+}
+for (let c = 0; c < 9; c++) {
+  const colVals = s9.solution.map(row => row[c]);
+  if (new Set(colVals).size !== 9) {
+    console.error("ERRO: Coluna inválida na solução do Sudoku 9x9:", colVals);
+    process.exit(1);
+  }
+}
+console.log("[PASS] SudokuGenerator: 9x9 Clássico até o 9 (Blocos 3x3 válidos) -> OK");
+
+// Testar MathWorksheetGenerator com 2 e 3 linhas (parcelas)
+console.log("\n--- Testando MathWorksheetGenerator (2 e 3 Linhas de Contas) ---");
+const mathGen = context.MathWorksheetGenerator;
+if (!mathGen || typeof mathGen.generateProblems !== "function") {
+  console.error("ERRO: MathWorksheetGenerator não está definido!");
+  process.exit(1);
+}
+const m2 = mathGen.generateProblems("addition", 4, { digits: 2, terms: 2 });
+if (!m2 || m2.length !== 4 || m2[0].termsCount !== 2 || m2[0].answer !== m2[0].num1 + m2[0].num2) {
+  console.error("ERRO: Falha ao gerar contas com 2 linhas:", m2);
+  process.exit(1);
+}
+console.log("[PASS] MathWorksheetGenerator: Contas com 2 Linhas (2 Parcelas: 10 a 99) -> OK");
+
+const m3 = mathGen.generateProblems("addition", 4, { digits: 2, terms: 3 });
+if (!m3 || m3.length !== 4 || m3[0].termsCount !== 3 || m3[0].answer !== m3[0].num1 + m3[0].num2 + m3[0].num3) {
+  console.error("ERRO: Falha ao gerar contas com 3 linhas:", m3);
+  process.exit(1);
+}
+console.log("[PASS] MathWorksheetGenerator: Contas com 3 Linhas (3 Parcelas: A + B + C) -> OK");
+
+const mMisto = mathGen.generateProblems("addition", 4, { digits: 3, terms: "misto" });
+if (!mMisto || mMisto.length !== 4 || mMisto[0].termsCount !== 2 || mMisto[1].termsCount !== 3) {
+  console.error("ERRO: Falha ao gerar contas mistas de 2 e 3 linhas:", mMisto);
+  process.exit(1);
+}
+console.log("[PASS] MathWorksheetGenerator: Contas Mistas (Alternando 2 e 3 Linhas em Centenas) -> OK");
+
 // 5. Testar CryptogramGenerator
 console.log("\n--- Testando CryptogramGenerator ---");
 const cryptoGen = context.CryptogramGenerator;

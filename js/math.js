@@ -1,7 +1,8 @@
 /**
  * Gerador de Atividades de Matemática Infantil (Math Worksheet Generator)
  * Suporta Adição, Subtração, Multiplicação e Divisão
- * Com controle de reagrupamento, empréstimo, tabuadas e layout vertical/horizontal
+ * Suporta Contas Armadas com 2 Linhas (2 Parcelas) e 3 Linhas (3 Parcelas: A + B + C)
+ * Controle de reagrupamento ("vai um"), empréstimo, dígitos (1, 2 e 3) e tabuadas
  */
 window.MathWorksheetGenerator = (function () {
 
@@ -9,13 +10,77 @@ window.MathWorksheetGenerator = (function () {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  function generateAdditionProblem(digits, allowRegrouping) {
+  /**
+   * Gera uma operação de adição com suporte a 2 ou 3 parcelas (linhas)
+   * @param {number} digits - 1 (1 a 9), 2 (10 a 99), 3 (100 a 999)
+   * @param {boolean} allowRegrouping - Permitir ou não "vai um"
+   * @param {number} terms - 2 parcelas ou 3 parcelas (linhas da conta)
+   */
+  function generateAdditionProblem(digits, allowRegrouping, terms) {
+    const numTerms = terms === 3 ? 3 : 2;
+
+    if (numTerms === 3) {
+      let a, b, c;
+      if (digits === 1) {
+        if (!allowRegrouping) {
+          // Sem vai-um: soma dos 3 <= 9
+          a = randomInt(1, 3);
+          b = randomInt(1, 3);
+          c = randomInt(0, 9 - (a + b));
+        } else {
+          a = randomInt(2, 9);
+          b = randomInt(2, 9);
+          c = randomInt(2, 9);
+        }
+      } else if (digits === 2) {
+        if (!allowRegrouping) {
+          // Sem vai-um nas unidades nem nas dezenas
+          const u1 = randomInt(1, 3);
+          const u2 = randomInt(1, 3);
+          const u3 = randomInt(0, 9 - (u1 + u2));
+          const d1 = randomInt(1, 3);
+          const d2 = randomInt(1, 3);
+          const d3 = randomInt(1, 9 - (d1 + d2));
+          a = d1 * 10 + u1;
+          b = d2 * 10 + u2;
+          c = d3 * 10 + u3;
+        } else {
+          // Com vai-um
+          a = randomInt(10, 59);
+          b = randomInt(10, 59);
+          c = randomInt(10, 49);
+        }
+      } else { // 3 dígitos (Centenas)
+        if (!allowRegrouping) {
+          const u1 = randomInt(1, 3), u2 = randomInt(1, 3), u3 = randomInt(0, 9 - (u1 + u2));
+          const d1 = randomInt(1, 3), d2 = randomInt(1, 3), d3 = randomInt(0, 9 - (d1 + d2));
+          const c1 = randomInt(1, 3), c2 = randomInt(1, 3), c3 = randomInt(1, 9 - (c1 + c2));
+          a = c1 * 100 + d1 * 10 + u1;
+          b = c2 * 100 + d2 * 10 + u2;
+          c = c3 * 100 + d3 * 10 + u3;
+        } else {
+          a = randomInt(100, 399);
+          b = randomInt(100, 399);
+          c = randomInt(100, 299);
+        }
+      }
+      return {
+        num1: a,
+        num2: b,
+        num3: c,
+        termsCount: 3,
+        terms: [a, b, c],
+        operator: "+",
+        answer: a + b + c
+      };
+    }
+
+    // Padrão: 2 parcelas (2 linhas de conta armada)
     let a, b;
     if (digits === 1) {
       a = randomInt(1, 9);
       b = randomInt(1, 9);
       if (!allowRegrouping && (a + b) >= 10) {
-        // Sem vai-um: soma menor que 10
         b = randomInt(1, 9 - a);
       }
     } else if (digits === 2) {
@@ -27,7 +92,6 @@ window.MathWorksheetGenerator = (function () {
         a = d1 * 10 + u1;
         b = d2 * 10 + u2;
       } else {
-        // Garantir que haja reagrupamento nas unidades
         const u1 = randomInt(4, 9);
         const u2 = randomInt(10 - u1, 9);
         const d1 = randomInt(1, 7);
@@ -42,6 +106,8 @@ window.MathWorksheetGenerator = (function () {
     return {
       num1: a,
       num2: b,
+      termsCount: 2,
+      terms: [a, b],
       operator: "+",
       answer: a + b
     };
@@ -77,6 +143,8 @@ window.MathWorksheetGenerator = (function () {
     return {
       num1: a,
       num2: b,
+      termsCount: 2,
+      terms: [a, b],
       operator: "−",
       answer: a - b
     };
@@ -100,6 +168,8 @@ window.MathWorksheetGenerator = (function () {
     return {
       num1: a,
       num2: b,
+      termsCount: 2,
+      terms: [a, b],
       operator: "×",
       answer: a * b
     };
@@ -118,23 +188,32 @@ window.MathWorksheetGenerator = (function () {
     return {
       num1: dividend,
       num2: divisor,
+      termsCount: 2,
+      terms: [dividend, divisor],
       operator: "÷",
       answer: quotient
     };
   }
 
   function generateProblems(type, count, options) {
+    const opts = options || {};
     const problems = [];
     for (let i = 0; i < count; i++) {
       let p;
       if (type === "addition") {
-        p = generateAdditionProblem(options.digits || 1, options.allowRegrouping !== false);
+        let itemTerms = opts.terms || 2;
+        if (opts.terms === "misto") {
+          itemTerms = (i % 2 === 0) ? 2 : 3;
+        } else {
+          itemTerms = parseInt(opts.terms) || 2;
+        }
+        p = generateAdditionProblem(opts.digits || 1, opts.allowRegrouping !== false, itemTerms);
       } else if (type === "subtraction") {
-        p = generateSubtractionProblem(options.digits || 1, options.allowBorrowing !== false);
+        p = generateSubtractionProblem(opts.digits || 1, opts.allowBorrowing !== false);
       } else if (type === "multiplication") {
-        p = generateMultiplicationProblem(options.table || "all", options.level || "1x1");
+        p = generateMultiplicationProblem(opts.table || "all", opts.level || "1x1");
       } else if (type === "division") {
-        p = generateDivisionProblem(options.level || "easy");
+        p = generateDivisionProblem(opts.level || "easy");
       }
       p.id = i + 1;
       problems.push(p);
@@ -143,6 +222,10 @@ window.MathWorksheetGenerator = (function () {
   }
 
   return {
-    generateProblems: generateProblems
+    generateProblems: generateProblems,
+    generateAdditionProblem: generateAdditionProblem,
+    generateSubtractionProblem: generateSubtractionProblem,
+    generateMultiplicationProblem: generateMultiplicationProblem,
+    generateDivisionProblem: generateDivisionProblem
   };
 })();
