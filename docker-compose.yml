@@ -25,17 +25,20 @@ services:
           cpus: '0.10'
           memory: 64M
 
-    # ── DICA PARA PROXY REVERSO NO PORTAINER (Traefik / Nginx Proxy Manager) ──
-    # Se você utiliza Traefik ou NPM no Portainer, descomente as linhas abaixo e defina sua rede:
+    # ── LABELS PARA O TRAEFIK (soberano.pro) ──
+    # Já configurado para o subdomínio oficial https://kids.soberano.pro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kids-soberano.rule=Host(`kids.soberano.pro`)"
+      - "traefik.http.routers.kids-soberano.entrypoints=websecure"
+      - "traefik.http.routers.kids-soberano.tls=true"
+      - "traefik.http.routers.kids-soberano.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kids-soberano.loadbalancer.server.port=80"
+
+    # Se o Traefik estiver em uma rede externa (ex: traefik_public ou proxy), descomente:
     # networks:
-    #   - proxy_network
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.ensino-soberano.rule=Host(`kids.ensinosoberano.com.br`)"
-    #   - "traefik.http.routers.ensino-soberano.entrypoints=websecure"
-    #   - "traefik.http.routers.ensino-soberano.tls.certresolver=letsencrypt"
-    #   - "traefik.http.services.ensino-soberano.loadbalancer.server.port=80"
+    #   - traefik_public
 
 # networks:
-#   proxy_network:
+#   traefik_public:
 #     external: true
