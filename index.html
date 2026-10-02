@@ -57,8 +57,12 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <button id="btn-open-whitelabel" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl transition-all shadow-sm flex items-center gap-1.5 active:scale-95">
+          <i data-lucide="building-2" class="w-4 h-4 text-indigo-600"></i> Escola (White-label)
+        </button>
+
         <button id="btn-open-booklet" type="button" class="px-3.5 py-2 text-xs sm:text-sm font-extrabold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-xl transition-all shadow-md flex items-center gap-1.5 active:scale-95">
-          <i data-lucide="book-open" class="w-4 h-4"></i> Criar Apostila (Caderno)
+          <i data-lucide="book-open" class="w-4 h-4"></i> Criar Apostila (30/50 Págs)
         </button>
 
         <button id="btn-toggle-answers" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-sm flex items-center">
@@ -891,10 +895,10 @@ Ensino Soberano brilha!</textarea>
 
   <!-- ── MODAL DE CONFIGURAÇÃO DE APOSTILA (BOOKLET BUILDER) ── -->
   <div id="booklet-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-pink-100 flex flex-col gap-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-2 border-pink-200 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <h3 class="text-lg font-extrabold text-slate-900 font-heading flex items-center gap-2">
-          <span>📚</span> Criar Apostila Ensino Soberano
+          <span>📚</span> Gerar Mega Apostila (30 a 50 Páginas)
         </h3>
         <button type="button" onclick="window.BookletBuilder.closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -903,22 +907,48 @@ Ensino Soberano brilha!</textarea>
 
       <div class="flex flex-col gap-3">
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Título da Apostila / Caderno</label>
-          <input id="booklet-custom-title" type="text" value="Caderno de Férias Soberano" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Nome do Aluno(a)</label>
-          <input id="booklet-student-name" type="text" value="Super Aluno(a)" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Modelo / Preset Pedagógico</label>
+          <select id="booklet-preset-select" class="w-full text-xs font-bold text-indigo-900 px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 bg-slate-50">
+            <option value="letramento_30" selected>📗 Caderno Letramento & Alfabetização (30 Páginas)</option>
+            <option value="matematica_30">📘 Caderno Matemática & Raciocínio (30 Páginas)</option>
+            <option value="megacombo_50">👑 Mega Combo Multidisciplinar Bimestral (50 Páginas)</option>
+            <option value="personalizado">⚙️ Personalizado (Definir Qtd de Páginas)</option>
+          </select>
         </div>
 
-        <div class="p-3 bg-pink-50/70 border border-pink-100 rounded-2xl text-xs text-slate-600 flex flex-col gap-1.5">
-          <span class="font-extrabold text-pink-700">O que será incluído na apostila completa:</span>
-          <span>• 🌸 Capa Oficial Ensino Soberano com Mascote Chibi</span>
-          <span>• 🔍 Caça-Palavras com Banco de Vocabulário</span>
-          <span>• ➕ 16 Desafios de Adição com Conta Armada</span>
-          <span>• 🌀 Labirinto Ninja do Início até a Coroa</span>
-          <span>• 🔢 Desafio de Contagem Visual com Emojis</span>
-          <span>• 📋 Folha de Gabarito Oficial do Professor no Final</span>
+        <div id="booklet-custom-pages-group" class="hidden">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Quantidade de Páginas Personalizada:</label>
+          <select id="booklet-custom-pages" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white">
+            <option value="15">15 Páginas (Mini Caderno)</option>
+            <option value="20" selected>20 Páginas (Padrão Mensal)</option>
+            <option value="35">35 Páginas (Bimestral Intermediário)</option>
+            <option value="50">50 Páginas (Mega Apostila Completa)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Título da Apostila</label>
+            <input id="booklet-custom-title" type="text" value="Caderno de Férias Soberano" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Nome do(a) Aluno(a)</label>
+            <input id="booklet-student-name" type="text" value="Super Aluno(a)" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nome da Instituição / Escola</label>
+          <input id="booklet-school-name" type="text" value="Ensino Soberano" class="w-full text-xs font-bold text-indigo-700 px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+        </div>
+
+        <div class="p-3 bg-gradient-to-r from-pink-50/80 to-purple-50/80 border border-pink-200 rounded-2xl text-xs text-slate-700 flex flex-col gap-1">
+          <span class="font-extrabold text-pink-700 flex items-center gap-1">✨ Estrutura da Apostila Gerada:</span>
+          <span>• Capa Oficial Colorida com Identidade Escolar (White-label)</span>
+          <span>• Atividades sequenciais progressivas com código BNCC</span>
+          <span>• Passaporte de Conquistas & Selos para avaliação contínua</span>
+          <span>• Caderno de Gabaritos Oficial do Professor condensado no final</span>
+          <span>• Diploma Oficial de Honra ao Mérito Soberano</span>
         </div>
       </div>
 
@@ -926,9 +956,142 @@ Ensino Soberano brilha!</textarea>
         <button type="button" onclick="window.BookletBuilder.closeModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl">
           Cancelar
         </button>
-        <button type="button" onclick="window.BookletBuilder.generate()" class="px-5 py-2.5 text-xs font-extrabold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-xl shadow-md flex items-center gap-1.5">
-          <i data-lucide="sparkles" class="w-4 h-4"></i> Gerar Apostila Completa Agora
+        <button type="button" onclick="window.BookletBuilder.generate()" class="px-5 py-2.5 text-xs font-extrabold text-white bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 rounded-xl shadow-md flex items-center gap-1.5 active:scale-95 transition-all">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Gerar Apostila em Lote Agora
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: PROGRESSO DE GERAÇÃO DA MEGA APOSTILA ── -->
+  <div id="booklet-progress-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-2 border-indigo-300 flex flex-col items-center gap-4 text-center">
+      <div class="w-16 h-16 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-3xl animate-bounce">
+        📚
+      </div>
+      <div>
+        <h3 class="text-lg font-extrabold text-slate-900 font-heading">Gerando Mega Apostila...</h3>
+        <p id="booklet-progress-text" class="text-xs text-slate-500 mt-1">Diagramando atividades e alinhamento BNCC...</p>
+      </div>
+
+      <div class="w-full bg-slate-100 rounded-full h-3.5 p-0.5 border border-slate-200 overflow-hidden">
+        <div id="booklet-progress-bar" class="bg-gradient-to-r from-pink-500 to-indigo-600 h-full rounded-full transition-all duration-200" style="width: 10%"></div>
+      </div>
+      <span class="text-[11px] text-slate-400">Geração assíncrona fluida em segundo plano.</span>
+    </div>
+  </div>
+
+  <!-- ── MODAL DE IDENTIDADE ESCOLAR & WHITE-LABEL ── -->
+  <div id="whitelabel-modal" class="no-print hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border-2 border-indigo-200 flex flex-col gap-4 my-8">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-extrabold text-slate-900 font-heading flex items-center gap-2">
+          <span>🏫</span> Identidade Escolar & White-label
+        </h3>
+        <button type="button" onclick="document.getElementById('whitelabel-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <!-- Logotipo da Escola / Instituição -->
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center gap-4">
+          <div id="wl-logo-preview" class="w-16 h-16 bg-white rounded-xl border border-slate-300 flex items-center justify-center overflow-hidden text-2xl shadow-xs">
+            👑
+          </div>
+          <div class="flex-1 flex flex-col gap-1.5">
+            <span class="font-bold text-slate-700">Logotipo da Escola (PNG, JPG ou SVG)</span>
+            <div class="flex items-center gap-2">
+              <label class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg cursor-pointer transition shadow-xs">
+                Carregar Logo
+                <input type="file" id="wl-logo-input" accept="image/*" class="hidden">
+              </label>
+              <button type="button" id="btn-wl-remove-logo" class="px-2.5 py-1.5 bg-white border border-slate-300 hover:bg-red-50 hover:text-red-600 rounded-lg text-slate-600 font-semibold">
+                Remover
+              </button>
+            </div>
+            <span class="text-[10px] text-slate-400">Salvo localmente no seu computador (100% offline & seguro).</span>
+          </div>
+        </div>
+
+        <!-- Nome e Campus -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Nome da Instituição / Escola</label>
+            <input type="text" id="wl-school-name" value="Ensino Soberano" class="w-full font-bold text-indigo-900 px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Unidade / Campus</label>
+            <input type="text" id="wl-campus" value="Sede Principal" class="w-full font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- Cores Institucionais -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Cor Primária da Instituição</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="wl-color-primary" value="#4f46e5" class="w-10 h-9 rounded-lg border border-slate-200 cursor-pointer">
+              <span id="wl-color-primary-hex" class="font-mono text-slate-600 font-bold">#4f46e5</span>
+            </div>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Cor Secundária / Destaque</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="wl-color-secondary" value="#f43f5e" class="w-10 h-9 rounded-lg border border-slate-200 cursor-pointer">
+              <span id="wl-color-secondary-hex" class="font-mono text-slate-600 font-bold">#f43f5e</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dados Pedagógicos Padrão -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Nome do(a) Professor(a)</label>
+            <input type="text" id="wl-teacher-name" value="Prof. Responsável" class="w-full font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Turma / Série Padrão</label>
+            <input type="text" id="wl-grade-class" value="1º Ano Fundamental" class="w-full font-medium px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- Multi-perfis (Salvar / Carregar) -->
+        <div class="p-3 bg-indigo-50/60 rounded-2xl border border-indigo-100 flex flex-col gap-2">
+          <span class="font-bold text-indigo-900">Perfis Salvos de Escolas / Turmas:</span>
+          <div class="flex items-center gap-2">
+            <select id="wl-profile-select" class="flex-1 font-semibold px-3 py-1.5 border border-indigo-200 rounded-lg bg-white">
+              <option value="">Selecione um perfil salvo...</option>
+            </select>
+            <button type="button" id="btn-wl-load-profile" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-xs">
+              Carregar
+            </button>
+            <button type="button" id="btn-wl-delete-profile" class="px-2.5 py-1.5 bg-white text-red-600 hover:bg-red-50 border border-red-200 rounded-lg font-bold">
+              Excluir
+            </button>
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="text" id="wl-new-profile-name" placeholder="Nome do novo perfil (ex: Colégio São Bento)..." class="flex-1 text-xs px-3 py-1.5 border border-slate-200 rounded-lg bg-white">
+            <button type="button" id="btn-wl-save-profile" class="px-3 py-1.5 bg-white text-indigo-700 border border-indigo-300 hover:bg-indigo-50 font-bold rounded-lg">
+              Salvar Perfil
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rodapé de Ações do Modal -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+        <button type="button" id="btn-wl-reset-default" class="text-xs font-bold text-slate-400 hover:text-red-500 underline">
+          Restaurar Padrão
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="document.getElementById('whitelabel-modal').classList.add('hidden')" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl">
+            Cancelar
+          </button>
+          <button type="button" id="btn-wl-save-apply" class="px-5 py-2 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Aplicar na Plataforma
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1039,6 +1202,7 @@ Ensino Soberano brilha!</textarea>
   <script src="js/sudoku.js"></script>
   <script src="js/cryptogram.js"></script>
   <script src="js/color-by-math.js"></script>
+  <script src="js/whitelabel.js"></script>
   <script src="js/booklet.js"></script>
   <script src="js/qrcode-generator.js"></script>
   <script src="js/interactive-tablet.js"></script>

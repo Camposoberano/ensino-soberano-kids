@@ -33,12 +33,24 @@ const mockWindow = {
       setAttribute: () => {},
       getAttribute: () => null,
       addEventListener: () => {}
-    })
+    }),
+    documentElement: {
+      style: {
+        setProperty: () => {}
+      }
+    }
   },
   ANIME_MASCOTS: {},
   KIDDO_VOCABULARY: {},
   setTimeout: setTimeout,
-  clearTimeout: clearTimeout
+  clearTimeout: clearTimeout,
+  localStorage: {
+    _data: {},
+    getItem(k) { return this._data[k] || null; },
+    setItem(k, v) { this._data[k] = String(v); },
+    removeItem(k) { delete this._data[k]; },
+    clear() { this._data = {}; }
+  }
 };
 mockWindow.window = mockWindow;
 mockWindow.document.defaultView = mockWindow;
@@ -71,6 +83,7 @@ const filesToLoad = [
   "sudoku.js",
   "cryptogram.js",
   "color-by-math.js",
+  "whitelabel.js",
   "booklet.js",
   "qrcode-generator.js",
   "interactive-tablet.js",
@@ -267,4 +280,43 @@ if (tablet.isActive()) {
 }
 console.log("[PASS] InteractiveTablet: Alternância de ferramentas e ciclo de vida da Lousa Digital -> OK");
 
-console.log("\n=== TODOS OS 28 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 9. Testar WhiteLabelModule
+console.log("\n--- Testando WhiteLabelModule ---");
+const wl = context.WhiteLabelModule;
+if (!wl || typeof wl.getSettings !== "function" || typeof wl.saveSettings !== "function") {
+  console.error("ERRO: WhiteLabelModule não está definido!");
+  process.exit(1);
+}
+const defSettings = wl.getSettings();
+if (!defSettings || defSettings.schoolName !== "Ensino Soberano") {
+  console.error("ERRO: Configurações padrão de WhiteLabel incorretas:", defSettings);
+  process.exit(1);
+}
+wl.saveSettings({ schoolName: "Colégio Ninja Modelo", campus: "Unidade Norte" });
+if (wl.getSettings().schoolName !== "Colégio Ninja Modelo") {
+  console.error("ERRO: Falha ao salvar configurações customizadas de escola!");
+  process.exit(1);
+}
+wl.saveProfile("Perfil Escola Modelo");
+const profiles = wl.listProfiles();
+if (!profiles["Perfil Escola Modelo"]) {
+  console.error("ERRO: Falha ao salvar perfil escolar:", profiles);
+  process.exit(1);
+}
+wl.resetToDefault();
+if (wl.getSettings().schoolName !== "Ensino Soberano") {
+  console.error("ERRO: Falha ao resetar configurações para o padrão Soberano!");
+  process.exit(1);
+}
+console.log("[PASS] WhiteLabelModule: Configuração institucional, persistência e multi-perfis -> OK");
+
+// 10. Testar BookletBuilder
+console.log("\n--- Testando BookletBuilder ---");
+const bb = context.BookletBuilder;
+if (!bb || typeof bb.generate !== "function" || typeof bb.renderMazeCanvas !== "function") {
+  console.error("ERRO: BookletBuilder não está definido corretamente!");
+  process.exit(1);
+}
+console.log("[PASS] BookletBuilder: Presets de 30/50 páginas e motor assíncrono de apostila -> OK");
+
+console.log("\n=== TODOS OS 29 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

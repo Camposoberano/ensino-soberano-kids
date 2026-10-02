@@ -18,6 +18,7 @@ window.KiddoApp = (function () {
     setupMascotSelector();
     setupZoomAndScaling();
     loadCategoryButtons();
+    setupWhiteLabel();
     renderCurrentActivity();
 
     // Redimensionar preview ao mudar tamanho da janela
@@ -332,6 +333,194 @@ window.KiddoApp = (function () {
         if (window.InteractiveTablet) window.InteractiveTablet.playVictorySound();
       });
     }
+
+    const presetSelect = document.getElementById("booklet-preset-select");
+    if (presetSelect) {
+      presetSelect.addEventListener("change", () => {
+        const customGroup = document.getElementById("booklet-custom-pages-group");
+        if (customGroup) {
+          if (presetSelect.value === "personalizado") {
+            customGroup.classList.remove("hidden");
+          } else {
+            customGroup.classList.add("hidden");
+          }
+        }
+      });
+    }
+  }
+
+  // ── SISTEMA WHITE-LABEL ESCOLAR ──
+  let tempLogoDataUrl = null;
+
+  function setupWhiteLabel() {
+    if (!window.WhiteLabelModule) return;
+
+    window.WhiteLabelModule.applyToDom();
+
+    const btnOpenWl = document.getElementById("btn-open-whitelabel");
+    if (btnOpenWl) {
+      btnOpenWl.addEventListener("click", openWhiteLabelModal);
+    }
+
+    const logoInput = document.getElementById("wl-logo-input");
+    if (logoInput) {
+      logoInput.addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            tempLogoDataUrl = evt.target.result;
+            const preview = document.getElementById("wl-logo-preview");
+            if (preview) {
+              preview.innerHTML = `<img src="${tempLogoDataUrl}" class="h-full w-full object-contain p-1">`;
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    const btnRemoveLogo = document.getElementById("btn-wl-remove-logo");
+    if (btnRemoveLogo) {
+      btnRemoveLogo.addEventListener("click", () => {
+        tempLogoDataUrl = "";
+        const preview = document.getElementById("wl-logo-preview");
+        if (preview) preview.innerHTML = "👑";
+      });
+    }
+
+    const primaryColorInput = document.getElementById("wl-color-primary");
+    if (primaryColorInput) {
+      primaryColorInput.addEventListener("input", (e) => {
+        const hex = document.getElementById("wl-color-primary-hex");
+        if (hex) hex.textContent = e.target.value;
+      });
+    }
+
+    const secColorInput = document.getElementById("wl-color-secondary");
+    if (secColorInput) {
+      secColorInput.addEventListener("input", (e) => {
+        const hex = document.getElementById("wl-color-secondary-hex");
+        if (hex) hex.textContent = e.target.value;
+      });
+    }
+
+    const btnSaveApply = document.getElementById("btn-wl-save-apply");
+    if (btnSaveApply) {
+      btnSaveApply.addEventListener("click", () => {
+        const s = {
+          schoolName: document.getElementById("wl-school-name")?.value || "Ensino Soberano",
+          campus: document.getElementById("wl-campus")?.value || "Sede Principal",
+          primaryColor: document.getElementById("wl-color-primary")?.value || "#4f46e5",
+          secondaryColor: document.getElementById("wl-color-secondary")?.value || "#f43f5e",
+          teacherName: document.getElementById("wl-teacher-name")?.value || "Prof. Responsável",
+          gradeClass: document.getElementById("wl-grade-class")?.value || "1º Ano Fundamental"
+        };
+        if (tempLogoDataUrl !== null) {
+          s.logoDataUrl = tempLogoDataUrl || null;
+        }
+        window.WhiteLabelModule.saveSettings(s);
+        document.getElementById("whitelabel-modal")?.classList.add("hidden");
+        syncHeader();
+        if (window.InteractiveTablet) window.InteractiveTablet.playVictorySound();
+      });
+    }
+
+    const btnResetDefault = document.getElementById("btn-wl-reset-default");
+    if (btnResetDefault) {
+      btnResetDefault.addEventListener("click", () => {
+        window.WhiteLabelModule.resetToDefault();
+        tempLogoDataUrl = null;
+        openWhiteLabelModal();
+        syncHeader();
+      });
+    }
+
+    const btnSaveProfile = document.getElementById("btn-wl-save-profile");
+    if (btnSaveProfile) {
+      btnSaveProfile.addEventListener("click", () => {
+        const nameInput = document.getElementById("wl-new-profile-name");
+        if (nameInput && nameInput.value.trim()) {
+          window.WhiteLabelModule.saveProfile(nameInput.value.trim());
+          nameInput.value = "";
+          updateProfilesDropdown();
+        }
+      });
+    }
+
+    const btnLoadProfile = document.getElementById("btn-wl-load-profile");
+    if (btnLoadProfile) {
+      btnLoadProfile.addEventListener("click", () => {
+        const select = document.getElementById("wl-profile-select");
+        if (select && select.value) {
+          window.WhiteLabelModule.loadProfile(select.value);
+          openWhiteLabelModal();
+          syncHeader();
+        }
+      });
+    }
+
+    const btnDeleteProfile = document.getElementById("btn-wl-delete-profile");
+    if (btnDeleteProfile) {
+      btnDeleteProfile.addEventListener("click", () => {
+        const select = document.getElementById("wl-profile-select");
+        if (select && select.value) {
+          window.WhiteLabelModule.deleteProfile(select.value);
+          updateProfilesDropdown();
+        }
+      });
+    }
+  }
+
+  function openWhiteLabelModal() {
+    const modal = document.getElementById("whitelabel-modal");
+    if (!modal || !window.WhiteLabelModule) return;
+
+    const s = window.WhiteLabelModule.getSettings();
+    const schoolNameEl = document.getElementById("wl-school-name");
+    const campusEl = document.getElementById("wl-campus");
+    const primaryColorEl = document.getElementById("wl-color-primary");
+    const primaryHexEl = document.getElementById("wl-color-primary-hex");
+    const secColorEl = document.getElementById("wl-color-secondary");
+    const secHexEl = document.getElementById("wl-color-secondary-hex");
+    const teacherEl = document.getElementById("wl-teacher-name");
+    const gradeEl = document.getElementById("wl-grade-class");
+    const previewEl = document.getElementById("wl-logo-preview");
+
+    if (schoolNameEl) schoolNameEl.value = s.schoolName;
+    if (campusEl) campusEl.value = s.campus;
+    if (primaryColorEl) primaryColorEl.value = s.primaryColor;
+    if (primaryHexEl) primaryHexEl.textContent = s.primaryColor;
+    if (secColorEl) secColorEl.value = s.secondaryColor;
+    if (secHexEl) secHexEl.textContent = s.secondaryColor;
+    if (teacherEl) teacherEl.value = s.teacherName;
+    if (gradeEl) gradeEl.value = s.gradeClass;
+
+    if (previewEl) {
+      if (s.logoDataUrl) {
+        previewEl.innerHTML = `<img src="${s.logoDataUrl}" class="h-full w-full object-contain p-1">`;
+      } else {
+        previewEl.innerHTML = "👑";
+      }
+    }
+    tempLogoDataUrl = s.logoDataUrl || null;
+
+    updateProfilesDropdown();
+    modal.classList.remove("hidden");
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  function updateProfilesDropdown() {
+    const select = document.getElementById("wl-profile-select");
+    if (!select || !window.WhiteLabelModule) return;
+    const profiles = window.WhiteLabelModule.listProfiles();
+    select.innerHTML = `<option value="">Selecione um perfil salvo...</option>`;
+    Object.keys(profiles).forEach(pName => {
+      const opt = document.createElement("option");
+      opt.value = pName;
+      opt.textContent = pName;
+      select.appendChild(opt);
+    });
   }
 
   function updateAnswerButtonText() {
