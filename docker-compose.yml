@@ -34,11 +34,12 @@ services:
       - "traefik.http.routers.kids-soberano.tls=true"
       - "traefik.http.routers.kids-soberano.tls.certresolver=letsencrypt"
       - "traefik.http.services.kids-soberano.loadbalancer.server.port=80"
+      - "traefik.docker.network=camposoberano"
 
-    # Se o Traefik estiver em uma rede externa (ex: traefik_public ou proxy), descomente:
-    # networks:
-    #   - traefik_public
+    networks:
+      - camposoberano
 
-# networks:
-#   traefik_public:
-#     external: true
+networks:
+  camposoberano:
+    external: true
+
