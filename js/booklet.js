@@ -156,23 +156,57 @@ window.BookletBuilder = (function () {
     page5.content.appendChild(countGrid);
     container.appendChild(page5.page);
 
-    // ── 6. PÁGINA FINAL: GABARITO DA APOSTILA ──
+    // ── 6. PÁGINA: PROBLEMINHAS CONTEXTUALIZADOS ──
+    const page6 = createBookletPage("Página 6", "Probleminhas do Cotidiano", "Leia cada historinha com atenção, raciocine e responda:");
+    const storyData = window.StoryProblemsGenerator.generate({ count: 2, difficulty: "medio" });
+    const storyList = document.createElement("div");
+    storyList.className = "flex flex-col gap-3 my-2";
+    storyData.forEach(p => {
+      storyList.innerHTML += `
+        <div class="p-3 border-2 border-indigo-100 rounded-2xl bg-white flex flex-col gap-2">
+          <div class="flex items-center justify-between border-b border-indigo-50 pb-1">
+            <span class="text-xs font-extrabold text-indigo-950 font-heading">${p.icon} ${p.mascote}</span>
+            <span class="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">${p.tag} • ${p.opSymbol}</span>
+          </div>
+          <p class="text-[11px] font-medium text-slate-700 bg-slate-50/60 p-2 rounded-xl border border-slate-100">${p.historia}</p>
+          <div class="grid grid-cols-12 gap-2 text-xs">
+            <div class="col-span-5 p-2 border border-dashed border-slate-300 rounded-xl min-h-[70px] text-[9px] text-slate-400">🎨 Desenho / Estratégia</div>
+            <div class="col-span-3 p-2 border border-dashed border-indigo-200 rounded-xl flex items-center justify-center font-bold text-slate-400">___ ${p.opSymbol} ___ = ___</div>
+            <div class="col-span-4 p-2 border border-slate-200 rounded-xl flex flex-col justify-center text-[10px] text-slate-600">R: <span class="dotted-line w-full block mt-1"></span></div>
+          </div>
+        </div>
+      `;
+    });
+    page6.content.appendChild(storyList);
+    container.appendChild(page6.page);
+
+    // ── 7. PÁGINA: PASSAPORTE DE CONQUISTAS & SELOS ──
+    const passportPage = document.createElement("div");
+    passportPage.className = "booklet-page mb-8";
+    passportPage.innerHTML = window.CertificateGenerator.renderPassport(studentName, mascotKey);
+    container.appendChild(passportPage);
+
+    // ── 8. PÁGINA: GABARITO OFICIAL DO PROFESSOR ──
     const pageAns = createBookletPage("Folha do Professor", "Gabarito Oficial da Apostila", "Confira aqui as respostas de todas as atividades:");
     pageAns.content.innerHTML = `
-      <div class="bg-red-50/70 border-2 border-dashed border-red-200 rounded-2xl p-6 flex flex-col gap-4 text-xs font-semibold text-slate-800">
+      <div class="bg-red-50/70 border-2 border-dashed border-red-200 rounded-2xl p-6 flex flex-col gap-3 text-xs font-semibold text-slate-800">
         <div>
-          <h4 class="font-extrabold text-red-700 uppercase mb-1">Página 2 (Caça-Palavras):</h4>
+          <h4 class="font-extrabold text-red-700 uppercase mb-0.5">Página 2 (Caça-Palavras):</h4>
           <p>Palavras: ${wsData.placedWords.map(w => w.word).join(" • ")}</p>
         </div>
         <div>
-          <h4 class="font-extrabold text-red-700 uppercase mb-1">Página 3 (Matemática):</h4>
+          <h4 class="font-extrabold text-red-700 uppercase mb-0.5">Página 3 (Matemática):</h4>
           <p>${mathProbs.map(p => `#${p.id}: ${p.answer}`).join(" | ")}</p>
         </div>
         <div>
-          <h4 class="font-extrabold text-red-700 uppercase mb-1">Página 5 (Contagem):</h4>
+          <h4 class="font-extrabold text-red-700 uppercase mb-0.5">Página 5 (Contagem):</h4>
           <p>${countData.problems.map(p => `#${p.id} (${p.name}): ${p.count}`).join(" | ")}</p>
         </div>
-        <div class="pt-4 flex justify-between items-center border-t border-red-200">
+        <div>
+          <h4 class="font-extrabold text-red-700 uppercase mb-0.5">Página 6 (Probleminhas):</h4>
+          <p>${storyData.map(p => `#${p.id}: ${p.equacao} (${p.resposta})`).join(" | ")}</p>
+        </div>
+        <div class="pt-3 flex justify-between items-center border-t border-red-200">
           <span class="text-[11px] text-slate-500">Parabéns por concluir seu Caderno Ensino Soberano!</span>
           <div class="anime-hanko-stamp scale-90">
             SUGOI! 🌸<br>NOTA 10<br><span class="text-[7px] text-red-500 font-bold">SOBERANO</span>
@@ -181,6 +215,12 @@ window.BookletBuilder = (function () {
       </div>
     `;
     container.appendChild(pageAns.page);
+
+    // ── 9. PÁGINA FINAL: DIPLOMA DE HONRA AO MÉRITO ──
+    const certPage = document.createElement("div");
+    certPage.className = "booklet-page mb-8";
+    certPage.innerHTML = window.CertificateGenerator.renderCertificate(studentName, bookletTitle, mascotKey);
+    container.appendChild(certPage);
 
     // Exibir visualização do livreto
     document.getElementById("booklet-view-modal")?.classList.remove("hidden");

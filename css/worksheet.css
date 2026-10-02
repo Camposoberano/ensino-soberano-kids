@@ -422,6 +422,16 @@ body {
     height: 100% !important;
   }
 
+  #standard-sheet-article.hidden,
+  #custom-sheet-wrapper.hidden {
+    display: none !important;
+  }
+
+  #custom-sheet-wrapper:not(.hidden) {
+    display: block !important;
+    width: 100% !important;
+  }
+
   .worksheet-paper {
     width: 100% !important;
     min-height: 100% !important;

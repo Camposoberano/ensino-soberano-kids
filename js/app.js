@@ -34,6 +34,7 @@ window.KiddoApp = (function () {
         showAnswers = false;
         updateAnswerButtonText();
         switchControlPanels();
+        setDefaultHeaderForTab(currentTab);
         renderCurrentActivity();
       });
     });
@@ -94,6 +95,9 @@ window.KiddoApp = (function () {
           speechInput.value = mascot.frasePadrao;
         }
         renderMascotOnSheet();
+        if (currentTab === "certificate") {
+          renderCurrentActivity();
+        }
       });
       container.appendChild(btn);
     });
@@ -149,6 +153,27 @@ window.KiddoApp = (function () {
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", syncHeader);
     });
+
+    ["cert-type", "cert-student-name", "cert-course-title"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("input", () => {
+          if (currentTab === "certificate") renderCurrentActivity();
+        });
+        el.addEventListener("change", () => {
+          if (currentTab === "certificate") renderCurrentActivity();
+        });
+      }
+    });
+
+    ["sp-operation", "sp-difficulty", "sp-count"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("change", () => {
+          if (currentTab === "storyproblems") renderCurrentActivity();
+        });
+      }
+    });
   }
 
   function updateAnswerButtonText() {
@@ -200,11 +225,40 @@ window.KiddoApp = (function () {
 
   function renderCurrentActivity() {
     syncHeader();
+
+    const standardArticle = document.getElementById("standard-sheet-article");
+    const customWrapper = document.getElementById("custom-sheet-wrapper");
+
+    if (currentTab === "certificate") {
+      if (standardArticle) standardArticle.classList.add("hidden");
+      if (customWrapper) {
+        customWrapper.classList.remove("hidden");
+        const certType = document.getElementById("cert-type")?.value || "diploma";
+        const studentName = document.getElementById("cert-student-name")?.value || "Lucas Oliveira";
+        const courseTitle = document.getElementById("cert-course-title")?.value || "Mestre do Conhecimento & Raciocínio Lógico";
+
+        if (certType === "passport") {
+          customWrapper.innerHTML = window.CertificateGenerator.renderPassport(studentName, currentMascotId);
+        } else {
+          customWrapper.innerHTML = window.CertificateGenerator.renderCertificate(studentName, courseTitle, currentMascotId);
+        }
+      }
+      applyScaling();
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
+
+    if (standardArticle) standardArticle.classList.remove("hidden");
+    if (customWrapper) customWrapper.classList.add("hidden");
+
     const contentArea = document.getElementById("worksheet-dynamic-content");
     if (!contentArea) return;
     contentArea.innerHTML = "";
 
     switch (currentTab) {
+      case "storyproblems":
+        renderStoryProblems(contentArea);
+        break;
       case "wordsearch":
         renderWordSearch(contentArea);
         break;
@@ -264,6 +318,112 @@ window.KiddoApp = (function () {
     applyAnswersVisibility();
     applyScaling();
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  function setDefaultHeaderForTab(tab) {
+    const titleInput = document.getElementById("sheet-title");
+    const instrInput = document.getElementById("sheet-instructions");
+    if (!titleInput || !instrInput) return;
+
+    const defaults = {
+      wordsearch: { t: "Missão Ninja: Caça-Palavras", i: "Encontre as palavras escondidas na grade abaixo:" },
+      addition: { t: "Academia dos Números: Adição", i: "Resolva as continhas de adição com bastante atenção:" },
+      subtraction: { t: "Desafio Ninja: Subtração", i: "Calcule as subtrações e anote os resultados corretos:" },
+      multiplication: { t: "Mestres da Tabuada: Multiplicação", i: "Multiplique os números e preencha as respostas:" },
+      division: { t: "Raciocínio Lógico: Divisão", i: "Reparta e divida com precisão cada uma das operações:" },
+      maze: { t: "Labirinto da Sabedoria", i: "Ajude o herói a traçar o caminho certo até o castelo Soberano:" },
+      counting: { t: "Missão de Contagem & Atenção", i: "Conte quantos itens há em cada quadro e anote no círculo:" },
+      matching: { t: "Ligue os Pares Correspondentes", i: "Ligue os pontos da esquerda com os itens certos da direita:" },
+      time: { t: "Guardiões do Tempo: Que Horas São?", i: "Observe os ponteiros dos relógios analógicos e escreva a hora:" },
+      patterns: { t: "Desafio dos Padrões & Sequências", i: "Descubra a regra lógica e complete os próximos elementos:" },
+      shapes: { t: "Geometria Soberana: Formas & Vértices", i: "Identifique as figuras geométricas e responda às perguntas:" },
+      body: { t: "Ciências & Biologia: O Corpo Humano", i: "Ligue cada sentido e órgão à sua função correta:" },
+      flashcards: { t: "Cartões de Estudo & Memória (Recortáveis)", i: "Recorte nas linhas pontilhadas e use para estudar:" },
+      origami: { t: "Arte & Concentração: Passo a Passo do Origami", i: "Siga os passos de dobradura para criar sua figura de papel:" },
+      coloring: { t: "Ateliê de Pintura & Criatividade", i: "Pinte o desenho com suas cores favoritas e muito capricho:" },
+      scramble: { t: "Detetive de Palavras Embaralhadas", i: "Desembaralhe as letras para descobrir a palavra secreta:" },
+      tracing: { t: "Treino de Caligrafia & Traçado", i: "Cubra as linhas pontilhadas com firmeza e capricho:" },
+      multichart: { t: "Tabela Pitagórica de Multiplicação", i: "Complete os espaços em branco da tabuada:" },
+      storyproblems: { t: "Probleminhas do Cotidiano Soberano", i: "Leia com atenção cada historinha, desenhe seu raciocínio, calcule e responda:" },
+      certificate: { t: "Diploma de Honra ao Mérito Soberano", i: "Reconhecimento oficial de excelência, dedicação e aprendizado." }
+    };
+
+    if (defaults[tab]) {
+      titleInput.value = defaults[tab].t;
+      instrInput.value = defaults[tab].i;
+    }
+  }
+
+  /* ── 0. PROBLEMINHAS CONTEXTUALIZADOS ── */
+  function renderStoryProblems(container) {
+    const opVal = document.getElementById("sp-operation")?.value || "todas";
+    const diffVal = document.getElementById("sp-difficulty")?.value || "medio";
+    const countVal = parseInt(document.getElementById("sp-count")?.value) || 3;
+
+    const problems = window.StoryProblemsGenerator.generate({
+      operation: opVal,
+      difficulty: diffVal,
+      count: countVal
+    });
+    currentData = problems;
+
+    const list = document.createElement("div");
+    list.className = "flex flex-col gap-3 my-1";
+
+    problems.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "p-3 border-2 border-indigo-100 rounded-2xl bg-white shadow-xs flex flex-col gap-2";
+      card.innerHTML = `
+        <div class="flex items-center justify-between border-b border-indigo-50 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-[11px] font-extrabold font-heading">#${p.id}</span>
+            <span class="text-sm">${p.icon}</span>
+            <span class="text-xs font-extrabold text-indigo-950 font-heading">${p.mascote}</span>
+          </div>
+          <span class="text-[9px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+            ${p.tag} • ${p.opSymbol}
+          </span>
+        </div>
+
+        <p class="text-[11.5px] font-medium text-slate-700 leading-relaxed bg-slate-50/60 p-2 rounded-xl border border-slate-100">
+          ${p.historia}
+        </p>
+
+        <div class="grid grid-cols-12 gap-2.5 items-stretch">
+          <!-- Coluna 1: Desenho / Raciocínio -->
+          <div class="col-span-5 p-2 border border-dashed border-slate-300 rounded-xl flex flex-col justify-between min-h-[75px] bg-slate-50/30">
+            <span class="text-[8.5px] font-bold uppercase tracking-wider text-slate-400">🎨 Desenho / Estratégia:</span>
+            <div class="my-auto text-center text-[9px] text-slate-300 italic">
+              (Espaço para desenhar ou rascunhar)
+            </div>
+          </div>
+
+          <!-- Coluna 2: Cálculo Matemático -->
+          <div class="col-span-3 p-2 border border-dashed border-indigo-200 rounded-xl flex flex-col justify-between items-center bg-indigo-50/20 text-center">
+            <span class="text-[8.5px] font-bold uppercase tracking-wider text-indigo-500">🔢 Cálculo:</span>
+            <div class="my-auto font-heading font-extrabold text-xs">
+              <span class="story-ans-val hidden text-emerald-600 font-extrabold text-sm">${p.equacao}</span>
+              <span class="story-placeholder text-slate-400">___ ${p.opSymbol} ___ = ___</span>
+            </div>
+          </div>
+
+          <!-- Coluna 3: Resposta Escrita Completa -->
+          <div class="col-span-4 p-2 border border-slate-200 rounded-xl flex flex-col justify-between bg-slate-50/50">
+            <span class="text-[8.5px] font-bold uppercase tracking-wider text-slate-500">✍️ Resposta Completa:</span>
+            <div class="my-auto text-[10.5px] font-semibold text-slate-700">
+              <div class="story-ans-val hidden text-emerald-700 font-bold bg-emerald-50 p-1 rounded border border-emerald-200">${p.resposta}</div>
+              <div class="story-placeholder">
+                <span class="text-slate-600">R:</span>
+                <span class="dotted-line w-full block mt-1"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    container.appendChild(list);
   }
 
   /* ── 1. CAÇA-PALAVRAS ── */
@@ -783,6 +943,16 @@ window.KiddoApp = (function () {
       else el.classList.remove("hidden");
     });
 
+    document.querySelectorAll(".story-ans-val").forEach(el => {
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    });
+
+    document.querySelectorAll(".story-placeholder").forEach(el => {
+      if (showAnswers) el.classList.add("hidden");
+      else el.classList.remove("hidden");
+    });
+
     if (currentTab === "maze" && currentData) {
       const container = document.getElementById("worksheet-dynamic-content");
       if (container) {
@@ -827,7 +997,11 @@ window.KiddoApp = (function () {
   }
 
   function downloadPDF() {
-    const paper = document.querySelector(".worksheet-paper");
+    let paper = document.querySelector(".worksheet-paper:not(.hidden)");
+    if (!paper && currentTab === "certificate") {
+      paper = document.querySelector("#custom-sheet-wrapper .worksheet-paper");
+    }
+    if (!paper) paper = document.querySelector(".worksheet-paper");
     if (!paper) return;
 
     const opt = {

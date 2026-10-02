@@ -105,6 +105,9 @@
         <button type="button" data-tab="multichart" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="grid" class="w-3.5 h-3.5"></i> Tabela Tabuada
         </button>
+        <button type="button" data-tab="storyproblems" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="book-open" class="w-3.5 h-3.5 text-pink-500"></i> Probleminhas
+        </button>
 
         <span class="h-4 w-px bg-slate-300 mx-1"></span>
 
@@ -145,6 +148,13 @@
         </button>
         <button type="button" data-tab="slidingpuzzle" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="puzzle" class="w-3.5 h-3.5"></i> Quebra-Cabeça Jogo
+        </button>
+
+        <span class="h-4 w-px bg-slate-300 mx-1"></span>
+
+        <!-- Conquistas & Reconhecimento -->
+        <button type="button" data-tab="certificate" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i> Diplomas & Selos
         </button>
       </div>
     </div>
@@ -505,6 +515,61 @@ Ensino Soberano brilha!</textarea>
         </div>
       </div>
 
+      <!-- PAINEL: PROBLEMINHAS CONTEXTUALIZADOS -->
+      <div id="panel-storyproblems" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-4 h-4 text-pink-500"></i> Opções dos Probleminhas
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Operação Matemática</label>
+          <select id="sp-operation" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="todas" selected>Misto (Adição, Subtração, Multiplicação, Divisão)</option>
+            <option value="adicao">Apenas Adição (+)</option>
+            <option value="subtracao">Apenas Subtração (−)</option>
+            <option value="multiplicacao">Apenas Multiplicação (×)</option>
+            <option value="divisao">Apenas Divisão (÷)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nível de Dificuldade</label>
+          <select id="sp-difficulty" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="facil">Iniciante (Números até 20, fácil interpretação)</option>
+            <option value="medio" selected>Intermediário (Números até 50, operações comuns)</option>
+            <option value="avancado">Avançado (Números até 100, raciocínio aprofundado)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Quantidade de Probleminhas na Página</label>
+          <select id="sp-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="2">2 Grandes (Muito espaço para desenho e cálculo)</option>
+            <option value="3" selected>3 Probleminhas (Padrão Pedagógico Ideal)</option>
+            <option value="4">4 Probleminhas (Treino Intensivo)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: DIPLOMAS & PASSAPORTE DE CONQUISTAS -->
+      <div id="panel-certificate" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Modelo de Reconhecimento
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Documento</label>
+          <select id="cert-type" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="diploma" selected>🏆 Diploma de Honra ao Mérito Soberano</option>
+            <option value="passport">🌟 Passaporte de Aventuras & Selos (12 Missões)</option>
+          </select>
+        </div>
+        <div id="cert-name-group">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nome do(a) Aluno(a)</label>
+          <input type="text" id="cert-student-name" value="Lucas Oliveira" placeholder="Nome da criança..." class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div id="cert-title-group">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Título do Reconhecimento / Curso</label>
+          <input type="text" id="cert-course-title" value="Mestre do Conhecimento & Raciocínio Lógico" class="w-full text-xs font-semibold px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+      </div>
+
       <!-- BOTÃO GERAR NOVO MODELO -->
       <button id="btn-generate" type="button" class="w-full py-3.5 px-4 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
         <i data-lucide="sparkles" class="w-5 h-5 text-amber-300"></i> Gerar Nova Atividade Anime
@@ -538,7 +603,7 @@ Ensino Soberano brilha!</textarea>
         <div class="page-scaler-wrapper">
 
           <!-- ── A FOLHA DE ATIVIDADE A4 (WORKSHEET PAPER) ── -->
-          <article class="worksheet-paper">
+          <article id="standard-sheet-article" class="worksheet-paper">
             <div class="worksheet-frame">
 
               <!-- Cabeçalho de Identificação Escolar Anime Soberano -->
@@ -608,6 +673,7 @@ Ensino Soberano brilha!</textarea>
 
             </div>
           </article>
+          <div id="custom-sheet-wrapper" class="hidden"></div>
 
         </div>
       </div>
@@ -720,6 +786,8 @@ Ensino Soberano brilha!</textarea>
   <script src="js/tracing.js"></script>
   <script src="js/multiplication-chart.js"></script>
   <script src="js/sliding-puzzle.js"></script>
+  <script src="js/certificate.js"></script>
+  <script src="js/story-problems.js"></script>
   <script src="js/booklet.js"></script>
   <script src="js/app.js"></script>
 </body>
