@@ -211,6 +211,27 @@ window.KiddoApp = (function () {
         syncBncc();
       });
     }
+
+    ["sudoku-size", "sudoku-mode", "sudoku-difficulty"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("change", () => {
+        if (currentTab === "sudoku") renderCurrentActivity();
+      });
+    });
+
+    const cryptogramInput = document.getElementById("cryptogram-input");
+    if (cryptogramInput) {
+      cryptogramInput.addEventListener("input", () => {
+        if (currentTab === "cryptogram") renderCurrentActivity();
+      });
+    }
+
+    ["cbm-template", "cbm-operation"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("change", () => {
+        if (currentTab === "colorbymath") renderCurrentActivity();
+      });
+    });
   }
 
   function updateAnswerButtonText() {
@@ -406,6 +427,15 @@ window.KiddoApp = (function () {
       case "multichart":
         renderMultiplicationChart(contentArea);
         break;
+      case "sudoku":
+        renderSudoku(contentArea);
+        break;
+      case "cryptogram":
+        renderCryptogram(contentArea);
+        break;
+      case "colorbymath":
+        renderColorByMath(contentArea);
+        break;
     }
 
     applyAnswersVisibility();
@@ -438,7 +468,10 @@ window.KiddoApp = (function () {
       tracing: { t: "Treino de Caligrafia & Traçado", i: "Cubra as linhas pontilhadas com firmeza e capricho:" },
       multichart: { t: "Tabela Pitagórica de Multiplicação", i: "Complete os espaços em branco da tabuada:" },
       storyproblems: { t: "Probleminhas do Cotidiano Soberano", i: "Leia com atenção cada historinha, desenhe seu raciocínio, calcule e responda:" },
-      certificate: { t: "Diploma de Honra ao Mérito Soberano", i: "Reconhecimento oficial de excelência, dedicação e aprendizado." }
+      certificate: { t: "Diploma de Honra ao Mérito Soberano", i: "Reconhecimento oficial de excelência, dedicação e aprendizado." },
+      sudoku: { t: "Desafio Sudoku Kids: Raciocínio Ninja", i: "Preencha os espaços vazios sem repetir nenhum elemento na mesma linha, coluna ou bloco:" },
+      cryptogram: { t: "Criptograma Ninja: Código Secreto", i: "Use a tabela de símbolos para decifrar a mensagem secreta dos mestres:" },
+      colorbymath: { t: "Pinte por Matemática: Mosaico das Cores", i: "Resolva as operações em cada quadrinho e pinte com a cor indicada na legenda:" }
     };
 
     if (defaults[tab]) {
@@ -517,6 +550,164 @@ window.KiddoApp = (function () {
     });
 
     container.appendChild(list);
+  }
+
+  /* ── 20. SUDOKU KIDS ── */
+  function renderSudoku(container) {
+    const size = parseInt(document.getElementById("sudoku-size")?.value) || 4;
+    const mode = document.getElementById("sudoku-mode")?.value || "emoji";
+    const diff = document.getElementById("sudoku-difficulty")?.value || "facil";
+
+    const data = window.SudokuGenerator.generate({ size: size, mode: mode, difficulty: diff });
+    currentData = data;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col items-center justify-center my-4";
+
+    if (data.mode === "emoji" && size === 4) {
+      const legend = document.createElement("div");
+      legend.className = "flex items-center gap-3 mb-4 p-2.5 bg-indigo-50/70 border border-indigo-200 rounded-xl text-xs font-bold text-indigo-900";
+      legend.innerHTML = `<span>Símbolos desta missão:</span> <div class="flex gap-2 text-lg">${data.symbols.map(s => `<span class="bg-white p-1 rounded-md shadow-xs border border-indigo-100">${s}</span>`).join("")}</div>`;
+      wrapper.appendChild(legend);
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "sudoku-grid";
+    const cellSize = size === 4 ? 60 : 44;
+    grid.style.gridTemplateColumns = `repeat(${size}, ${cellSize}px)`;
+
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        const val = data.puzzle[r][c];
+        const solutionVal = data.solution[r][c];
+        const cell = document.createElement("div");
+        cell.className = "sudoku-cell";
+        cell.style.width = `${cellSize}px`;
+        cell.style.height = `${cellSize}px`;
+
+        if ((c + 1) % data.blockSizeC === 0 && c !== size - 1) cell.classList.add("sudoku-border-r");
+        if ((r + 1) % data.blockSizeR === 0 && r !== size - 1) cell.classList.add("sudoku-border-b");
+
+        if (val !== "") {
+          cell.classList.add("sudoku-initial");
+          cell.textContent = val;
+        } else {
+          cell.classList.add("sudoku-missing");
+          cell.setAttribute("data-sol", solutionVal);
+          cell.textContent = solutionVal;
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    wrapper.appendChild(grid);
+    container.appendChild(wrapper);
+  }
+
+  /* ── 21. CRIPTOGRAMA NINJA ── */
+  function renderCryptogram(container) {
+    const customInput = document.getElementById("cryptogram-input")?.value?.trim();
+    const data = window.CryptogramGenerator.generate(customInput);
+    currentData = data;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col gap-4 my-2";
+
+    const legendBlock = document.createElement("div");
+    legendBlock.className = "flex flex-col gap-1.5 p-3 bg-slate-50 border border-slate-200 rounded-2xl";
+    legendBlock.innerHTML = `
+      <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center justify-between">
+        <span>🔑 Tabela Secreta de Decodificação:</span>
+        <span class="text-indigo-600 font-bold">Cada símbolo = Uma letra</span>
+      </div>
+      <div class="cipher-legend-grid">
+        ${Object.keys(data.cipherMap).map(letter => `
+          <div class="cipher-legend-item">
+            <span class="text-sm select-none">${data.cipherMap[letter]}</span>
+            <span class="text-[11px] font-extrabold text-slate-700 font-heading border-t border-slate-200 w-full mt-0.5 pt-0.5">${letter}</span>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    wrapper.appendChild(legendBlock);
+
+    const messageContainer = document.createElement("div");
+    messageContainer.className = "flex flex-wrap gap-x-4 gap-y-3 justify-center items-center p-4 bg-white border-2 border-dashed border-indigo-100 rounded-2xl min-h-[160px]";
+
+    data.words.forEach(wordLetters => {
+      const wordBox = document.createElement("div");
+      wordBox.className = "flex gap-1 items-center";
+
+      wordLetters.forEach(item => {
+        if (!item.isAlpha) {
+          const sep = document.createElement("div");
+          sep.className = "text-lg font-bold text-slate-400 px-0.5";
+          sep.textContent = item.symbol;
+          wordBox.appendChild(sep);
+        } else {
+          const box = document.createElement("div");
+          box.className = "cipher-letter-box";
+          box.innerHTML = `
+            <span class="text-base select-none">${item.symbol}</span>
+            <span class="cipher-letter-val" data-letter="${item.letter}">${item.letter}</span>
+          `;
+          wordBox.appendChild(box);
+        }
+      });
+
+      messageContainer.appendChild(wordBox);
+    });
+
+    wrapper.appendChild(messageContainer);
+    container.appendChild(wrapper);
+  }
+
+  /* ── 22. PINTE POR MATEMÁTICA ── */
+  function renderColorByMath(container) {
+    const tplId = document.getElementById("cbm-template")?.value || "crown";
+    const op = document.getElementById("cbm-operation")?.value || "addition";
+
+    const data = window.ColorByMathGenerator.generate({ templateId: tplId, operation: op });
+    currentData = data;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col items-center gap-3 my-2";
+
+    const legend = document.createElement("div");
+    legend.className = "flex flex-wrap justify-center gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-2xl w-full max-w-xl";
+    data.palette.forEach(p => {
+      legend.innerHTML += `
+        <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white rounded-xl border border-slate-200 shadow-xs text-xs font-bold text-slate-700">
+          <span class="w-4 h-4 rounded-md border border-slate-400" style="background-color: ${p.hex}"></span>
+          <span>Resultado <strong>${p.target}</strong>: ${p.corNome}</span>
+        </div>
+      `;
+    });
+    wrapper.appendChild(legend);
+
+    const grid = document.createElement("div");
+    grid.className = "grid gap-1.5 p-2 bg-slate-100 border-2 border-slate-300 rounded-2xl shadow-inner";
+    grid.style.gridTemplateColumns = `repeat(${data.template.cols}, 46px)`;
+
+    data.grid.forEach(row => {
+      row.forEach(cell => {
+        const div = document.createElement("div");
+        div.className = "cbm-cell";
+        div.style.width = "46px";
+        div.style.height = "46px";
+        div.setAttribute("data-color", cell.hex);
+        div.setAttribute("data-target", cell.target);
+        div.innerHTML = `
+          <span class="cbm-eq text-[10px]">${cell.equation}</span>
+          <span class="cbm-ans text-[11px] font-extrabold hidden">${cell.target}</span>
+        `;
+        grid.appendChild(div);
+      });
+    });
+
+    wrapper.appendChild(grid);
+    container.appendChild(wrapper);
   }
 
   /* ── 1. CAÇA-PALAVRAS ── */
@@ -1044,6 +1235,32 @@ window.KiddoApp = (function () {
     document.querySelectorAll(".story-placeholder").forEach(el => {
       if (showAnswers) el.classList.add("hidden");
       else el.classList.remove("hidden");
+    });
+
+    document.querySelectorAll(".sudoku-missing").forEach(el => {
+      if (showAnswers) el.classList.add("show-answer");
+      else el.classList.remove("show-answer");
+    });
+
+    document.querySelectorAll(".cipher-letter-val").forEach(el => {
+      if (showAnswers) el.classList.add("show-answer");
+      else el.classList.remove("show-answer");
+    });
+
+    document.querySelectorAll(".cbm-cell").forEach(cell => {
+      const eq = cell.querySelector(".cbm-eq");
+      const ans = cell.querySelector(".cbm-ans");
+      if (showAnswers) {
+        cell.classList.add("show-answer");
+        cell.style.backgroundColor = cell.getAttribute("data-color");
+        if (eq) eq.classList.add("hidden");
+        if (ans) ans.classList.remove("hidden");
+      } else {
+        cell.classList.remove("show-answer");
+        cell.style.backgroundColor = "#ffffff";
+        if (eq) eq.classList.remove("hidden");
+        if (ans) ans.classList.add("hidden");
+      }
     });
 
     if (currentTab === "maze" && currentData) {

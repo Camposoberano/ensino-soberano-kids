@@ -148,6 +148,24 @@ window.BNCCModule = (function () {
       "1ano": { code: "EF15AR01", desc: "Valorizar o percurso individual e coletivo de aprendizagem escolar." },
       "2ano": { code: "EF15AR01", desc: "Reconhecimento do mérito, foco e determinação pedagógica." },
       "3ano_5ano": { code: "EF15AR01", desc: "Certificação formal de dedicação e autonomia acadêmica." }
+    },
+    sudoku: {
+      infantil: { code: "EI03ET05", desc: "Classificar objetos desenvolvendo noções de não-repetição em linhas e colunas." },
+      "1ano": { code: "EF01MA09", desc: "Identificar padrões e completar sequências sem elementos repetidos." },
+      "2ano": { code: "EF02MA09", desc: "Raciocínio dedutivo e preenchimento de matrizes lógicas 4x4." },
+      "3ano_5ano": { code: "EF03MA10", desc: "Dedução lógica formal e eliminação de hipóteses em grades 6x6." }
+    },
+    cryptogram: {
+      infantil: { code: "EI03EF09", desc: "Associação entre símbolos e letras do alfabeto com apoio lúdico." },
+      "1ano": { code: "EF01LP07", desc: "Correspondência entre símbolos e grafemas para decifrar palavras." },
+      "2ano": { code: "EF02LP08", desc: "Decodificação de frases completas com segmentação e reflexão linguística." },
+      "3ano_5ano": { code: "EF03LP02", desc: "Decifração e interpretação de provérbios e mensagens temáticas." }
+    },
+    colorbymath: {
+      infantil: { code: "EI03ET07", desc: "Relacionar contagem e numerais ao preenchimento de cores." },
+      "1ano": { code: "EF01MA06", desc: "Aplicar fatos básicos de adição associados a legendas cromáticas." },
+      "2ano": { code: "EF02MA05", desc: "Resolução de operações aritméticas com representação visual em mosaico." },
+      "3ano_5ano": { code: "EF03MA05", desc: "Cálculo mental e preenchimento de matriz geométrica por resultados." }
     }
   };
 
@@ -155,10 +173,10 @@ window.BNCCModule = (function () {
    * Recomendações de atividades por faixa etária
    */
   const RECOMMENDED_TABS = {
-    infantil: ["counting", "shapes", "body", "coloring", "origami", "tracing", "matching"],
-    "1ano": ["wordsearch", "addition", "subtraction", "scramble", "tracing", "time", "patterns", "shapes", "counting", "storyproblems"],
-    "2ano": ["wordsearch", "addition", "subtraction", "multiplication", "time", "patterns", "storyproblems", "flashcards"],
-    "3ano_5ano": ["multiplication", "division", "multichart", "storyproblems", "time", "patterns", "slidingpuzzle"]
+    infantil: ["counting", "shapes", "body", "coloring", "origami", "tracing", "matching", "sudoku"],
+    "1ano": ["wordsearch", "addition", "subtraction", "scramble", "tracing", "time", "patterns", "shapes", "counting", "storyproblems", "sudoku", "cryptogram", "colorbymath"],
+    "2ano": ["wordsearch", "addition", "subtraction", "multiplication", "time", "patterns", "storyproblems", "flashcards", "sudoku", "cryptogram", "colorbymath"],
+    "3ano_5ano": ["multiplication", "division", "multichart", "storyproblems", "time", "patterns", "slidingpuzzle", "sudoku", "cryptogram", "colorbymath"]
   };
 
   /**

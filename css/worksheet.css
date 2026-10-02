@@ -360,6 +360,126 @@ body {
   box-shadow: 0 0 0 1.5px #6366f1;
 }
 
+/* ── SUDOKU KIDS ── */
+.sudoku-grid {
+  display: grid;
+  border: 3px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.sudoku-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  border-right: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
+  user-select: none;
+}
+
+.sudoku-border-r {
+  border-right: 3px solid #1e293b !important;
+}
+
+.sudoku-border-b {
+  border-bottom: 3px solid #1e293b !important;
+}
+
+.sudoku-missing {
+  color: transparent;
+  background-color: #ffffff;
+}
+
+.sudoku-missing.show-answer {
+  color: #059669 !important;
+  background-color: #ecfdf5 !important;
+}
+
+/* ── CRIPTOGRAMA NINJA ── */
+.cipher-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 3px;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.cipher-legend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 1px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.cipher-letter-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 32px;
+  min-height: 52px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.cipher-letter-val {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: transparent;
+  border-top: 1.5px dashed #94a3b8;
+  width: 100%;
+  text-align: center;
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cipher-letter-val.show-answer {
+  color: #059669 !important;
+  background-color: #ecfdf5;
+}
+
+/* ── PINTE POR MATEMÁTICA ── */
+.cbm-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  border: 1.5px solid #94a3b8;
+  background-color: #ffffff;
+  color: #1e293b;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.cbm-cell.show-answer {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
 /* ── REGRAS MULTI-PÁGINA (APOSTILAS / LIVRETOS) ── */
 .booklet-page {
   page-break-after: always;

@@ -86,6 +86,9 @@
         <button type="button" data-tab="tracing" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Linhas de Traço
         </button>
+        <button type="button" data-tab="cryptogram" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="key" class="w-3.5 h-3.5 text-amber-600"></i> Criptograma
+        </button>
 
         <span class="h-4 w-px bg-slate-300 mx-1"></span>
 
@@ -130,6 +133,9 @@
         <button type="button" data-tab="maze" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="compass" class="w-3.5 h-3.5"></i> Labirintos
         </button>
+        <button type="button" data-tab="sudoku" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-indigo-600"></i> Sudoku Kids
+        </button>
 
         <span class="h-4 w-px bg-slate-300 mx-1"></span>
 
@@ -142,6 +148,9 @@
         </button>
         <button type="button" data-tab="coloring" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="palette" class="w-3.5 h-3.5"></i> Coloração
+        </button>
+        <button type="button" data-tab="colorbymath" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
+          <i data-lucide="brush" class="w-3.5 h-3.5 text-pink-600"></i> Pinte por Contas
         </button>
         <button type="button" data-tab="origami" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 bg-white text-slate-700 hover:bg-slate-100">
           <i data-lucide="scissors" class="w-3.5 h-3.5"></i> Origami
@@ -608,6 +617,69 @@ Ensino Soberano brilha!</textarea>
         </div>
       </div>
 
+      <!-- PAINEL: SUDOKU KIDS -->
+      <div id="panel-sudoku" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="layout-grid" class="w-4 h-4 text-indigo-500"></i> Opções do Sudoku Kids
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tamanho da Grade</label>
+          <select id="sudoku-size" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="4" selected>4 x 4 (Blocos 2x2 - Ideal para Iniciantes)</option>
+            <option value="6">6 x 6 (Blocos 2x3 - Desafio Médio)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Elemento (na Grade 4x4)</label>
+          <select id="sudoku-mode" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="emoji" selected>Emojis Chibi (🌸, ⭐, 🍎, ⚡)</option>
+            <option value="numbers">Números (1, 2, 3, 4)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Dificuldade (Lacunas)</label>
+          <select id="sudoku-difficulty" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="facil" selected>Fácil (Mais pistas preenchidas)</option>
+            <option value="medio">Médio (Mais espaços para pensar)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PAINEL: CRIPTOGRAMA NINJA -->
+      <div id="panel-cryptogram" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="key" class="w-4 h-4 text-amber-500"></i> Criptograma Secreto
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Frase Secreta para Decifrar</label>
+          <textarea id="cryptogram-input" rows="3" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase" placeholder="Deixe em branco para frase inspiradora surpresa...">O CONHECIMENTO E O SEU MAIOR SUPERPODER</textarea>
+          <p class="text-[10px] text-slate-400 mt-1">Cada letra será convertida no símbolo secreto correspondente.</p>
+        </div>
+      </div>
+
+      <!-- PAINEL: PINTE POR CONTAS -->
+      <div id="panel-colorbymath" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="brush" class="w-4 h-4 text-pink-500"></i> Pinte por Matemática
+        </h3>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Desenho / Mosaico</label>
+          <select id="cbm-template" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="crown" selected>👑 Coroa Imperial Soberano</option>
+            <option value="heart">💖 Coração Sakura Brilhante</option>
+            <option value="star">⭐ Estrela Ninja Dourada</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Operação Aritmética</label>
+          <select id="cbm-operation" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="addition" selected>Adição (+)</option>
+            <option value="subtraction">Subtração (−)</option>
+            <option value="multiplication">Multiplicação (×)</option>
+          </select>
+        </div>
+      </div>
+
       <!-- BOTÃO GERAR NOVO MODELO -->
       <button id="btn-generate" type="button" class="w-full py-3.5 px-4 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
         <i data-lucide="sparkles" class="w-5 h-5 text-amber-300"></i> Gerar Nova Atividade Anime
@@ -832,6 +904,9 @@ Ensino Soberano brilha!</textarea>
   <script src="js/sliding-puzzle.js"></script>
   <script src="js/certificate.js"></script>
   <script src="js/story-problems.js"></script>
+  <script src="js/sudoku.js"></script>
+  <script src="js/cryptogram.js"></script>
+  <script src="js/color-by-math.js"></script>
   <script src="js/booklet.js"></script>
   <script src="js/app.js"></script>
 </body>

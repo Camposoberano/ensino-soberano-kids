@@ -66,6 +66,9 @@ const filesToLoad = [
   "sliding-puzzle.js",
   "certificate.js",
   "story-problems.js",
+  "sudoku.js",
+  "cryptogram.js",
+  "color-by-math.js",
   "booklet.js",
   "app.js"
 ];
@@ -170,4 +173,53 @@ if (!kinderSkill || !kinderSkill.code || kinderSkill.code !== "EI03ET07") {
 }
 console.log(`[PASS] BNCCModule: Contagem Ed. Infantil -> ${kinderSkill.code}: ${kinderSkill.desc}`);
 
-console.log("\n=== TODOS OS 23 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 4. Testar SudokuGenerator
+console.log("\n--- Testando SudokuGenerator ---");
+const sudoku = context.SudokuGenerator;
+if (!sudoku || typeof sudoku.generate !== "function") {
+  console.error("ERRO: SudokuGenerator não está definido!");
+  process.exit(1);
+}
+const s4 = sudoku.generate({ size: 4, mode: "emoji", difficulty: "facil" });
+if (!s4 || s4.size !== 4 || s4.puzzle.length !== 4 || s4.solution.length !== 4) {
+  console.error("ERRO: Falha ao gerar Sudoku 4x4:", s4);
+  process.exit(1);
+}
+console.log("[PASS] SudokuGenerator: 4x4 Emojis -> OK");
+
+const s6 = sudoku.generate({ size: 6, mode: "numbers", difficulty: "medio" });
+if (!s6 || s6.size !== 6 || s6.puzzle.length !== 6 || s6.solution.length !== 6) {
+  console.error("ERRO: Falha ao gerar Sudoku 6x6:", s6);
+  process.exit(1);
+}
+console.log("[PASS] SudokuGenerator: 6x6 Numérico -> OK");
+
+// 5. Testar CryptogramGenerator
+console.log("\n--- Testando CryptogramGenerator ---");
+const cryptoGen = context.CryptogramGenerator;
+if (!cryptoGen || typeof cryptoGen.generate !== "function") {
+  console.error("ERRO: CryptogramGenerator não está definido!");
+  process.exit(1);
+}
+const crData = cryptoGen.generate("ENSINO SOBERANO");
+if (!crData || crData.words.length !== 2 || !crData.cipherMap) {
+  console.error("ERRO: Falha no CryptogramGenerator:", crData);
+  process.exit(1);
+}
+console.log(`[PASS] CryptogramGenerator: Frase 'ENSINO SOBERANO' decodificada em ${crData.words.length} palavras -> OK`);
+
+// 6. Testar ColorByMathGenerator
+console.log("\n--- Testando ColorByMathGenerator ---");
+const cbmGen = context.ColorByMathGenerator;
+if (!cbmGen || typeof cbmGen.generate !== "function") {
+  console.error("ERRO: ColorByMathGenerator não está definido!");
+  process.exit(1);
+}
+const cbmCrown = cbmGen.generate({ templateId: "crown", operation: "addition" });
+if (!cbmCrown || !cbmCrown.palette || cbmCrown.grid.length !== 7 || cbmCrown.grid[0].length !== 9) {
+  console.error("ERRO: Falha no ColorByMathGenerator:", cbmCrown);
+  process.exit(1);
+}
+console.log(`[PASS] ColorByMathGenerator: Mosaico ${cbmCrown.template.nome} (${cbmCrown.template.rows}x${cbmCrown.template.cols}) -> OK`);
+
+console.log("\n=== TODOS OS 26 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
