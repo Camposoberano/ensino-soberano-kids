@@ -322,7 +322,8 @@
         { type: "scramble", title: "Detetive de Palavras", instruction: "Desembaralhe as letras corretas:", bncc: "EF01LP08" },
         { type: "patterns", title: "Padrões & Sequências Lógicas", instruction: "Descubra o padrão e complete os elementos:", bncc: "EF01MA09" },
         { type: "time", title: "Guardiões do Tempo: Que Horas São?", instruction: "Observe os relógios analógicos e registre a hora:", bncc: "EF02MA18" },
-        { type: "shapes", title: "Geometria Soberana: Formas", instruction: "Identifique as figuras e responda às questões:", bncc: "EF01MA14" }
+        { type: "shapes", title: "Geometria Soberana: Formas", instruction: "Identifique as figuras e responda às questões:", bncc: "EF01MA14" },
+        { type: "drawing", title: "Aprenda a Desenhar & Colorir", instruction: "Siga o passo a passo com atenção, pratique o traçado e pinte com suas cores favoritas:", bncc: "EF15AR04" }
       ];
 
       for (let i = 0; i < contentPages; i++) {
@@ -473,6 +474,20 @@
         });
         container.appendChild(grid);
         answerText = `Contagens: ${countData.problems.map(p => `${p.name}=${p.count}`).join(" | ")}`;
+        break;
+      }
+
+      case "drawing": {
+        if (window.StepByStepDrawing && window.DrawingDatabase) {
+          const randItem = window.DrawingDatabase.getRandom("all");
+          const mode = (pageNum % 2 === 0) ? "stepbystep" : "grid";
+          const dHtml = window.StepByStepDrawing.generate(randItem.id, mode, { gridSize: 7, showTracing: false, showSolution: false });
+          const wrapper = document.createElement("div");
+          wrapper.className = "w-full my-1";
+          wrapper.innerHTML = dHtml;
+          container.appendChild(wrapper);
+          answerText = `Desenho: ${randItem.name} (${mode === "stepbystep" ? "Passo a Passo" : "Cópia por Grade"}).`;
+        }
         break;
       }
 

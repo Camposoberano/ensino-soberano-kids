@@ -19,6 +19,7 @@ window.KiddoApp = (function () {
     setupZoomAndScaling();
     loadCategoryButtons();
     setupWhiteLabel();
+    setupDrawingControls();
     renderCurrentActivity();
 
     // Redimensionar preview ao mudar tamanho da janela
@@ -835,6 +836,9 @@ window.KiddoApp = (function () {
       case "colorbymath":
         renderColorByMath(contentArea);
         break;
+      case "drawing":
+        renderDrawing(contentArea);
+        break;
     }
 
     applyAnswersVisibility();
@@ -1042,7 +1046,8 @@ window.KiddoApp = (function () {
       cryptogram: { t: "Criptograma Ninja: Código Secreto", i: "Use a tabela de símbolos para decifrar a mensagem secreta dos mestres:" },
       colorbymath: { t: "Pinte por Matemática: Mosaico das Cores", i: "Resolva as operações em cada quadrinho e pinte com a cor indicada na legenda:" },
       diagnostic: { t: "Ficha de Avaliação Diagnóstica & Rubricas BNCC", i: "Instrumento pedagógico bimestral de acompanhamento e sondagem de competências:" },
-      boardgame: { t: "A Trilha da Sabedoria Ninja: Jogo de Tabuleiro", i: "Jogo de tabuleiro pedagógico imprimível com desafios de raciocínio, peões e dado 3D:" }
+      boardgame: { t: "A Trilha da Sabedoria Ninja: Jogo de Tabuleiro", i: "Jogo de tabuleiro pedagógico imprimível com desafios de raciocínio, peões e dado 3D:" },
+      drawing: { t: "Oficina de Arte: Aprenda a Desenhar & Colorir", i: "Siga o passo a passo com atenção, pratique o traçado e pinte com suas cores favoritas:" }
     };
 
     if (defaults[tab]) {
@@ -1679,6 +1684,171 @@ window.KiddoApp = (function () {
     container.appendChild(wrapper);
   }
 
+  /* ── 12.1. CRIADOR DE DESENHO & COLORIR (355 ITENS) ── */
+  function renderDrawing(container) {
+    if (!window.StepByStepDrawing || !window.DrawingDatabase) return;
+
+    const itemSelect = document.getElementById("drawing-item-select");
+    const modeSelect = document.getElementById("drawing-mode-select");
+    const gridSizeSelect = document.getElementById("drawing-grid-size-select");
+    const tracingToggle = document.getElementById("drawing-tracing-toggle");
+
+    const itemId = itemSelect?.value || "leao";
+    const mode = modeSelect?.value || "stepbystep";
+    const gridSize = parseInt(gridSizeSelect?.value) || 7;
+    const showTracing = tracingToggle?.checked === true;
+    const showSolution = showAnswers === true;
+
+    const item = window.DrawingDatabase.getById(itemId);
+
+    // Ajusta o cabeçalho dinâmico para contextualizar a atividade
+    const titleInput = document.getElementById("sheet-title");
+    const instrInput = document.getElementById("sheet-instructions");
+    if (titleInput && instrInput) {
+      if (mode === "stepbystep") {
+        titleInput.value = `Aprenda a Desenhar: ${item.name}`;
+        instrInput.value = `Siga o passo a passo com atenção, pratique no quadro livre e pinte com muito capricho!`;
+      } else if (mode === "grid") {
+        titleInput.value = `Cópia por Grade: ${item.name}`;
+        instrInput.value = `Observe as coordenadas na grade modelo (${gridSize}x${gridSize}) e transfira o traçado para o seu quadro!`;
+      } else if (mode === "coloring") {
+        titleInput.value = `Livro de Colorir: ${item.name}`;
+        instrInput.value = `Pinte o desenho com suas cores favoritas, cubra o nome pontilhado e capriche na arte!`;
+      }
+      const sheetTitleEl = document.getElementById("preview-title") || document.getElementById("sheet-title");
+      const sheetInstrEl = document.getElementById("preview-instructions") || document.getElementById("sheet-instructions");
+      if (sheetTitleEl) sheetTitleEl.textContent = titleInput.value;
+      if (sheetInstrEl) sheetInstrEl.textContent = instrInput.value;
+    }
+
+    const html = window.StepByStepDrawing.generate(itemId, mode, {
+      gridSize: gridSize,
+      showTracing: showTracing,
+      showSolution: showSolution
+    });
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "w-full my-2";
+    wrapper.innerHTML = html;
+    container.appendChild(wrapper);
+  }
+
+  function setupDrawingControls() {
+    if (!window.DrawingDatabase) return;
+
+    const categorySelect = document.getElementById("drawing-category-select");
+    const searchInput = document.getElementById("drawing-search-input");
+    const itemSelect = document.getElementById("drawing-item-select");
+    const randomBtn = document.getElementById("btn-drawing-random");
+    const modeSelect = document.getElementById("drawing-mode-select");
+    const gridOptions = document.getElementById("drawing-grid-options");
+    const generateBtn = document.getElementById("btn-generate-drawing");
+    const gridSizeSelect = document.getElementById("drawing-grid-size-select");
+    const tracingToggle = document.getElementById("drawing-tracing-toggle");
+
+    function populateItems() {
+      if (!itemSelect) return;
+      const cat = categorySelect?.value || "all";
+      const q = searchInput?.value || "";
+      const items = window.DrawingDatabase.search(q, cat);
+
+      const prevVal = itemSelect.value;
+      itemSelect.innerHTML = "";
+
+      if (items.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Nenhum desenho encontrado";
+        itemSelect.appendChild(opt);
+        return;
+      }
+
+      items.forEach(it => {
+        const opt = document.createElement("option");
+        opt.value = it.id;
+        opt.textContent = `${it.name} (${it.category.toUpperCase()})`;
+        itemSelect.appendChild(opt);
+      });
+
+      if (items.some(it => it.id === prevVal)) {
+        itemSelect.value = prevVal;
+      } else {
+        itemSelect.value = items[0].id;
+      }
+    }
+
+    if (categorySelect) {
+      categorySelect.addEventListener("change", () => {
+        populateItems();
+        if (currentTab === "drawing") renderCurrentActivity();
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+        populateItems();
+      });
+    }
+
+    if (itemSelect) {
+      itemSelect.addEventListener("change", () => {
+        if (currentTab === "drawing") renderCurrentActivity();
+      });
+    }
+
+    if (modeSelect) {
+      modeSelect.addEventListener("change", () => {
+        if (gridOptions) {
+          if (modeSelect.value === "grid") {
+            gridOptions.classList.remove("hidden");
+          } else {
+            gridOptions.classList.add("hidden");
+          }
+        }
+        if (currentTab === "drawing") renderCurrentActivity();
+      });
+    }
+
+    if (gridSizeSelect) {
+      gridSizeSelect.addEventListener("change", () => {
+        if (currentTab === "drawing") renderCurrentActivity();
+      });
+    }
+
+    if (tracingToggle) {
+      tracingToggle.addEventListener("change", () => {
+        if (currentTab === "drawing") renderCurrentActivity();
+      });
+    }
+
+    if (randomBtn) {
+      randomBtn.addEventListener("click", () => {
+        const cat = categorySelect?.value || "all";
+        const rand = window.DrawingDatabase.getRandom(cat);
+        if (rand && itemSelect) {
+          if (categorySelect && categorySelect.value !== "all" && categorySelect.value !== rand.category) {
+            categorySelect.value = "all";
+          }
+          if (searchInput) searchInput.value = "";
+          populateItems();
+          itemSelect.value = rand.id;
+          if (currentTab === "drawing") renderCurrentActivity();
+        }
+      });
+    }
+
+    if (generateBtn) {
+      generateBtn.addEventListener("click", () => {
+        renderCurrentActivity();
+        if (window.confetti) {
+          window.confetti({ particleCount: 50, spread: 70, origin: { y: 0.7 } });
+        }
+      });
+    }
+
+    populateItems();
+  }
+
   /* ── 13. PALAVRAS EMBARALHADAS ── */
   function renderScramble(container) {
     const rawWords = (document.getElementById("scramble-words")?.value || "ESCOLA\nCRIANCA\nPROFESSOR\nCADERNO\nAMIZADE")
@@ -1873,6 +2043,14 @@ window.KiddoApp = (function () {
         const canvas = window.BookletBuilder.renderMazeCanvas(currentData, showAnswers);
         wrapper.appendChild(canvas);
         container.appendChild(wrapper);
+      }
+    }
+
+    if (currentTab === "drawing") {
+      const container = document.getElementById("worksheet-dynamic-content");
+      if (container) {
+        container.innerHTML = "";
+        renderDrawing(container);
       }
     }
   }

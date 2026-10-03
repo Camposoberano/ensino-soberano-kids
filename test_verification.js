@@ -95,6 +95,8 @@ const filesToLoad = [
   "board-game.js",
   "batch-students.js",
   "classroom-quiz.js",
+  "drawing-database.js",
+  "step-by-step-drawing.js",
   "app.js"
 ];
 
@@ -480,4 +482,112 @@ if (typeof quiz.playTickSound !== "function" || typeof quiz.playCorrectSound !==
 }
 console.log("[PASS] ClassroomQuizModule: Game show interativo com sintetizador de áudio, temporizador e banco multidisciplinar -> OK");
 
-console.log("\n=== TODOS OS 33 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// 15. Testar DrawingDatabase e StepByStepDrawing (355 Itens e 3 Modos)
+console.log("\n--- Testando DrawingDatabase & StepByStepDrawing (Catálogo de 355 Itens) ---");
+const dDb = context.DrawingDatabase;
+if (!dDb || typeof dDb.getAll !== "function" || typeof dDb.getById !== "function" || typeof dDb.search !== "function") {
+  console.error("ERRO: DrawingDatabase não está definido corretamente!");
+  process.exit(1);
+}
+
+const allItems = dDb.getAll();
+if (!Array.isArray(allItems) || allItems.length < 350) {
+  console.error(`ERRO: Catálogo de desenhos insuficiente: ${allItems.length} itens (esperado >= 350)!`);
+  process.exit(1);
+}
+
+const categories = dDb.getCategories();
+const catKeys = ["animais", "paisagens", "objetos", "frutas", "fantasia"];
+for (const ck of catKeys) {
+  if (!categories[ck]) {
+    console.error(`ERRO: Categoria ${ck} não encontrada nas categorias registradas!`);
+    process.exit(1);
+  }
+  const itemsInCat = dDb.getByCategory(ck);
+  if (itemsInCat.length < 50) {
+    console.error(`ERRO: Categoria ${ck} possui itens insuficientes: ${itemsInCat.length}!`);
+    process.exit(1);
+  }
+}
+
+// Validar integridade estrutural de cada item
+for (let i = 0; i < allItems.length; i++) {
+  const item = allItems[i];
+  if (!item.id || !item.name || !item.category || !item.word) {
+    console.error(`ERRO: Item ${i} possui metadados incompletos:`, item);
+    process.exit(1);
+  }
+  if (!Array.isArray(item.layers) || item.layers.length !== 5) {
+    console.error(`ERRO: Item ${item.id} não possui 5 camadas vetoriais:`, item.layers?.length);
+    process.exit(1);
+  }
+  if (!Array.isArray(item.stepsDesc) || item.stepsDesc.length !== 5) {
+    console.error(`ERRO: Item ${item.id} não possui 5 descrições de passos:`, item.stepsDesc?.length);
+    process.exit(1);
+  }
+  if (!Array.isArray(item.colors) || item.colors.length < 3) {
+    console.error(`ERRO: Item ${item.id} possui paleta de cores insuficiente:`, item.colors);
+    process.exit(1);
+  }
+}
+
+// Testar busca e aleatório
+const searchGato = dDb.search("gato", "animais");
+if (!searchGato.some(i => i.id === "gato")) {
+  console.error("ERRO: Busca por 'gato' falhou:", searchGato);
+  process.exit(1);
+}
+const randomItem = dDb.getRandom("paisagens");
+if (!randomItem || randomItem.category !== "paisagens") {
+  console.error("ERRO: getRandom por categoria falhou:", randomItem);
+  process.exit(1);
+}
+
+// Testar motor StepByStepDrawing
+const dEngine = context.StepByStepDrawing;
+if (!dEngine || typeof dEngine.generate !== "function" || typeof dEngine.generateStepByStep !== "function") {
+  console.error("ERRO: StepByStepDrawing não está definido corretamente!");
+  process.exit(1);
+}
+
+// 1. Testar Passo a Passo
+const testItem = dDb.getById("leao");
+const htmlStep = dEngine.generateStepByStep(testItem);
+if (!htmlStep.includes("Etapa 1") || !htmlStep.includes("Etapa 5: Final") || !htmlStep.includes("Sua Vez!")) {
+  console.error("ERRO: Renderização de Passo a Passo falhou em conter os 6 quadros!");
+  process.exit(1);
+}
+
+// 2. Testar Cópia por Grade (Grid Copy)
+const htmlGrid7 = dEngine.generateGridCopy(testItem, { gridSize: 7, showTracing: false, showSolution: false });
+if (!htmlGrid7.includes("7x7") || !htmlGrid7.includes("grid-overlay")) {
+  console.error("ERRO: Renderização da grade 7x7 falhou!");
+  process.exit(1);
+}
+
+const htmlGridSolution = dEngine.generateGridCopy(testItem, { gridSize: 5, showTracing: false, showSolution: true });
+if (!htmlGridSolution.includes("5x5") || !htmlGridSolution.includes("<rect width=\"200\" height=\"200\" fill=\"#ffffff\" rx=\"8\"/>")) {
+  console.error("ERRO: Gabarito da grade 5x5 falhou!");
+  process.exit(1);
+}
+
+// 3. Testar Livro de Colorir A4
+const htmlColoring = dEngine.generateColoringPage(testItem, { showBackground: true });
+if (!htmlColoring.includes("Cubra e Escreva o Nome da Ilustração") || !htmlColoring.includes("Cores Sugeridas:")) {
+  console.error("ERRO: Renderização da página de colorir gigante falhou!");
+  process.exit(1);
+}
+
+// 4. Testar chamada universal
+const universalStep = dEngine.generate("cachorro", "stepbystep");
+const universalGrid = dEngine.generate("praia-tropical", "grid", { gridSize: 7 });
+const universalColor = dEngine.generate("maca-vermelha", "coloring");
+if (!universalStep || !universalGrid || !universalColor) {
+  console.error("ERRO: Função universal generate() falhou!");
+  process.exit(1);
+}
+
+console.log(`[PASS] DrawingDatabase: Catálogo de ${allItems.length} desenhos em 5 categorias verificado com sucesso -> OK`);
+console.log("[PASS] StepByStepDrawing: Renderização dos 3 modos (Passo a Passo, Grade Coordenadas, Livro Colorir A4) -> OK");
+
+console.log("\n=== TODOS OS 35 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

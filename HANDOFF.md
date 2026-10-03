@@ -50,14 +50,17 @@ Todo o código foi auditado, testado de ponta a ponta e encapsulado em contêine
 | 30 | Jogos de Tabuleiro | `js/board-game.js` | ✅ Aprovado | 4 temas (Ninja, Medieval, Espaço, Safári), 24 casas e dados |
 | 31 | Mala Direta Escolar | `js/batch-students.js` | ✅ Aprovado | Importação de lista de alunos e impressão personalizada em lote|
 | 32 | Quiz Show Lousa/Projetor | `js/classroom-quiz.js` | ✅ Aprovado | Game show para sala de aula com efeitos sonoros Web Audio API |
-| 33 | Orquestrador Central | `js/app.js` | ✅ Aprovado | Gerenciamento de estado, impressão e alternância de telas |
+| 33 | Catálogo Vetorial de Desenhos | `js/drawing-database.js` | ✅ Aprovado | 355 ilustrações vetoriais categorizadas (Animais, Paisagens, Objetos, Frutas, Fantasia) |
+| 34 | Criador de Desenho & Pintura | `js/step-by-step-drawing.js`| ✅ Aprovado | 3 modos: Passo a Passo (6 quadros), Grade Quadriculada (5x5 a 9x9) e Livro de Colorir A4 |
+| 35 | Orquestrador Central | `js/app.js` | ✅ Aprovado | Gerenciamento de estado, impressão e alternância de telas |
 
 ---
 
 ## 3. O Que Deu Certo (Successes & Destaques)
 
-1. **Robustez dos 33 Módulos:**
+1. **Robustez dos 35 Módulos:**
    - Todos os geradores foram testados rigorosamente via script automatizado `test_verification.js` sem nenhuma falha (`exit code 0`).
+   - Implementação do **Criador de Desenho & Livro de Colorir** com acervo gigante de **355 desenhos** em SVG puro (100% offline, sem APIs pagas), com suporte a impressão A4, cópia por coordenadas espaciais e pautas caligráficas.
    - Implementação de recursos escolares avançados como a **Mala Direta (Batch Students)**, a **Apostila Gigante de 30 a 50 páginas** e a **Lousa de Quiz com Áudio Sintetizado**.
 2. **Container Docker Otimizado:**
    - Construção baseada em `nginx:alpine` extremamente leve (~25MB).

@@ -137,6 +137,12 @@ window.BNCCModule = (function () {
       "2ano": { code: "EF15AR04", desc: "Desenvolver percepção estética e harmonização cromática." },
       "3ano_5ano": { code: "EF15AR05", desc: "Criação visual com apreciação de traços, luzes e contrastes." }
     },
+    drawing: {
+      infantil: { code: "EI03TS02", desc: "Expressar-se livremente por meio de desenho, traçado geométrico e uso de cores." },
+      "1ano": { code: "EF15AR04", desc: "Experimentar técnicas de desenho passo a passo, cópia por grade e controle motor." },
+      "2ano": { code: "EF15AR05", desc: "Desenvolver percepção espacial, proporção, transposição por malha e pintura." },
+      "3ano_5ano": { code: "EF15AR06", desc: "Criação visual com noções de escala, coordenadas cartesianas e estilização artística." }
+    },
     slidingpuzzle: {
       infantil: { code: "EI03ET05", desc: "Classificar e ordenar peças desenvolvendo noções espaciais." },
       "1ano": { code: "EF01MA09", desc: "Desenvolver planejamento e antecipação de movimentos em jogos lógicos." },
@@ -173,10 +179,10 @@ window.BNCCModule = (function () {
    * Recomendações de atividades por faixa etária
    */
   const RECOMMENDED_TABS = {
-    infantil: ["counting", "shapes", "body", "coloring", "origami", "tracing", "matching", "sudoku"],
-    "1ano": ["wordsearch", "addition", "subtraction", "scramble", "tracing", "time", "patterns", "shapes", "counting", "storyproblems", "sudoku", "cryptogram", "colorbymath"],
-    "2ano": ["wordsearch", "addition", "subtraction", "multiplication", "time", "patterns", "storyproblems", "flashcards", "sudoku", "cryptogram", "colorbymath"],
-    "3ano_5ano": ["multiplication", "division", "multichart", "storyproblems", "time", "patterns", "slidingpuzzle", "sudoku", "cryptogram", "colorbymath"]
+    infantil: ["counting", "shapes", "body", "coloring", "drawing", "origami", "tracing", "matching", "sudoku"],
+    "1ano": ["wordsearch", "addition", "subtraction", "scramble", "tracing", "drawing", "time", "patterns", "shapes", "counting", "storyproblems", "sudoku", "cryptogram", "colorbymath"],
+    "2ano": ["wordsearch", "addition", "subtraction", "multiplication", "drawing", "time", "patterns", "storyproblems", "flashcards", "sudoku", "cryptogram", "colorbymath"],
+    "3ano_5ano": ["multiplication", "division", "multichart", "drawing", "storyproblems", "time", "patterns", "slidingpuzzle", "sudoku", "cryptogram", "colorbymath"]
   };
 
   /**
