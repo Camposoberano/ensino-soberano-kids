@@ -29,10 +29,12 @@ body {
 /* ── CONTAINER DA FOLHA A4 ── */
 .worksheet-paper {
   width: 210mm;
+  height: 297mm;
   min-height: 297mm;
+  max-height: 297mm;
   background-color: #ffffff;
   color: #1e293b;
-  padding: 10mm 12mm;
+  padding: 7mm 9mm;
   margin: 0 auto;
   box-sizing: border-box;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
@@ -41,19 +43,24 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Moldura Lúdica Estilo Anime Manga */
 .worksheet-frame {
   border: 2.5px solid #cbd5e1;
-  border-radius: 16px;
-  padding: 8mm;
+  border-radius: 14px;
+  padding: 5mm 6mm;
   height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: relative;
   flex: 1;
   background-color: #ffffff;
+  overflow: hidden;
 }
 
 /* Cantoneiras fofas da moldura */
@@ -78,8 +85,8 @@ body {
 /* ── CABEÇALHO DE IDENTIFICAÇÃO ESCOLAR ANIME ── */
 .student-header {
   border-bottom: 2px dashed #e2e8f0;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+  padding-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .dotted-line {
@@ -558,13 +565,21 @@ body {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 6mm;
+    margin: 0;
   }
 
-  body {
-    background: transparent !important;
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+
+  html, body {
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
+    overflow: hidden !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -578,23 +593,35 @@ body {
   #digital-solution-modal,
   #puzzle-view-container,
   #booklet-modal,
-  .modal-backdrop {
+  .modal-backdrop,
+  #drawer-backdrop,
+  #app-drawer {
     display: none !important;
   }
 
   /* Se a visualização de apostila estiver aberta, imprime ela */
-  body:has(#booklet-view-modal:not(.hidden)) #preview-wrapper {
+  body:has(#booklet-view-modal:not(.hidden)) #preview-wrapper,
+  body:has(#batch-view-modal:not(.hidden)) #preview-wrapper {
     display: none !important;
   }
 
-  body:has(#booklet-view-modal:not(.hidden)) #booklet-view-modal {
+  body:has(#booklet-view-modal:not(.hidden)),
+  body:has(#batch-view-modal:not(.hidden)) {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body:has(#booklet-view-modal:not(.hidden)) #booklet-view-modal,
+  body:has(#batch-view-modal:not(.hidden)) #batch-view-modal {
     display: block !important;
     position: static !important;
     background: transparent !important;
     padding: 0 !important;
   }
 
-  body:has(#booklet-view-modal:not(.hidden)) #booklet-render-target {
+  body:has(#booklet-view-modal:not(.hidden)) #booklet-render-target,
+  body:has(#batch-view-modal:not(.hidden)) #batch-render-target {
     display: block !important;
     width: 100% !important;
   }
@@ -603,13 +630,20 @@ body {
     padding: 0 !important;
     margin: 0 !important;
     display: block !important;
-    overflow: visible !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
   }
 
   .page-scaler-wrapper {
     transform: none !important;
-    width: 100% !important;
-    height: 100% !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
   }
 
   #standard-sheet-article.hidden,
@@ -619,25 +653,63 @@ body {
 
   #custom-sheet-wrapper:not(.hidden) {
     display: block !important;
-    width: 100% !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
   }
 
   .worksheet-paper {
-    width: 100% !important;
-    min-height: 100% !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    box-sizing: border-box !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    padding: 5mm !important;
-  }
-
-  .booklet-page {
-    page-break-after: always !important;
-    break-after: page !important;
-    height: 100% !important;
+    padding: 6mm 8mm !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
   }
 
   .worksheet-frame {
-    padding: 5mm !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    box-sizing: border-box !important;
+    padding: 4.5mm 5.5mm !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  #worksheet-dynamic-content {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    width: 100% !important;
+  }
+
+  .booklet-page,
+  .batch-student-page {
+    page-break-after: always !important;
+    break-after: page !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
 
   /* Renderizar traço novo do passo a passo em grafite uniforme na impressão */
@@ -649,6 +721,7 @@ body {
   .step-card {
     transform: none !important;
     box-shadow: none !important;
-    break-inside: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 }

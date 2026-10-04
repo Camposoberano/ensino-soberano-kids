@@ -104,17 +104,17 @@
     for (let step = 0; step < 4; step++) {
       const svg = buildStepSvg(layers, step);
       cardsHtml.push(`
-        <div class="step-card bg-white border-2 border-slate-200 rounded-2xl p-2.5 flex flex-col items-center justify-between shadow-xs">
-          <div class="w-full flex items-center justify-between mb-1">
-            <span class="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-md flex items-center gap-1 font-heading">
+        <div class="step-card bg-white border-2 border-slate-200 rounded-xl p-2 flex flex-col items-center justify-between shadow-xs">
+          <div class="w-full flex items-center justify-between mb-0.5">
+            <span class="text-[9.5px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded flex items-center gap-1 font-heading">
               <span>Etapa ${step + 1}</span>
             </span>
-            <span class="text-[8px] font-bold text-slate-400">Traço Roxo = Novo</span>
+            <span class="text-[7.5px] font-bold text-slate-400">Traço Roxo = Novo</span>
           </div>
-          <div class="w-full aspect-square max-w-[130px] flex items-center justify-center p-1">
+          <div class="w-full aspect-square max-w-[105px] flex items-center justify-center p-0.5">
             ${svg}
           </div>
-          <p class="text-[9px] font-medium text-slate-600 text-center leading-tight mt-1 line-clamp-2">
+          <p class="text-[8.5px] font-medium text-slate-600 text-center leading-tight mt-0.5 line-clamp-2">
             ${stepsDesc[step]}
           </p>
         </div>
@@ -124,17 +124,17 @@
     // Passo 5: Desenho Final Modelo
     const fullSvg = buildCompleteSvg(layers);
     cardsHtml.push(`
-      <div class="step-card bg-indigo-50/50 border-2 border-indigo-300 rounded-2xl p-2.5 flex flex-col items-center justify-between shadow-xs">
-        <div class="w-full flex items-center justify-between mb-1">
-          <span class="text-[10px] font-extrabold text-white bg-indigo-600 px-2 py-0.5 rounded-md flex items-center gap-1 font-heading shadow-xs">
+      <div class="step-card bg-indigo-50/50 border-2 border-indigo-300 rounded-xl p-2 flex flex-col items-center justify-between shadow-xs">
+        <div class="w-full flex items-center justify-between mb-0.5">
+          <span class="text-[9.5px] font-extrabold text-white bg-indigo-600 px-1.5 py-0.5 rounded flex items-center gap-1 font-heading shadow-xs">
             <span>Etapa 5: Final</span>
           </span>
-          <span class="text-[8px] font-extrabold text-indigo-700">Modelo Pronto!</span>
+          <span class="text-[7.5px] font-extrabold text-indigo-700">Modelo Pronto!</span>
         </div>
-        <div class="w-full aspect-square max-w-[130px] flex items-center justify-center p-1">
+        <div class="w-full aspect-square max-w-[105px] flex items-center justify-center p-0.5">
           ${fullSvg}
         </div>
-        <p class="text-[9px] font-bold text-indigo-900 text-center leading-tight mt-1">
+        <p class="text-[8.5px] font-bold text-indigo-900 text-center leading-tight mt-0.5">
           ${stepsDesc[4]}
         </p>
       </div>
@@ -142,19 +142,19 @@
 
     // Quadro 6: Espaço Livre do Aluno para Desenho e Pintura
     cardsHtml.push(`
-      <div class="step-card bg-amber-50/40 border-2 border-dashed border-amber-300 rounded-2xl p-2.5 flex flex-col items-center justify-between relative">
-        <div class="w-full flex items-center justify-between mb-1">
-          <span class="text-[10px] font-extrabold text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md flex items-center gap-1 font-heading">
-            <i data-lucide="sparkles" class="w-3 h-3 text-amber-600 inline"></i> <span>Sua Vez!</span>
+      <div class="step-card bg-amber-50/40 border-2 border-dashed border-amber-300 rounded-xl p-2 flex flex-col items-center justify-between relative">
+        <div class="w-full flex items-center justify-between mb-0.5">
+          <span class="text-[9.5px] font-extrabold text-amber-800 bg-amber-100 border border-amber-300 px-1.5 py-0.5 rounded flex items-center gap-1 font-heading">
+            <i data-lucide="sparkles" class="w-2.5 h-2.5 text-amber-600 inline"></i> <span>Sua Vez!</span>
           </span>
-          <span class="text-[8px] font-bold text-amber-600">Desenhe & Pinte</span>
+          <span class="text-[7.5px] font-bold text-amber-600">Desenhe & Pinte</span>
         </div>
-        <div class="w-full flex-1 flex flex-col items-center justify-center border border-dashed border-amber-200 rounded-xl bg-white/80 p-2 my-1">
-          <i data-lucide="pencil" class="w-8 h-8 text-amber-300 mb-1 opacity-75"></i>
-          <span class="text-[10px] font-bold text-slate-400 text-center">Faça seu desenho aqui e pinte bem colorido!</span>
+        <div class="w-full flex-1 flex flex-col items-center justify-center border border-dashed border-amber-200 rounded-lg bg-white/80 p-1 my-0.5 min-h-[90px]">
+          <i data-lucide="pencil" class="w-6 h-6 text-amber-300 mb-0.5 opacity-75"></i>
+          <span class="text-[8.5px] font-bold text-slate-400 text-center">Faça seu desenho aqui e pinte!</span>
         </div>
-        <div class="w-full flex items-center justify-between text-[8px] font-semibold text-slate-400 pt-1">
-          <span>Assinatura: __________________</span>
+        <div class="w-full flex items-center justify-between text-[7.5px] font-semibold text-slate-400 pt-0.5">
+          <span>Assinatura: ____________</span>
           <span>Nota: ⭐⭐⭐⭐⭐</span>
         </div>
       </div>
@@ -163,37 +163,37 @@
     // Paleta de cores recomendadas
     const colors = item.colors || ["#f59e0b", "#ef4444", "#10b981", "#3b82f6"];
     const colorBadges = colors.map(c => `
-      <div class="flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded-full shadow-2xs">
-        <span class="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-inner" style="background-color: ${c}"></span>
-        <span class="text-[9px] font-bold text-slate-600 uppercase font-mono">${c}</span>
+      <div class="flex items-center gap-1 bg-white border border-slate-200 px-1.5 py-0.5 rounded-full shadow-2xs">
+        <span class="w-3 h-3 rounded-full border border-slate-300 shadow-inner" style="background-color: ${c}"></span>
+        <span class="text-[8px] font-bold text-slate-600 uppercase font-mono">${c}</span>
       </div>
     `).join("");
 
     return `
-      <div class="step-drawing-container flex flex-col gap-3 w-full">
-        <!-- 6 Quadros Sequenciais -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+      <div class="step-drawing-container flex flex-col gap-2 w-full">
+        <!-- 6 Quadros Sequenciais em Grade Fixa 3 Colunas -->
+        <div class="grid grid-cols-3 gap-2 w-full">
           ${cardsHtml.join("")}
         </div>
 
-        <!-- Barra Inferior: Paleta Sugerida & Caligrafia -->
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <!-- Barra Inferior: Paleta Sugerida & Caligrafia Compacta -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 flex flex-row items-center justify-between gap-2 w-full">
           <!-- Paleta de Cores -->
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 font-heading flex items-center gap-1">
-              <i data-lucide="palette" class="w-3.5 h-3.5 text-pink-500"></i> Cores Sugeridas:
+          <div class="flex items-center gap-1.5">
+            <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 font-heading flex items-center gap-1">
+              <i data-lucide="palette" class="w-3 h-3 text-pink-500"></i> Cores:
             </span>
-            <div class="flex items-center gap-1.5 flex-wrap">
+            <div class="flex items-center gap-1 flex-wrap">
               ${colorBadges}
             </div>
           </div>
 
           <!-- Treino de Caligrafia da Palavra -->
-          <div class="flex items-center gap-2 bg-white px-3 py-1.5 border border-indigo-100 rounded-xl">
-            <span class="text-[10px] font-extrabold text-indigo-700 uppercase font-heading">
+          <div class="flex items-center gap-1.5 bg-white px-2.5 py-1 border border-indigo-100 rounded-lg">
+            <span class="text-[9px] font-extrabold text-indigo-700 uppercase font-heading">
               Escreva o Nome:
             </span>
-            <span class="font-mono text-sm font-black tracking-widest text-slate-700 border-b-2 border-dotted border-slate-400 pb-0.5">
+            <span class="font-mono text-xs font-black tracking-widest text-slate-700 border-b border-dotted border-slate-400 pb-0.5">
               ${item.word || item.name.toUpperCase()}
             </span>
           </div>
@@ -246,19 +246,19 @@
     `).join("");
 
     return `
-      <div class="grid-drawing-container flex flex-col gap-4 w-full">
-        <!-- 2 Quadros Lado a Lado -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid-drawing-container flex flex-col gap-2 w-full">
+        <!-- 2 Quadros Lado a Lado em Grade Fixa -->
+        <div class="grid grid-cols-2 gap-3 w-full">
           <!-- Quadro 1: Modelo Original com Coordenadas -->
-          <div class="bg-white border-2 border-slate-200 rounded-3xl p-4 flex flex-col items-center shadow-xs">
-            <div class="w-full flex items-center justify-between mb-2">
-              <span class="text-xs font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-heading">
-                <i data-lucide="eye" class="w-3.5 h-3.5 text-indigo-600"></i> 1. Modelo com Grade (${gridSize}x${gridSize})
+          <div class="bg-white border-2 border-slate-200 rounded-2xl p-2.5 flex flex-col items-center shadow-xs">
+            <div class="w-full flex items-center justify-between mb-1">
+              <span class="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-lg flex items-center gap-1 font-heading">
+                <i data-lucide="eye" class="w-3 h-3 text-indigo-600"></i> 1. Modelo (${gridSize}x${gridSize})
               </span>
-              <span class="text-[10px] font-bold text-slate-400">Observe as Coordenadas</span>
+              <span class="text-[8px] font-bold text-slate-400">Coordenadas A-${["A","B","C","D","E","F","G","H","I"][gridSize-1]}</span>
             </div>
             
-            <div class="relative w-full aspect-square max-w-[270px] border-2 border-slate-300 rounded-2xl overflow-hidden bg-white shadow-inner">
+            <div class="relative w-full aspect-square max-w-[210px] border-2 border-slate-300 rounded-xl overflow-hidden bg-white shadow-inner">
               <div class="w-full h-full">
                 ${modelFullSvg}
               </div>
@@ -266,21 +266,21 @@
                 ${gridOverlay}
               </svg>
             </div>
-            <p class="text-[10px] font-medium text-slate-500 text-center mt-2">
-              Transfira o traçado de cada quadrante (ex: B2, C3) para o quadro ao lado.
+            <p class="text-[8.5px] font-medium text-slate-500 text-center mt-1">
+              Transfira o traço de cada quadrante para a grade ao lado.
             </p>
           </div>
 
           <!-- Quadro 2: Área de Cópia do Aluno -->
-          <div class="bg-white border-2 border-indigo-200 rounded-3xl p-4 flex flex-col items-center shadow-xs">
-            <div class="w-full flex items-center justify-between mb-2">
-              <span class="text-xs font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-300 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-heading">
-                <i data-lucide="pencil" class="w-3.5 h-3.5 text-emerald-600"></i> 2. Sua Grade de Cópia
+          <div class="bg-white border-2 border-indigo-200 rounded-2xl p-2.5 flex flex-col items-center shadow-xs">
+            <div class="w-full flex items-center justify-between mb-1">
+              <span class="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-300 px-2 py-0.5 rounded-lg flex items-center gap-1 font-heading">
+                <i data-lucide="pencil" class="w-3 h-3 text-emerald-600"></i> 2. Sua Grade de Cópia
               </span>
-              <span class="text-[10px] font-extrabold text-pink-600 ${showTracing ? '' : 'hidden'}">Traço Guia Ativo</span>
+              <span class="text-[8px] font-extrabold text-pink-600 ${showTracing ? '' : 'hidden'}">Traço Guia</span>
             </div>
 
-            <div class="relative w-full aspect-square max-w-[270px] border-2 border-indigo-400 rounded-2xl overflow-hidden bg-white shadow-inner">
+            <div class="relative w-full aspect-square max-w-[210px] border-2 border-indigo-400 rounded-xl overflow-hidden bg-white shadow-inner">
               <div class="w-full h-full">
                 ${studentContentSvg}
               </div>
@@ -288,27 +288,27 @@
                 ${gridOverlay}
               </svg>
             </div>
-            <p class="text-[10px] font-bold text-indigo-900 text-center mt-2">
-              Copie o desenho com precisão e depois pinte tudo com capricho!
+            <p class="text-[8.5px] font-bold text-indigo-900 text-center mt-1">
+              Copie o desenho com precisão e pinte com capricho!
             </p>
           </div>
         </div>
 
-        <!-- Rodapé Pedagógico -->
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 font-heading flex items-center gap-1">
-              <i data-lucide="palette" class="w-3.5 h-3.5 text-pink-500"></i> Paleta Sugerida:
+        <!-- Rodapé Pedagógico Compacto -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 flex flex-row items-center justify-between gap-2 w-full">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 font-heading flex items-center gap-1">
+              <i data-lucide="palette" class="w-3 h-3 text-pink-500"></i> Cores:
             </span>
-            <div class="flex items-center gap-1.5 flex-wrap">
+            <div class="flex items-center gap-1 flex-wrap">
               ${colorBadges}
             </div>
           </div>
-          <div class="flex items-center gap-2 bg-white px-3 py-1.5 border border-indigo-100 rounded-xl">
-            <span class="text-[10px] font-extrabold text-indigo-700 uppercase font-heading">
+          <div class="flex items-center gap-1.5 bg-white px-2.5 py-1 border border-indigo-100 rounded-lg">
+            <span class="text-[9px] font-extrabold text-indigo-700 uppercase font-heading">
               Treino de Escrita:
             </span>
-            <span class="font-mono text-sm font-black tracking-widest text-slate-700 border-b-2 border-dotted border-slate-400 pb-0.5">
+            <span class="font-mono text-xs font-black tracking-widest text-slate-700 border-b border-dotted border-slate-400 pb-0.5">
               ${item.word || item.name.toUpperCase()}
             </span>
           </div>
@@ -329,55 +329,53 @@
 
     const colors = item.colors || ["#f59e0b", "#ef4444", "#10b981", "#3b82f6"];
     const colorSwatches = colors.map((c, i) => `
-      <div class="flex flex-col items-center gap-1">
-        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-slate-300 shadow-sm flex items-center justify-center font-bold text-[10px] text-slate-700 bg-white" style="border-color: ${c}">
-          <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full" style="background-color: ${c}"></span>
-        </div>
+      <div class="flex items-center gap-1">
+        <span class="w-4 h-4 rounded-full border border-slate-300 shadow-inner" style="background-color: ${c}"></span>
         <span class="text-[8px] font-bold text-slate-500 uppercase font-mono">${c}</span>
       </div>
     `).join("");
 
     return `
-      <div class="coloring-page-container flex flex-col items-center justify-between w-full max-w-xl mx-auto my-1">
+      <div class="coloring-page-container flex flex-col items-center justify-between w-full max-w-lg mx-auto">
         <!-- Moldura Artística e Desenho Central -->
-        <div class="w-full relative border-4 border-slate-800 rounded-3xl p-3 sm:p-5 bg-white shadow-sm flex flex-col items-center">
+        <div class="w-full relative border-3 border-slate-800 rounded-2xl p-2.5 bg-white shadow-xs flex flex-col items-center">
           <!-- Cantoneiras decorativas -->
-          <div class="absolute top-2 left-2 text-slate-400 text-xs">⭐</div>
-          <div class="absolute top-2 right-2 text-slate-400 text-xs">⭐</div>
-          <div class="absolute bottom-2 left-2 text-slate-400 text-xs">⭐</div>
-          <div class="absolute bottom-2 right-2 text-slate-400 text-xs">⭐</div>
+          <div class="absolute top-1.5 left-2 text-slate-400 text-xs">⭐</div>
+          <div class="absolute top-1.5 right-2 text-slate-400 text-xs">⭐</div>
+          <div class="absolute bottom-1.5 left-2 text-slate-400 text-xs">⭐</div>
+          <div class="absolute bottom-1.5 right-2 text-slate-400 text-xs">⭐</div>
 
-          <div class="w-full aspect-square max-w-[320px] sm:max-w-[350px] flex items-center justify-center my-2">
+          <div class="w-full aspect-square max-w-[260px] flex items-center justify-center my-1">
             ${largeSvg}
           </div>
 
           <!-- Faixa de Caligrafia / Treino de Alfabetização -->
-          <div class="w-full mt-2 pt-2 border-t-2 border-dashed border-slate-300 flex flex-col items-center gap-1">
-            <span class="text-[10px] font-extrabold uppercase text-indigo-700 tracking-wider font-heading">
+          <div class="w-full mt-1 pt-1.5 border-t-2 border-dashed border-slate-300 flex flex-col items-center gap-0.5">
+            <span class="text-[9px] font-extrabold uppercase text-indigo-700 tracking-wider font-heading">
               Cubra e Escreva o Nome da Ilustração:
             </span>
-            <div class="font-mono text-base sm:text-lg font-black tracking-[0.25em] text-slate-800 border-b-2 border-dashed border-slate-500 px-4 py-1">
+            <div class="font-mono text-sm sm:text-base font-black tracking-[0.2em] text-slate-800 border-b-2 border-dashed border-slate-500 px-3 py-0.5">
               ${item.word || item.name.toUpperCase()}
             </div>
           </div>
         </div>
 
         <!-- Paleta de Cores e Ficha de Assinatura -->
-        <div class="w-full mt-3 bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 flex flex-row items-center justify-between gap-2">
           <!-- Cores Recomendadas -->
-          <div class="flex items-center gap-3">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-600 font-heading">
+          <div class="flex items-center gap-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-600 font-heading">
               Cores Sugeridas:
             </span>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
               ${colorSwatches}
             </div>
           </div>
 
           <!-- Selo de Assinatura do Aluno -->
-          <div class="text-right flex flex-col items-end text-[9px] font-semibold text-slate-500">
-            <span>Pintado com amor por: __________________</span>
-            <span class="text-[8px] text-amber-600 font-bold mt-0.5">Avaliação da Arte: ⭐ ⭐ ⭐ ⭐ ⭐</span>
+          <div class="text-right flex flex-col items-end text-[8px] font-semibold text-slate-500 leading-tight">
+            <span>Pintado por: __________________</span>
+            <span class="text-[7.5px] text-amber-600 font-bold mt-0.5">Avaliação: ⭐ ⭐ ⭐ ⭐ ⭐</span>
           </div>
         </div>
       </div>
