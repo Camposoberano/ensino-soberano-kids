@@ -148,7 +148,23 @@ window.KiddoApp = (function () {
         btn.classList.add("active-tab", "bg-indigo-600", "text-white", "shadow-sm", "font-bold");
         btn.classList.remove("text-slate-700");
 
-        currentTab = btn.getAttribute("data-tab");
+        let targetTab = btn.getAttribute("data-tab");
+        if (targetTab === "coloring") {
+          targetTab = "drawing";
+          const modeSelect = document.getElementById("drawing-mode-select");
+          if (modeSelect) {
+            modeSelect.value = "coloring";
+            const gridOptions = document.getElementById("drawing-grid-options");
+            if (gridOptions) gridOptions.classList.add("hidden");
+          }
+        } else if (targetTab === "drawing") {
+          const modeSelect = document.getElementById("drawing-mode-select");
+          if (modeSelect && modeSelect.value === "coloring") {
+            modeSelect.value = "stepbystep";
+          }
+        }
+
+        currentTab = targetTab;
         showAnswers = false;
         customBnccText = null;
         updateAnswerButtonText();
@@ -262,12 +278,28 @@ window.KiddoApp = (function () {
       applyAnswersVisibility();
     });
 
-    document.getElementById("btn-print").addEventListener("click", () => window.print());
-    document.getElementById("btn-download-pdf").addEventListener("click", downloadPDF);
+    const btnPrint = document.getElementById("btn-print");
+    if (btnPrint) {
+      btnPrint.addEventListener("click", () => {
+        closeDrawer();
+        setTimeout(() => window.print(), 100);
+      });
+    }
+
+    const btnDownloadPdf = document.getElementById("btn-download-pdf");
+    if (btnDownloadPdf) {
+      btnDownloadPdf.addEventListener("click", () => {
+        closeDrawer();
+        downloadPDF();
+      });
+    }
 
     const btnQuickPrint = document.getElementById("btn-quick-print");
     if (btnQuickPrint) {
-      btnQuickPrint.addEventListener("click", () => window.print());
+      btnQuickPrint.addEventListener("click", () => {
+        closeDrawer();
+        setTimeout(() => window.print(), 100);
+      });
     }
 
     const btnDrawerQuiz = document.getElementById("btn-drawer-quiz");
@@ -1811,6 +1843,27 @@ window.KiddoApp = (function () {
 
   /* ── 12. PÁGINA PARA COLORIR (COLORING) ── */
   function renderColoring(container) {
+    if (window.StepByStepDrawing && window.DrawingDatabase) {
+      const itemSelect = document.getElementById("drawing-item-select");
+      const itemId = itemSelect?.value || window.DrawingDatabase.getRandom()?.id || "leao";
+      const item = window.DrawingDatabase.getById(itemId);
+      const titleInput = document.getElementById("sheet-title");
+      const instrInput = document.getElementById("sheet-instructions");
+      if (titleInput && instrInput && item) {
+        titleInput.value = `Livro de Colorir: ${item.name}`;
+        instrInput.value = `Pinte o desenho com suas cores favoritas, cubra o nome pontilhado e capriche na arte!`;
+        const sheetTitleEl = document.getElementById("preview-title") || document.getElementById("sheet-title");
+        const sheetInstrEl = document.getElementById("preview-instructions") || document.getElementById("sheet-instructions");
+        if (sheetTitleEl) sheetTitleEl.textContent = titleInput.value;
+        if (sheetInstrEl) sheetInstrEl.textContent = instrInput.value;
+      }
+      const html = window.StepByStepDrawing.generate(itemId, "coloring", { showBackground: true });
+      const wrapper = document.createElement("div");
+      wrapper.className = "w-full my-2";
+      wrapper.innerHTML = html;
+      container.appendChild(wrapper);
+      return;
+    }
     const data = window.ColoringGenerator.generate("hikari");
     const wrapper = document.createElement("div");
     wrapper.className = "my-2 flex flex-col items-center";

@@ -538,6 +538,22 @@ body {
   break-after: page;
 }
 
+/* ── MÓDULO APRENDA A DESENHAR & COLORIR ── */
+.new-step-stroke,
+.new-step-stroke * {
+  stroke: #4f46e5 !important;
+  stroke-width: 2.8px !important;
+}
+
+.step-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px -2px rgba(99, 102, 241, 0.15);
+}
+
 /* ── REGRAS EXCLUSIVAS DE IMPRESSÃO (@media print) ── */
 @media print {
   @page {
@@ -622,5 +638,17 @@ body {
 
   .worksheet-frame {
     padding: 5mm !important;
+  }
+
+  /* Renderizar traço novo do passo a passo em grafite uniforme na impressão */
+  .new-step-stroke,
+  .new-step-stroke * {
+    stroke: #1e293b !important;
+  }
+
+  .step-card {
+    transform: none !important;
+    box-shadow: none !important;
+    break-inside: avoid;
   }
 }
