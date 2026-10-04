@@ -480,13 +480,14 @@
       case "drawing": {
         if (window.StepByStepDrawing && window.DrawingDatabase) {
           const randItem = window.DrawingDatabase.getRandom("all");
-          const mode = (pageNum % 2 === 0) ? "stepbystep" : "grid";
+          const mode = (pageNum % 3 === 0) ? "coloring" : (pageNum % 2 === 0 ? "stepbystep" : "grid");
           const dHtml = window.StepByStepDrawing.generate(randItem.id, mode, { gridSize: 7, showTracing: false, showSolution: false });
           const wrapper = document.createElement("div");
           wrapper.className = "w-full my-1";
           wrapper.innerHTML = dHtml;
           container.appendChild(wrapper);
-          answerText = `Desenho: ${randItem.name} (${mode === "stepbystep" ? "Passo a Passo" : "Cópia por Grade"}).`;
+          const modeName = mode === "coloring" ? "Livro de Colorir" : (mode === "stepbystep" ? "Passo a Passo" : "Cópia por Grade");
+          answerText = `Desenho: ${randItem.name} (${modeName}).`;
         }
         break;
       }
@@ -551,10 +552,10 @@
     if (!element) return;
 
     const opt = {
-      margin: 4,
+      margin: 0,
       filename: "mega-apostila-ensino-soberano.pdf",
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       pagebreak: { mode: ["css", "legacy"] }
     };

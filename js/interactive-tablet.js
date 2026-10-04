@@ -35,6 +35,9 @@
     pencil: { color: '#334155', width: 2.5, opacity: 0.85, isEraser: false, name: 'Lápis Grafite' },
     blue_pen: { color: '#1d4ed8', width: 3.5, opacity: 1.0, isEraser: false, name: 'Caneta Azul' },
     red_pen: { color: '#dc2626', width: 3.5, opacity: 1.0, isEraser: false, name: 'Caneta Vermelha' },
+    green_pen: { color: '#16a34a', width: 3.5, opacity: 1.0, isEraser: false, name: 'Caneta Verde' },
+    pink_pen: { color: '#db2777', width: 3.5, opacity: 1.0, isEraser: false, name: 'Caneta Rosa' },
+    brush: { color: '#8b5cf6', width: 12, opacity: 0.75, isEraser: false, name: 'Pincel de Pintura' },
     highlighter: { color: 'rgba(250, 204, 21, 0.45)', width: 18, opacity: 1.0, isEraser: false, name: 'Marca-Texto' },
     eraser: { color: '#000000', width: 24, opacity: 1.0, isEraser: true, name: 'Borracha Mágica' }
   };
