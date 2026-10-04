@@ -184,6 +184,7 @@ window.KiddoApp = (function () {
     const activePanel = document.getElementById(`panel-${currentTab}`);
     if (activePanel) {
       activePanel.classList.remove("hidden");
+      if (window.lucide) window.lucide.createIcons();
     }
 
     const previewWrapper = document.getElementById("preview-wrapper");
@@ -441,7 +442,12 @@ window.KiddoApp = (function () {
       });
     });
 
-    ["math-digits", "math-terms", "math-count", "math-layout", "math-regrouping", "math-table"].forEach(id => {
+    [
+      "math-digits", "math-terms", "math-count", "math-layout", "math-regrouping",
+      "mult-level", "mult-table", "mult-count", "mult-layout",
+      "sub-digits", "sub-count", "sub-layout", "sub-borrowing",
+      "div-level", "div-count", "div-layout"
+    ].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener("change", () => {
@@ -1098,7 +1104,7 @@ window.KiddoApp = (function () {
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
             ${ops.map(o => `
               <div class="bg-white p-2 rounded-lg border border-slate-200 text-center font-mono font-bold text-xs">
-                ${o.num1} ${o.symbol} ${o.num2} = <span class="text-emerald-600 font-extrabold text-sm">${o.answer}</span>
+                ${o.termsCount === 3 && o.operator === "+" ? `${o.num1} + ${o.num2} + ${o.num3}` : `${o.num1} ${o.operator || "×"} ${o.num2}`} = <span class="text-emerald-600 font-extrabold text-sm">${o.answer}</span>
               </div>
             `).join("")}
           </div>
@@ -1519,35 +1525,72 @@ window.KiddoApp = (function () {
 
   /* ── 2. MATEMÁTICA ── */
   function renderMath(container, opType) {
-    const digits = parseInt(document.getElementById("math-digits")?.value || 2);
-    const count = parseInt(document.getElementById("math-count")?.value || 20);
-    const layout = document.getElementById("math-layout")?.value || "vertical";
-    const terms = document.getElementById("math-terms")?.value || 2;
-    const allowRegrouping = document.getElementById("math-regrouping")?.checked !== false;
+    let digits = 2;
+    let count = 20;
+    let layout = "vertical";
+    let terms = 2;
+    let allowRegrouping = true;
+    let allowBorrowing = true;
+    let tableChoice = "all";
+    let multLevel = "1x1";
+    let divLevel = "easy";
+
+    if (opType === "addition") {
+      digits = parseInt(document.getElementById("math-digits")?.value || 2);
+      count = parseInt(document.getElementById("math-count")?.value || 20);
+      layout = document.getElementById("math-layout")?.value || "vertical";
+      terms = document.getElementById("math-terms")?.value || 2;
+      allowRegrouping = document.getElementById("math-regrouping")?.checked !== false;
+    } else if (opType === "subtraction") {
+      digits = parseInt(document.getElementById("sub-digits")?.value || document.getElementById("math-digits")?.value || 2);
+      count = parseInt(document.getElementById("sub-count")?.value || document.getElementById("math-count")?.value || 20);
+      layout = document.getElementById("sub-layout")?.value || document.getElementById("math-layout")?.value || "vertical";
+      terms = 2; // Subtração é SEMPRE estritamente 2 termos (minuendo e subtraendo)
+      allowBorrowing = document.getElementById("sub-borrowing")?.checked !== false;
+    } else if (opType === "multiplication") {
+      multLevel = document.getElementById("mult-level")?.value || "1x1";
+      tableChoice = document.getElementById("mult-table")?.value || document.getElementById("math-table")?.value || "all";
+      count = parseInt(document.getElementById("mult-count")?.value || document.getElementById("math-count")?.value || 20);
+      layout = document.getElementById("mult-layout")?.value || document.getElementById("math-layout")?.value || "vertical";
+      terms = 2; // REGRA PEDAGÓGICA: Multiplicação opera estritamente com 2 fatores (2 linhas)
+    } else if (opType === "division") {
+      divLevel = document.getElementById("div-level")?.value || "easy";
+      count = parseInt(document.getElementById("div-count")?.value || document.getElementById("math-count")?.value || 20);
+      layout = document.getElementById("div-layout")?.value || document.getElementById("math-layout")?.value || "vertical";
+      terms = 2; // Divisão é SEMPRE 2 termos (dividendo e divisor)
+    }
 
     currentData = window.MathWorksheetGenerator.generateProblems(opType, count, {
       digits: digits,
       terms: terms,
       allowRegrouping: allowRegrouping,
-      allowBorrowing: allowRegrouping,
-      table: document.getElementById("math-table")?.value || "all",
-      level: digits === 1 ? "easy" : "medium"
+      allowBorrowing: allowBorrowing,
+      table: tableChoice,
+      level: opType === "multiplication" ? multLevel : divLevel
     });
 
     const gridEl = document.createElement("div");
     gridEl.className = "grid grid-cols-4 gap-3 my-3";
 
     currentData.forEach(p => {
+      // Definir paleta de cor do operador pedagógico
+      let opColor = "text-indigo-600";
+      if (opType === "addition") opColor = "text-emerald-600";
+      else if (opType === "subtraction") opColor = "text-rose-500";
+      else if (opType === "multiplication") opColor = "text-purple-600";
+      else if (opType === "division") opColor = "text-blue-600";
+
       if (layout === "vertical") {
         const card = document.createElement("div");
         card.className = "math-card-vertical";
-        if (p.termsCount === 3) {
+        // 3 linhas é exclusividade da adição (A + B + C). Multiplicação NUNCA usa 3 linhas.
+        if (p.termsCount === 3 && opType === "addition") {
           card.innerHTML = `
             <div class="text-[10px] text-slate-400 font-bold w-full mb-0.5">#${p.id}</div>
             <div>${p.num1}</div>
             <div>${p.num2}</div>
             <div class="math-op-line">
-              <span class="text-base text-pink-500 mr-2 font-bold">${p.operator}</span>
+              <span class="text-base ${opColor} mr-2 font-bold">${p.operator}</span>
               <span>${p.num3}</span>
             </div>
             <div class="math-answer-box math-answer-val">${p.answer}</div>
@@ -1557,7 +1600,7 @@ window.KiddoApp = (function () {
             <div class="text-[10px] text-slate-400 font-bold w-full mb-0.5">#${p.id}</div>
             <div>${p.num1}</div>
             <div class="math-op-line">
-              <span class="text-base text-pink-500 mr-2 font-bold">${p.operator}</span>
+              <span class="text-base ${opColor} mr-2 font-bold">${p.operator}</span>
               <span>${p.num2}</span>
             </div>
             <div class="math-answer-box math-answer-val">${p.answer}</div>
@@ -1567,7 +1610,7 @@ window.KiddoApp = (function () {
       } else {
         const card = document.createElement("div");
         card.className = "math-card-horizontal";
-        if (p.termsCount === 3) {
+        if (p.termsCount === 3 && opType === "addition") {
           card.innerHTML = `
             <span class="text-[10px] text-slate-400 mr-2 font-bold">#${p.id}</span>
             <span>${p.num1} + ${p.num2} + ${p.num3} = </span>

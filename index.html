@@ -131,10 +131,10 @@
           <span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.2 rounded-full">8</span>
         </div>
         <div class="flex flex-col gap-0.5">
-          <button type="button" data-tab="addition" data-search="adição soma contas parcelas matematica linhas" class="nav-tab-btn drawer-item w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-white transition-all text-left">
+          <button type="button" data-tab="addition" data-search="adição soma contas parcelas matematica linhas 2 parcelas 3 parcelas" class="nav-tab-btn drawer-item w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-white transition-all text-left">
             <div class="flex items-center gap-2">
               <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs"><i data-lucide="plus" class="w-3 h-3"></i></span>
-              <span>Adição (2 e 3 Linhas)</span>
+              <span>Adição (2 e 3 Parcelas)</span>
             </div>
             <span class="text-[10px] text-slate-400">1º a 3º Ano</span>
           </button>
@@ -147,10 +147,10 @@
             <span class="text-[10px] text-slate-400">1º a 3º Ano</span>
           </button>
 
-          <button type="button" data-tab="multiplication" data-search="multiplicação vezes produto matematica" class="nav-tab-btn drawer-item w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-white transition-all text-left">
+          <button type="button" data-tab="multiplication" data-search="multiplicação vezes produto matematica fatores tabuada contas" class="nav-tab-btn drawer-item w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-white transition-all text-left">
             <div class="flex items-center gap-2">
               <span class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs"><i data-lucide="x" class="w-3 h-3"></i></span>
-              <span>Multiplicação</span>
+              <span>Multiplicação (Tabuada & Contas)</span>
             </div>
             <span class="text-[10px] text-slate-400">2º a 5º Ano</span>
           </button>
@@ -638,39 +638,155 @@ TARTARUGA</textarea>
 
       <!-- PAINEL: SUBTRAÇÃO -->
       <div id="panel-subtraction" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <i data-lucide="minus-circle" class="w-4 h-4 text-rose-500"></i> Configurar Subtração
-        </h3>
-        <p class="text-xs text-slate-500">Garante que o primeiro número seja sempre maior que o segundo, eliminando resultados negativos.</p>
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="minus-circle" class="w-4 h-4 text-rose-500"></i> Configurar Subtração
+          </h3>
+          <span class="text-[10px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full border border-rose-100">2 Termos</span>
+        </div>
+        <div class="p-2.5 bg-rose-50/80 rounded-xl border border-rose-100 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-rose-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-[11px] text-rose-800 leading-tight">
+            <strong>Subtração Escolar:</strong> Estritamente 2 termos (Minuendo − Subtraendo). Garante resultado positivo sem números negativos.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Dígitos</label>
+            <select id="sub-digits" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
+              <option value="1">1 Dígito (1 a 9)</option>
+              <option value="2" selected>2 Dígitos (10 a 99 - Dezenas)</option>
+              <option value="3">3 Dígitos (100 a 999 - Centenas)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Qtd. Questões</label>
+            <select id="sub-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
+              <option value="12">12 Questões</option>
+              <option value="16">16 Questões</option>
+              <option value="20" selected>20 Questões</option>
+              <option value="24">24 Questões</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Formato</label>
+            <select id="sub-layout" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
+              <option value="vertical" selected>Vertical (Conta Armada: 2 Linhas)</option>
+              <option value="horizontal">Horizontal (Em Linha)</option>
+            </select>
+          </div>
+          <div class="flex items-center pt-5">
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input id="sub-borrowing" type="checkbox" checked class="rounded text-rose-600 focus:ring-rose-500">
+              Com Empréstimo
+            </label>
+          </div>
+        </div>
       </div>
 
       <!-- PAINEL: MULTIPLICAÇÃO -->
       <div id="panel-multiplication" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <i data-lucide="x-circle" class="w-4 h-4 text-purple-500"></i> Configurar Multiplicação
-        </h3>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Tabuada Específica</label>
-          <select id="math-table" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="all" selected>Todas as Tabuadas (2 ao 9)</option>
-            <option value="2">Tabuada do 2</option>
-            <option value="3">Tabuada do 3</option>
-            <option value="4">Tabuada do 4</option>
-            <option value="5">Tabuada do 5</option>
-            <option value="6">Tabuada do 6</option>
-            <option value="7">Tabuada do 7</option>
-            <option value="8">Tabuada do 8</option>
-            <option value="9">Tabuada do 9</option>
-          </select>
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="x-circle" class="w-4 h-4 text-purple-500"></i> Configurar Multiplicação
+          </h3>
+          <span class="text-[10px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full border border-purple-100">Estritamente 2 Fatores</span>
+        </div>
+        <!-- Informativo Pedagógico -->
+        <div class="p-2.5 bg-purple-50 rounded-xl border border-purple-100 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-[11px] text-purple-800 leading-tight">
+            <strong>Padrão Fundamental:</strong> A multiplicação opera estritamente com <strong>2 fatores</strong> (multiplicando e multiplicador em 2 linhas). Não possui parcelas adicionais como na adição.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Dificuldade / Fatores</label>
+            <select id="mult-level" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <option value="1x1" selected>Tabuada Básica (Fatores 1 a 10)</option>
+              <option value="2x1">Dezenas × 1 Dígito (ex: 24 × 3)</option>
+              <option value="3x1">Centenas × 1 Dígito (ex: 135 × 4)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Tabuada Específica</label>
+            <select id="mult-table" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <option value="all" selected>Todas as Tabuadas (2 ao 9)</option>
+              <option value="2">Tabuada do 2</option>
+              <option value="3">Tabuada do 3</option>
+              <option value="4">Tabuada do 4</option>
+              <option value="5">Tabuada do 5</option>
+              <option value="6">Tabuada do 6</option>
+              <option value="7">Tabuada do 7</option>
+              <option value="8">Tabuada do 8</option>
+              <option value="9">Tabuada do 9</option>
+              <option value="10">Tabuada do 10</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Qtd. Questões</label>
+            <select id="mult-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <option value="12">12 Questões</option>
+              <option value="16">16 Questões</option>
+              <option value="20" selected>20 Questões</option>
+              <option value="24">24 Questões</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Formato</label>
+            <select id="mult-layout" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <option value="vertical" selected>Vertical (Conta Armada: 2 Linhas)</option>
+              <option value="horizontal">Horizontal (Em Linha: A × B = ___)</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <!-- PAINEL: DIVISÃO -->
       <div id="panel-division" class="control-panel hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <i data-lucide="divide-circle" class="w-4 h-4 text-blue-500"></i> Configurar Divisão
-        </h3>
-        <p class="text-xs text-slate-500">Divisões exatas estruturadas com divisores entre 2 e 10.</p>
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="divide-circle" class="w-4 h-4 text-blue-500"></i> Configurar Divisão
+          </h3>
+          <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">2 Termos</span>
+        </div>
+        <div class="p-2.5 bg-blue-50/80 rounded-xl border border-blue-100 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-[11px] text-blue-800 leading-tight">
+            <strong>Divisão Escolar:</strong> Estritamente 2 termos (Dividendo ÷ Divisor). Operações com divisões exatas e quocientes inteiros.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Dificuldade / Divisores</label>
+            <select id="div-level" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="easy" selected>Básico (Divisores de 2 a 5)</option>
+              <option value="medium">Intermediário (Divisores de 2 a 10)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Qtd. Questões</label>
+            <select id="div-count" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="12">12 Questões</option>
+              <option value="16">16 Questões</option>
+              <option value="20" selected>20 Questões</option>
+              <option value="24">24 Questões</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Formato</label>
+            <select id="div-layout" class="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="vertical" selected>Vertical (Conta Armada: 2 Linhas)</option>
+              <option value="horizontal">Horizontal (Em Linha: A ÷ B = ___)</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <!-- PAINEL: DIZER A HORA (NOVO) -->

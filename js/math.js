@@ -150,21 +150,36 @@ window.MathWorksheetGenerator = (function () {
     };
   }
 
+  /**
+   * Gera uma operação de multiplicação fundamental
+   * REGRA PEDAGÓGICA: A multiplicação opera estritamente com 2 fatores (multiplicando e multiplicador).
+   * Diferente da adição, NÃO possui múltiplas parcelas/linhas empilhadas (A x B x C não existe no currículo fundamental).
+   * @param {string|number} tableChoice - "all" ou tabuada fixa (2 a 10)
+   * @param {string} level - "1x1" (fatores 1 a 10), "2x1" (dezenas x 1 dígito), "3x1" (centenas x 1 dígito)
+   */
   function generateMultiplicationProblem(tableChoice, level) {
     let a, b;
-    if (tableChoice === "all") {
-      a = randomInt(2, 9);
-      b = randomInt(1, 10);
-    } else {
-      a = parseInt(tableChoice) || 2;
-      b = randomInt(1, 10);
-    }
+    const isSpecificTable = tableChoice && tableChoice !== "all";
+    const fixedTable = isSpecificTable ? (parseInt(tableChoice) || 2) : null;
 
     if (level === "2x1") {
-      a = randomInt(11, 49);
-      b = randomInt(2, 6);
+      a = randomInt(11, 89);
+      b = fixedTable ? fixedTable : randomInt(2, 9);
+    } else if (level === "3x1") {
+      a = randomInt(101, 499);
+      b = fixedTable ? fixedTable : randomInt(2, 9);
+    } else {
+      // Padrão 1x1 (Tabuada Básica de 1 a 10)
+      if (fixedTable) {
+        a = fixedTable;
+        b = randomInt(1, 10);
+      } else {
+        a = randomInt(2, 9);
+        b = randomInt(1, 10);
+      }
     }
 
+    // A multiplicação escolar possui ESTRITAMENTE 2 termos (linhas da conta armada)
     return {
       num1: a,
       num2: b,

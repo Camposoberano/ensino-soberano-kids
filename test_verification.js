@@ -270,6 +270,58 @@ if (!mMisto || mMisto.length !== 4 || mMisto[0].termsCount !== 2 || mMisto[1].te
 }
 console.log("[PASS] MathWorksheetGenerator: Contas Mistas (Alternando 2 e 3 Linhas em Centenas) -> OK");
 
+// Testar Multiplicação (ESTRITAMENTE 2 FATORES - Nunca 3 linhas)
+console.log("\n--- Testando Multiplicação (Garantia de Estritamente 2 Fatores) ---");
+const multBasica = mathGen.generateProblems("multiplication", 6, { table: "all", level: "1x1", terms: 3 });
+if (!multBasica || multBasica.length !== 6) {
+  console.error("ERRO: Falha ao gerar problemas de multiplicação básica:", multBasica);
+  process.exit(1);
+}
+multBasica.forEach((p, idx) => {
+  if (p.termsCount !== 2 || p.terms.length !== 2 || p.operator !== "×" || p.answer !== p.num1 * p.num2 || p.num3 !== undefined) {
+    console.error(`ERRO: Multiplicação violou regra de 2 fatores no item #${idx + 1}:`, p);
+    process.exit(1);
+  }
+});
+console.log("[PASS] MathWorksheetGenerator: Multiplicação 1x1 ignora termo 3 e gera estritamente 2 fatores (A × B) -> OK");
+
+const mult2x1 = mathGen.generateProblems("multiplication", 4, { level: "2x1", table: "7" });
+mult2x1.forEach((p, idx) => {
+  if (p.termsCount !== 2 || p.terms.length !== 2 || p.operator !== "×" || p.answer !== p.num1 * p.num2 || p.num2 !== 7 || p.num1 < 10) {
+    console.error(`ERRO: Multiplicação 2x1 com tabuada fixa falhou no item #${idx + 1}:`, p);
+    process.exit(1);
+  }
+});
+console.log("[PASS] MathWorksheetGenerator: Multiplicação 2x1 (Dezenas × Tabuada Fixa do 7) estritamente 2 fatores -> OK");
+
+const mult3x1 = mathGen.generateProblems("multiplication", 4, { level: "3x1", table: "all" });
+mult3x1.forEach((p, idx) => {
+  if (p.termsCount !== 2 || p.terms.length !== 2 || p.operator !== "×" || p.answer !== p.num1 * p.num2 || p.num1 < 100) {
+    console.error(`ERRO: Multiplicação 3x1 falhou no item #${idx + 1}:`, p);
+    process.exit(1);
+  }
+});
+console.log("[PASS] MathWorksheetGenerator: Multiplicação 3x1 (Centenas × 1 Dígito) estritamente 2 fatores -> OK");
+
+// Testar Subtração e Divisão (ambos estritamente 2 termos)
+const subData = mathGen.generateProblems("subtraction", 4, { digits: 2 });
+subData.forEach((p, idx) => {
+  if (p.termsCount !== 2 || p.operator !== "−" || p.num1 < p.num2 || p.answer !== p.num1 - p.num2) {
+    console.error(`ERRO: Subtração violou regras no item #${idx + 1}:`, p);
+    process.exit(1);
+  }
+});
+console.log("[PASS] MathWorksheetGenerator: Subtração estritamente 2 termos sem resultado negativo -> OK");
+
+const divData = mathGen.generateProblems("division", 4, { level: "easy" });
+divData.forEach((p, idx) => {
+  if (p.termsCount !== 2 || p.operator !== "÷" || p.num1 % p.num2 !== 0 || p.answer !== p.num1 / p.num2) {
+    console.error(`ERRO: Divisão exata violou regras no item #${idx + 1}:`, p);
+    process.exit(1);
+  }
+});
+console.log("[PASS] MathWorksheetGenerator: Divisão exata estritamente 2 termos -> OK");
+
 // 5. Testar CryptogramGenerator
 console.log("\n--- Testando CryptogramGenerator ---");
 const cryptoGen = context.CryptogramGenerator;
