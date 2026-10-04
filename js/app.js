@@ -12,14 +12,125 @@ window.KiddoApp = (function () {
   let customBnccText = null;
   let showQrCode = true;
 
+  const TAB_DEFINITIONS = {
+    wordsearch: { title: "Caça-Palavras", icon: "search" },
+    scramble: { title: "Palavras Embaralhadas", icon: "shuffle" },
+    tracing: { title: "Linhas de Traço & Coordenação", icon: "pen-tool" },
+    cryptogram: { title: "Criptograma Enigma", icon: "key" },
+    addition: { title: "Adição (2 e 3 Linhas)", icon: "plus" },
+    subtraction: { title: "Subtração", icon: "minus" },
+    multiplication: { title: "Multiplicação", icon: "x" },
+    division: { title: "Divisão", icon: "divide" },
+    multichart: { title: "Tabela de Tabuada", icon: "grid" },
+    storyproblems: { title: "Probleminhas Ilustrados", icon: "book-open" },
+    colorbymath: { title: "Pinte por Contas", icon: "brush" },
+    sudoku: { title: "Sudoku Kids (4x4 a 9x9)", icon: "layout-grid" },
+    drawing: { title: "Criador de Desenho", icon: "pencil" },
+    coloring: { title: "Livro de Coloração A4", icon: "palette" },
+    origami: { title: "Origami Dobradura", icon: "scissors" },
+    maze: { title: "Labirintos Lúdicos", icon: "compass" },
+    matching: { title: "Ligar Colunas & Pares", icon: "git-commit" },
+    patterns: { title: "Padrões & Lógica", icon: "sparkles" },
+    time: { title: "Dizer a Hora", icon: "clock" },
+    shapes: { title: "Formas Geométricas", icon: "shapes" },
+    counting: { title: "Contagem Lúdica", icon: "hash" },
+    slidingpuzzle: { title: "Quebra-Cabeça Jogo", icon: "puzzle" },
+    body: { title: "Partes do Corpo", icon: "user" },
+    flashcards: { title: "Cartões de Estudo", icon: "layers" },
+    boardgame: { title: "Tabuleiro Ninja A4", icon: "dices" },
+    diagnostic: { title: "Avaliação BNCC", icon: "clipboard-check" },
+    certificate: { title: "Diplomas & Selos", icon: "award" }
+  };
+
+  function updateHeaderActiveBadge() {
+    const titleEl = document.getElementById("header-active-name");
+    const iconEl = document.getElementById("header-active-icon");
+    const def = TAB_DEFINITIONS[currentTab] || { title: "Atividade", icon: "sparkles" };
+    if (titleEl) titleEl.textContent = def.title;
+    if (iconEl) {
+      iconEl.setAttribute("data-lucide", def.icon);
+      if (window.lucide) window.lucide.createIcons();
+    }
+  }
+
+  function openDrawer() {
+    const drawer = document.getElementById("app-drawer");
+    const backdrop = document.getElementById("drawer-backdrop");
+    if (!drawer || !backdrop) return;
+    drawer.classList.remove("-translate-x-full");
+    drawer.classList.add("translate-x-0");
+    backdrop.classList.remove("opacity-0", "pointer-events-none");
+    backdrop.classList.add("opacity-100", "pointer-events-auto");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  function closeDrawer() {
+    const drawer = document.getElementById("app-drawer");
+    const backdrop = document.getElementById("drawer-backdrop");
+    if (!drawer || !backdrop) return;
+    drawer.classList.add("-translate-x-full");
+    drawer.classList.remove("translate-x-0");
+    backdrop.classList.add("opacity-0", "pointer-events-none");
+    backdrop.classList.remove("opacity-100", "pointer-events-auto");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  function setupDrawerNavigation() {
+    const btnToggle = document.getElementById("btn-toggle-menu");
+    if (btnToggle) btnToggle.addEventListener("click", openDrawer);
+
+    const btnClose = document.getElementById("btn-close-drawer");
+    if (btnClose) btnClose.addEventListener("click", closeDrawer);
+
+    const backdrop = document.getElementById("drawer-backdrop");
+    if (backdrop) backdrop.addEventListener("click", closeDrawer);
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
+  }
+
+  function setupDrawerSearch() {
+    const input = document.getElementById("drawer-search-input");
+    const clearBtn = document.getElementById("btn-clear-drawer-search");
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+      const term = input.value.trim().toLowerCase();
+      if (clearBtn) clearBtn.classList.toggle("hidden", term.length === 0);
+
+      document.querySelectorAll(".drawer-category-group").forEach(group => {
+        let visibleCount = 0;
+        group.querySelectorAll(".drawer-item").forEach(item => {
+          const text = (item.textContent + " " + (item.getAttribute("data-search") || "")).toLowerCase();
+          const match = text.includes(term);
+          item.classList.toggle("hidden", !match);
+          if (match) visibleCount++;
+        });
+        group.classList.toggle("hidden", visibleCount === 0);
+      });
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        input.dispatchEvent(new Event("input"));
+        input.focus();
+      });
+    }
+  }
+
   function init() {
     setupTabSwitching();
     setupControls();
+    setupDrawerNavigation();
+    setupDrawerSearch();
     setupMascotSelector();
     setupZoomAndScaling();
     loadCategoryButtons();
     setupWhiteLabel();
     setupDrawingControls();
+    updateHeaderActiveBadge();
     renderCurrentActivity();
 
     // Redimensionar preview ao mudar tamanho da janela
@@ -30,19 +141,22 @@ window.KiddoApp = (function () {
     document.querySelectorAll(".nav-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".nav-tab-btn").forEach(b => {
-          b.classList.remove("active-tab", "bg-indigo-600", "text-white");
-          b.classList.add("bg-white", "text-slate-700");
+          b.classList.remove("active-tab", "bg-indigo-600", "text-white", "shadow-sm");
+          b.classList.add("text-slate-700");
+          b.classList.remove("font-bold");
         });
-        btn.classList.add("active-tab", "bg-indigo-600", "text-white");
-        btn.classList.remove("bg-white", "text-slate-700");
+        btn.classList.add("active-tab", "bg-indigo-600", "text-white", "shadow-sm", "font-bold");
+        btn.classList.remove("text-slate-700");
 
         currentTab = btn.getAttribute("data-tab");
         showAnswers = false;
         customBnccText = null;
         updateAnswerButtonText();
+        updateHeaderActiveBadge();
         switchControlPanels();
         setDefaultHeaderForTab(currentTab);
         renderCurrentActivity();
+        closeDrawer();
       });
     });
   }
@@ -151,14 +265,31 @@ window.KiddoApp = (function () {
     document.getElementById("btn-print").addEventListener("click", () => window.print());
     document.getElementById("btn-download-pdf").addEventListener("click", downloadPDF);
 
+    const btnQuickPrint = document.getElementById("btn-quick-print");
+    if (btnQuickPrint) {
+      btnQuickPrint.addEventListener("click", () => window.print());
+    }
+
+    const btnDrawerQuiz = document.getElementById("btn-drawer-quiz");
+    if (btnDrawerQuiz) {
+      btnDrawerQuiz.addEventListener("click", () => {
+        closeDrawer();
+        if (window.ClassroomQuizModule) window.ClassroomQuizModule.openModal();
+      });
+    }
+
     const btnOpenBooklet = document.getElementById("btn-open-booklet");
     if (btnOpenBooklet) {
-      btnOpenBooklet.addEventListener("click", () => window.BookletBuilder.openModal());
+      btnOpenBooklet.addEventListener("click", () => {
+        closeDrawer();
+        window.BookletBuilder.openModal();
+      });
     }
 
     const btnOpenBatch = document.getElementById("btn-open-batch");
     if (btnOpenBatch) {
       btnOpenBatch.addEventListener("click", () => {
+        closeDrawer();
         if (window.BatchStudentsModule) window.BatchStudentsModule.openModal();
       });
     }
@@ -428,7 +559,10 @@ window.KiddoApp = (function () {
 
     const btnOpenWl = document.getElementById("btn-open-whitelabel");
     if (btnOpenWl) {
-      btnOpenWl.addEventListener("click", openWhiteLabelModal);
+      btnOpenWl.addEventListener("click", () => {
+        closeDrawer();
+        openWhiteLabelModal();
+      });
     }
 
     const logoInput = document.getElementById("wl-logo-input");
