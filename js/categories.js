@@ -66,5 +66,32 @@ window.KIDDO_VOCABULARY = {
       "BICICLETA", "MOTO", "HELICOPTERO", "NAVIO", "METRO",
       "SUBMARINO", "FOGUETE", "CAMINHAO", "BALAO", "TRATOR"
     ]
+  },
+  profissoes: {
+    nome: "Profissões & Trabalhadores",
+    icone: "briefcase",
+    palavras: [
+      "PROFESSOR", "MEDICO", "BOMBEIRO", "POLICIAL", "DENTISTA",
+      "ENGENHEIRO", "CARPINTEIRO", "PADEIRO", "COZINHEIRO", "PINTOR",
+      "CARTEIRO", "MOTORISTA", "VETERINARIO", "JARDINEIRO", "ELETRICISTA"
+    ]
+  },
+  sentimentos: {
+    nome: "Emoções & Sentimentos",
+    icone: "heart",
+    palavras: [
+      "ALEGRIA", "AMOR", "CORAGEM", "CALMA", "ESPERANCA",
+      "GRATIDAO", "AMIZADE", "CARINHO", "EMPATIA", "FELICIDADE",
+      "RESPEITO", "PAZ", "CONFIANCA", "GENTILEZA", "BONDADE"
+    ]
+  },
+  meioambiente: {
+    nome: "Meio Ambiente & Ecologia",
+    icone: "leaf",
+    palavras: [
+      "RECICLAGEM", "PLANETA", "NATUREZA", "AGUA", "ENERGIA",
+      "ARVORE", "OXIGENIO", "PRESERVACAO", "SEMENTE", "VIDA",
+      "TERRA", "ECOLOGIA", "FLORESTA", "LIMPEZA", "CUIDADO"
+    ]
   }
 };

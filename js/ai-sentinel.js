@@ -16,6 +16,7 @@ window.AISentinelModule = (function () {
     const btnClose = document.getElementById("btn-close-ai-audit");
     const btnRunGemini = document.getElementById("btn-run-gemini-audit");
     const btnCopyReport = document.getElementById("btn-copy-gemini-report");
+    const btnPrintReport = document.getElementById("btn-print-gemini-report");
 
     if (btnOpen) {
       btnOpen.addEventListener("click", () => {
@@ -50,6 +51,12 @@ window.AISentinelModule = (function () {
         }
       });
     }
+
+    if (btnPrintReport) {
+      btnPrintReport.addEventListener("click", () => {
+        printReport();
+      });
+    }
   }
 
   function openModal() {
@@ -57,6 +64,7 @@ window.AISentinelModule = (function () {
     if (!modal) return;
     modal.classList.remove("hidden");
     if (window.lucide) window.lucide.createIcons();
+    restoreLastReport();
     runFastJevAudit();
   }
 
@@ -192,9 +200,19 @@ window.AISentinelModule = (function () {
       contentBox.innerHTML = formatMarkdownToHTML(data.report || "Parecer gerado com sucesso.");
       
       const metricsEl = document.getElementById("gemini-metrics-badge");
+      const metricsText = `Gemini 2.5 Flash • ${data.latency_ms || 3200}ms • ${data.tokens || 650} tokens`;
       if (metricsEl) {
-        metricsEl.textContent = `Gemini 2.5 Flash • ${data.latency_ms || 3200}ms • ${data.tokens || 650} tokens`;
+        metricsEl.textContent = metricsText;
       }
+
+      try {
+        localStorage.setItem("ensino_soberano_ai_last_report", JSON.stringify({
+          report: data.report,
+          rawHtml: contentBox.innerHTML,
+          metrics: metricsText,
+          timestamp: Date.now()
+        }));
+      } catch (e) {}
     } catch (err) {
       reportBox.classList.remove("hidden");
       contentBox.innerHTML = `
@@ -208,6 +226,164 @@ window.AISentinelModule = (function () {
       btn.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1.5"></i> Gerar Novo Parecer`;
       if (window.lucide) window.lucide.createIcons();
     }
+  }
+
+  function restoreLastReport() {
+    const reportBox = document.getElementById("gemini-report-box");
+    const contentBox = document.getElementById("gemini-report-content");
+    const metricsEl = document.getElementById("gemini-metrics-badge");
+    if (!reportBox || !contentBox) return;
+
+    try {
+      const saved = localStorage.getItem("ensino_soberano_ai_last_report");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.rawHtml) {
+          contentBox.innerHTML = parsed.rawHtml;
+          if (metricsEl && parsed.metrics) {
+            metricsEl.textContent = parsed.metrics.includes("(Salvo)") ? parsed.metrics : `${parsed.metrics} • Histórico`;
+          }
+          reportBox.classList.remove("hidden");
+        }
+      }
+    } catch (e) {}
+  }
+
+  function printReport() {
+    const contentBox = document.getElementById("gemini-report-content");
+    if (!contentBox || !contentBox.innerHTML.trim()) return;
+
+    const printWin = window.open("", "_blank", "width=800,height=900");
+    if (!printWin) {
+      alert("Por favor, permita popups para imprimir o parecer pedagógico.");
+      return;
+    }
+
+    const schoolName = window.WhiteLabelModule?.getConfig()?.schoolName || "Ensino Soberano Kids";
+    const dateStr = new Date().toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+
+    printWin.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Parecer Pedagógico BNCC - ${schoolName}</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 36px 48px;
+      color: #0f172a;
+      line-height: 1.6;
+    }
+    .header {
+      border-bottom: 2px solid #4f46e5;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .school-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1e1b4b;
+      letter-spacing: -0.02em;
+    }
+    .doc-subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .badge {
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+    h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #4338ca;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    p {
+      font-size: 12px;
+      color: #334155;
+      margin: 8px 0;
+    }
+    strong {
+      color: #0f172a;
+    }
+    ul, ol {
+      margin: 6px 0 12px 18px;
+      padding: 0;
+    }
+    li {
+      font-size: 12px;
+      color: #334155;
+      margin-bottom: 4px;
+    }
+    .footer {
+      margin-top: 40px;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 14px;
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+    @media print {
+      body { padding: 20px; }
+      @page { margin: 1.5cm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="school-title">Parecer Pedagógico & Conformidade BNCC</div>
+      <div class="doc-subtitle">${schoolName} • Sentinela Pedagógico e Avaliação Cognitiva</div>
+    </div>
+    <span class="badge">Documento Oficial</span>
+  </div>
+  <div class="content">
+    ${contentBox.innerHTML}
+  </div>
+  <div class="footer">
+    <span>Emitido por Ensino Soberano Kids • Simbiose Jev + Gemini</span>
+    <span>Data de Emissão: ${dateStr}</span>
+  </div>
+  <script>
+    window.onload = function() {
+      setTimeout(function() {
+        window.print();
+      }, 250);
+    };
+  <\/script>
+</body>
+</html>`);
+    printWin.document.close();
   }
 
   function getCurrentAppState() {
@@ -257,6 +433,8 @@ window.AISentinelModule = (function () {
     init: init,
     openModal: openModal,
     runFastJevAudit: runFastJevAudit,
-    generateGeminiDeepReport: generateGeminiDeepReport
+    generateGeminiDeepReport: generateGeminiDeepReport,
+    printReport: printReport,
+    restoreLastReport: restoreLastReport
   };
 })();

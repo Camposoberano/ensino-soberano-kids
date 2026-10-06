@@ -650,6 +650,17 @@ if (!context.KIDDO_VOCABULARY.corpo.palavras.includes("CABECA") || context.KIDDO
 }
 console.log("[PASS] Vocabulary & Orthography: Palavras verificadas sem erros de digitação (CABECA) -> OK");
 
+// Verificação das novas categorias BNCC de vocabulário
+const requiredCategories = ["profissoes", "sentimentos", "meioambiente"];
+for (const catKey of requiredCategories) {
+  const cat = context.KIDDO_VOCABULARY[catKey];
+  if (!cat || !cat.nome || !cat.icone || !Array.isArray(cat.palavras) || cat.palavras.length < 10) {
+    console.error(`ERRO: Categoria BNCC ${catKey} ausente ou incompleta!`);
+    process.exit(1);
+  }
+}
+console.log(`[PASS] Vocabulary BNCC: Categorias ${requiredCategories.join(", ")} expandidas com sucesso -> OK`);
+
 // Verificação de camadas do catálogo vetorial
 const invalidDrawing = allItems.find(it => !it.layers || it.layers.length < 5 || !it.stepsDesc || it.stepsDesc.length < 5);
 if (invalidDrawing) {
@@ -660,10 +671,10 @@ console.log("[PASS] DrawingDatabase: 100% dos 355 itens possuem 5 camadas vetori
 
 // Testar AISentinelModule (Simbiose Jev + Gemini)
 const aiSentinel = context.AISentinelModule;
-if (!aiSentinel || typeof aiSentinel.init !== "function" || typeof aiSentinel.runFastJevAudit !== "function") {
-  console.error("ERRO: AISentinelModule não está definido!");
+if (!aiSentinel || typeof aiSentinel.init !== "function" || typeof aiSentinel.runFastJevAudit !== "function" || typeof aiSentinel.printReport !== "function" || typeof aiSentinel.restoreLastReport !== "function") {
+  console.error("ERRO: AISentinelModule incompleto ou não definido!");
   process.exit(1);
 }
-console.log("[PASS] AISentinelModule: Simbiose Jev (Sistema 1) + Gemini (Sistema 2) inicializada e ativa -> OK");
+console.log("[PASS] AISentinelModule: Simbiose Jev + Gemini inicializada com persistência e impressão oficial -> OK");
 
 console.log("\n=== TODOS OS 36 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

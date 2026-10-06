@@ -63,8 +63,27 @@ A arquitetura opera prioritariamente client-side com retaguarda assíncrona loca
    - **Jev (TypeSafe):** Auditor sentinela ultrarrápido (<500ms) usando `Noul`, `Choice` e `Score`. Validação paramétrica estrita (regras de multiplicação de 2 fatores, densidade A4, conformidade da faixa etária).
    - **Gemini 2.5 Flash:** Avaliador pedagógico profundo (~3s) com fundamentação curricular BNCC, benefícios de desenvolvimento cognitivo e sugestões práticas de mediação docente.
    - **Retaguarda HTTP Local (`server.py`):** Servidor multithreaded na porta 8085 com rotas `/api/audit/fast` (Jev) e `/api/audit/deep` (Gemini), com suporte a CORS e tolerância a falhas offline.
-   - **Módulo Front-End (`js/ai-sentinel.js`):** Integração visual completa com badge pulsante no topo (`#badge-jev-status`), modal interativo com cartões de validação instantânea e parecer detalhado em Markdown renderizado.
+   - **Módulo Front-End (`js/ai-sentinel.js`):** Integração visual completa com badge pulsante no topo (`#badge-jev-status`), modal interativo com cartões de validação instantânea, parecer em Markdown, persistência no `localStorage` e emissão/impressão oficial do parecer pedagógico formatado.
    - **Launcher `iniciar.bat`:** Inicialização automática de `python server.py` e abertura do navegador padrão.
+
+8. **Autonomia 100% Offline das Bibliotecas Front-End (`vendor/`):**
+   - Download de cópias standalone locais das 4 bibliotecas externas essenciais em `vendor/`:
+     - `vendor/tailwindcss.js` (Tailwind CSS standalone)
+     - `vendor/lucide.min.js` (Ícones Lucide)
+     - `vendor/html2pdf.bundle.min.js` (Motor de exportação PDF)
+     - `vendor/confetti.browser.min.js` (Efeitos visuais)
+   - Atualizado `index.html` com carregamento prioritário local e fallback condicional automático via CDN.
+
+9. **Expansão Curricular de Vocabulário BNCC & Higienização Ortográfica:**
+   - Adicionadas 3 novas categorias de alta relevância pedagógica:
+     - `profissoes`: "Profissões & Trabalhadores" (`briefcase`)
+     - `sentimentos`: "Emoções & Sentimentos" (`heart`)
+     - `meioambiente`: "Meio Ambiente & Ecologia" (`leaf`)
+   - Correção e blindagem de ortografia permanente (ex: `"CABECA"` em esquema corporal).
+
+10. **Aprimoramentos de UI/UX, Mobile & Isolamento de Impressão:**
+    - Barra de navegação adaptativa para smartphones (`< 640px`), prevenindo quebras indesejadas de cabeçalho.
+    - Modais `#classroom-quiz-modal` e `#ai-audit-modal` adicionados explicitamente às classes `.no-print` e isolados de `@media print`.
 
 ---
 
