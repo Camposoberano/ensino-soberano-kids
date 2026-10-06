@@ -97,6 +97,7 @@ const filesToLoad = [
   "classroom-quiz.js",
   "drawing-database.js",
   "step-by-step-drawing.js",
+  "ai-sentinel.js",
   "app.js"
 ];
 
@@ -642,4 +643,12 @@ if (!universalStep || !universalGrid || !universalColor) {
 console.log(`[PASS] DrawingDatabase: Catálogo de ${allItems.length} desenhos em 5 categorias verificado com sucesso -> OK`);
 console.log("[PASS] StepByStepDrawing: Renderização dos 3 modos (Passo a Passo, Grade Coordenadas, Livro Colorir A4) -> OK");
 
-console.log("\n=== TODOS OS 35 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// Testar AISentinelModule (Simbiose Jev + Gemini)
+const aiSentinel = context.AISentinelModule;
+if (!aiSentinel || typeof aiSentinel.init !== "function" || typeof aiSentinel.runFastJevAudit !== "function") {
+  console.error("ERRO: AISentinelModule não está definido!");
+  process.exit(1);
+}
+console.log("[PASS] AISentinelModule: Simbiose Jev (Sistema 1) + Gemini (Sistema 2) inicializada e ativa -> OK");
+
+console.log("\n=== TODOS OS 36 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

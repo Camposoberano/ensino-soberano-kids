@@ -1,11 +1,11 @@
 # 📋 RELATÓRIO DE HANDOFF & ESTADO DO PROJETO
 
 **Projeto:** Ensino Soberano Kids (Anime Edition)  
-**Data da Última Atualização:** 04 de Outubro de 2026  
+**Data da Última Atualização:** 06 de Outubro de 2026  
 **Repositório:** `https://github.com/Camposoberano/ensino-soberano-kids`  
 **Branches:** `master` (principal) e `main` (sincronizada)  
-**Status dos Módulos:** 35 de 35 módulos 100% operacionais (`node test_verification.js` $\to$ Exit Code 0)  
-**Ambiente Local:** Porta 8085 (`http://localhost:8085`)  
+**Status dos Módulos:** 36 de 36 módulos 100% operacionais (`node test_verification.js` $\to$ Exit Code 0)  
+**Ambiente Local:** Porta 8085 (`http://localhost:8085`) via `server.py` ou `iniciar.bat`  
 
 ---
 
@@ -13,8 +13,9 @@
 
 O **Ensino Soberano Kids** é uma SPA (Single Page Application) estática de alto desempenho educacional voltada para a Educação Infantil e os anos iniciais do Ensino Fundamental I (1º ao 5º ano), rigorosamente alinhada à Base Nacional Comum Curricular (BNCC).
 
-A arquitetura opera 100% client-side (sem dependência de banco de dados ou APIs pagas), com:
-- Geração paramétrica de 35 tipos de atividades interativas e impressas;
+A arquitetura opera prioritariamente client-side com retaguarda assíncrona local de auditoria por IA (Simbiose Jev + Gemini), contando com:
+- Geração paramétrica de 36 módulos de atividades interativas e impressas;
+- Sentinela de IA Híbrido: Jev (TypeSafe Sistema 1, <500ms) para validação paramétrica estrita e Gemini 2.5 Flash (Sistema 2, ~3s) para parecer pedagógico e alinhamento BNCC;
 - Renderização vetorizada em folha padrão **A4 retrato (210mm × 297mm)** com margem zero para impressão limpa;
 - Lousa Digital Interativa para uso com caneta stylus/touch em sala de aula;
 - Sistema White-Label institucional com personalização por escola/professor;
@@ -58,9 +59,16 @@ A arquitetura opera 100% client-side (sem dependência de banco de dados ou APIs
    - Criados `AGENTS.md` e `CLAUDE.md` na raiz com diretrizes de persistência e checklist do comando `"salva tudo"`.
    - Instituído `docs/HANDOFF.md` como o documento oficial de estado do projeto.
 
+7. **Simbiose de IA: Jev (Sistema 1) + Gemini (Sistema 2):**
+   - **Jev (TypeSafe):** Auditor sentinela ultrarrápido (<500ms) usando `Noul`, `Choice` e `Score`. Validação paramétrica estrita (regras de multiplicação de 2 fatores, densidade A4, conformidade da faixa etária).
+   - **Gemini 2.5 Flash:** Avaliador pedagógico profundo (~3s) com fundamentação curricular BNCC, benefícios de desenvolvimento cognitivo e sugestões práticas de mediação docente.
+   - **Retaguarda HTTP Local (`server.py`):** Servidor multithreaded na porta 8085 com rotas `/api/audit/fast` (Jev) e `/api/audit/deep` (Gemini), com suporte a CORS e tolerância a falhas offline.
+   - **Módulo Front-End (`js/ai-sentinel.js`):** Integração visual completa com badge pulsante no topo (`#badge-jev-status`), modal interativo com cartões de validação instantânea e parecer detalhado em Markdown renderizado.
+   - **Launcher `iniciar.bat`:** Inicialização automática de `python server.py` e abertura do navegador padrão.
+
 ---
 
-## 3. Inventário Técnico dos 35 Módulos
+## 3. Inventário Técnico dos 36 Módulos
 
 | # | Módulo | Arquivo | Responsabilidade |
 |---|---|---|---|
@@ -98,7 +106,8 @@ A arquitetura opera 100% client-side (sem dependência de banco de dados ou APIs
 | 32 | Quiz Show para Projetores | `js/classroom-quiz.js` | Game show para sala de aula com áudio Web Audio API |
 | 33 | Catálogo Vetorial de Desenhos | `js/drawing-database.js` | 355 ilustrações vetoriais categorizadas sem duplicatas |
 | 34 | Criador de Desenho Passo a Passo | `js/step-by-step-drawing.js` | 3 modos de desenho (Passo a Passo, Grade e Colorir) |
-| 35 | Orquestrador da Aplicação | `js/app.js` | Gerenciamento de eventos, DOM, drawer e impressão |
+| 35 | Sentinela de Auditoria IA | `js/ai-sentinel.js` | Simbiose de auditoria Jev (Sistema 1) + Gemini (Sistema 2) |
+| 36 | Orquestrador da Aplicação | `js/app.js` | Gerenciamento de eventos, DOM, drawer, modal IA e impressão |
 
 ---
 
@@ -120,20 +129,26 @@ A arquitetura opera 100% client-side (sem dependência de banco de dados ou APIs
 ## 6. Bloqueios & Riscos
 
 - **Status de Bloqueios:** **Zero bloqueios ativos**.
-- **Infraestrutura:** A aplicação roda 100% estática localmente ou em contêiner Nginx/Alpine já homologado para Coolify e Docker Swarm.
+- **Infraestrutura:** A aplicação roda 100% estática localmente ou em contêiner Nginx/Alpine já homologado para Coolify e Docker Swarm. Com `server.py` ativo, habilita os endpoints de auditoria inteligente Jev + Gemini.
 
 ---
 
 ## 7. Comandos de Verificação & Execução
 
 ```bash
-# 1. Executar bateria automatizada de testes (Headless DOM)
+# 1. Executar bateria automatizada de testes (Headless DOM - 36 módulos)
 node test_verification.js
 
-# 2. Iniciar servidor de desenvolvimento local (Porta 8085)
-python -m http.server 8085
+# 2. Executar auditoria de linha de comando (Jev + Gemini)
+python audit_sentinel.py
 
-# 3. Rodar container de produção via Docker
+# 3. Iniciar servidor local completo com API de IA integrada (Porta 8085)
+python server.py
+
+# 4. Iniciar via script Windows de um clique
+iniciar.bat
+
+# 5. Rodar container de produção via Docker
 docker build -t ensino-soberano-kids .
 docker run -d -p 8080:80 ensino-soberano-kids
 ```

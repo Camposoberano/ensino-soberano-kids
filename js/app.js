@@ -2341,10 +2341,13 @@ window.KiddoApp = (function () {
 
   return {
     init: init,
-    getCurrentMascot: () => currentMascotId
+    getCurrentMascot: () => currentMascotId,
+    getCurrentTab: () => currentTab,
+    getCurrentData: () => currentData
   };
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
   window.KiddoApp.init();
+  if (window.AISentinelModule) window.AISentinelModule.init();
 });
