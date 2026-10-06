@@ -176,6 +176,19 @@ window.AISentinelModule = (function () {
       const data = await response.json();
 
       reportBox.classList.remove("hidden");
+
+      if (data.error) {
+        contentBox.innerHTML = `
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs">
+            <strong>Aviso de Configuração:</strong> ${data.error}<br/>
+            Configure a variável de ambiente <code>OPENROUTER_API_KEY</code> para gerar pareceres formais via Gemini.
+          </div>
+        `;
+        const metricsEl = document.getElementById("gemini-metrics-badge");
+        if (metricsEl) metricsEl.textContent = "Chave de API não configurada";
+        return;
+      }
+
       contentBox.innerHTML = formatMarkdownToHTML(data.report || "Parecer gerado com sucesso.");
       
       const metricsEl = document.getElementById("gemini-metrics-badge");
@@ -200,7 +213,7 @@ window.AISentinelModule = (function () {
   function getCurrentAppState() {
     const currentTab = window.KiddoApp?.getCurrentTab ? window.KiddoApp.getCurrentTab() : "multiplication";
     const currentData = window.KiddoApp?.getCurrentData ? window.KiddoApp.getCurrentData() : [];
-    const gradeLevel = document.getElementById("class-grade-select")?.value || "2ano";
+    const gradeLevel = document.getElementById("grade-level-select")?.value || "2ano";
 
     return {
       activityType: currentTab,
@@ -226,12 +239,17 @@ window.AISentinelModule = (function () {
 
   function formatMarkdownToHTML(md) {
     if (!md) return "";
-    return md
+    const sanitized = md
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    return sanitized
       .replace(/### (.*?)\n/g, '<h4 class="text-xs font-bold text-indigo-900 mt-2 mb-1">$1</h4>')
       .replace(/## (.*?)\n/g, '<h3 class="text-sm font-extrabold text-slate-900 mt-3 mb-1 font-heading">$1</h3>')
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="italic text-slate-700">$1</em>')
-      .replace(/\n\n/g, '<p class="my-2 text-xs leading-relaxed text-slate-700"></p>')
+      .replace(/\n\n/g, '<div class="my-2"></div>')
       .replace(/\n- (.*?)/g, '<li class="text-xs text-slate-700 ml-4 list-disc">$1</li>');
   }
 

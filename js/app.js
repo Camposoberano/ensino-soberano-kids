@@ -768,7 +768,7 @@ window.KiddoApp = (function () {
     const btn = document.getElementById("btn-toggle-answers");
     if (!btn) return;
     const icon = showAnswers ? "eye-off" : "eye";
-    btn.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 mr-1.5"></i> ${showAnswers ? "Ocultar Gabarito" : "Ver Gabarito"}`;
+    btn.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 sm:mr-1.5"></i> <span class="hidden sm:inline">${showAnswers ? "Ocultar Gabarito" : "Ver Gabarito"}</span>`;
     if (window.lucide) window.lucide.createIcons();
   }
 

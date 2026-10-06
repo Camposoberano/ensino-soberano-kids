@@ -44,7 +44,7 @@ window.KIDDO_VOCABULARY = {
     nome: "Corpo Humano",
     icone: "smile",
     palavras: [
-      "CABELA", "OLHOS", "NARIZ", "BOCA", "OUVIDO",
+      "CABECA", "OLHOS", "NARIZ", "BOCA", "OUVIDO",
       "BRACO", "PERNA", "MAO", "PE", "DEDO",
       "JOELHO", "COTOVELO", "OMBRO", "BARRIGA", "CORACAO"
     ]

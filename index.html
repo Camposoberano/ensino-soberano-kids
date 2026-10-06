@@ -442,7 +442,7 @@
       </div>
 
       <!-- Centro: Atividade Ativa (Minimalista) -->
-      <div class="flex items-center">
+      <div class="hidden md:flex items-center">
         <div id="header-active-indicator" class="flex items-center gap-2 px-3 py-1 bg-slate-100/90 border border-slate-200 rounded-full text-xs font-bold text-slate-800 shadow-2xs">
           <i id="header-active-icon" data-lucide="search" class="w-3.5 h-3.5 text-indigo-600"></i>
           <span id="header-active-name">Caça-Palavras</span>
@@ -456,8 +456,9 @@
           <span class="hidden sm:inline">Auditoria IA</span>
           <span id="badge-jev-status" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Sentinela Jev Ativo"></span>
         </button>
-        <button id="btn-toggle-answers" type="button" class="px-3 py-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-xs flex items-center active:scale-95">
-          <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5"></i> Ver Gabarito
+        <button id="btn-toggle-answers" type="button" class="px-2.5 sm:px-3 py-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition-all shadow-xs flex items-center active:scale-95" title="Alternar visualização do gabarito">
+          <i data-lucide="eye" class="w-3.5 h-3.5 sm:mr-1.5"></i>
+          <span class="hidden sm:inline">Ver Gabarito</span>
         </button>
         <button id="btn-quick-print" type="button" class="hidden sm:flex px-3 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-indigo-600 rounded-xl transition-all shadow-xs items-center gap-1.5 active:scale-95" title="Imprimir Folha A4">
           <i data-lucide="printer" class="w-3.5 h-3.5"></i> Imprimir

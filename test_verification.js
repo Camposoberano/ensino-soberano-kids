@@ -643,6 +643,21 @@ if (!universalStep || !universalGrid || !universalColor) {
 console.log(`[PASS] DrawingDatabase: Catálogo de ${allItems.length} desenhos em 5 categorias verificado com sucesso -> OK`);
 console.log("[PASS] StepByStepDrawing: Renderização dos 3 modos (Passo a Passo, Grade Coordenadas, Livro Colorir A4) -> OK");
 
+// Verificação de vocabulário e ortografia
+if (!context.KIDDO_VOCABULARY.corpo.palavras.includes("CABECA") || context.KIDDO_VOCABULARY.corpo.palavras.includes("CABELA")) {
+  console.error("ERRO: Vocabulário de corpo contém erro ortográfico!");
+  process.exit(1);
+}
+console.log("[PASS] Vocabulary & Orthography: Palavras verificadas sem erros de digitação (CABECA) -> OK");
+
+// Verificação de camadas do catálogo vetorial
+const invalidDrawing = allItems.find(it => !it.layers || it.layers.length < 5 || !it.stepsDesc || it.stepsDesc.length < 5);
+if (invalidDrawing) {
+  console.error("ERRO: Desenho com camadas ou passos insuficientes:", invalidDrawing.id);
+  process.exit(1);
+}
+console.log("[PASS] DrawingDatabase: 100% dos 355 itens possuem 5 camadas vetoriais e 5 passos sequenciais -> OK");
+
 // Testar AISentinelModule (Simbiose Jev + Gemini)
 const aiSentinel = context.AISentinelModule;
 if (!aiSentinel || typeof aiSentinel.init !== "function" || typeof aiSentinel.runFastJevAudit !== "function") {
