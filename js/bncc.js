@@ -172,6 +172,18 @@ window.BNCCModule = (function () {
       "1ano": { code: "EF01MA06", desc: "Aplicar fatos básicos de adição associados a legendas cromáticas." },
       "2ano": { code: "EF02MA05", desc: "Resolução de operações aritméticas com representação visual em mosaico." },
       "3ano_5ano": { code: "EF03MA05", desc: "Cálculo mental e preenchimento de matriz geométrica por resultados." }
+    },
+    crossword: {
+      infantil: { code: "EI03EF09", desc: "Identificar palavras conhecidas apoiadas por imagens e ilustrações." },
+      "1ano": { code: "EF01LP02", desc: "Escrever palavras com correspondência fonema-grafema cruzando letras em malha." },
+      "2ano": { code: "EF02LP04", desc: "Completar palavras cruzadas com segmentação silábica e pistas ilustradas." },
+      "3ano_5ano": { code: "EF03LP01", desc: "Ler e escrever palavras complexas com autonomia e vocabulário temático." }
+    },
+    fractions: {
+      infantil: { code: "EI03ET07", desc: "Perceber noções intuitivas de partes de um todo (metade, pedaço, fatia)." },
+      "1ano": { code: "EF01MA06", desc: "Compreender metades e partes iguais em contextos práticos e lúdicos." },
+      "2ano": { code: "EF02MA08", desc: "Identificar a metade e a terça parte de figuras geométricas e conjuntos." },
+      "3ano_5ano": { code: "EF04MA09", desc: "Reconhecer frações unitárias e não unitárias (pizza/barra) como partes do todo." }
     }
   };
 
@@ -179,10 +191,10 @@ window.BNCCModule = (function () {
    * Recomendações de atividades por faixa etária
    */
   const RECOMMENDED_TABS = {
-    infantil: ["counting", "shapes", "body", "coloring", "drawing", "origami", "tracing", "matching", "sudoku"],
-    "1ano": ["wordsearch", "addition", "subtraction", "scramble", "tracing", "drawing", "time", "patterns", "shapes", "counting", "storyproblems", "sudoku", "cryptogram", "colorbymath"],
-    "2ano": ["wordsearch", "addition", "subtraction", "multiplication", "drawing", "time", "patterns", "storyproblems", "flashcards", "sudoku", "cryptogram", "colorbymath"],
-    "3ano_5ano": ["multiplication", "division", "multichart", "drawing", "storyproblems", "time", "patterns", "slidingpuzzle", "sudoku", "cryptogram", "colorbymath"]
+    infantil: ["counting", "shapes", "body", "coloring", "drawing", "origami", "tracing", "matching", "sudoku", "crossword"],
+    "1ano": ["wordsearch", "crossword", "addition", "subtraction", "scramble", "tracing", "drawing", "time", "patterns", "shapes", "counting", "storyproblems", "sudoku", "cryptogram", "colorbymath"],
+    "2ano": ["wordsearch", "crossword", "addition", "subtraction", "multiplication", "drawing", "time", "patterns", "storyproblems", "flashcards", "sudoku", "cryptogram", "colorbymath", "fractions"],
+    "3ano_5ano": ["fractions", "multiplication", "division", "multichart", "crossword", "drawing", "storyproblems", "time", "patterns", "slidingpuzzle", "sudoku", "cryptogram", "colorbymath"]
   };
 
   /**

@@ -97,6 +97,8 @@ const filesToLoad = [
   "classroom-quiz.js",
   "drawing-database.js",
   "step-by-step-drawing.js",
+  "crossword.js",
+  "fractions.js",
   "ai-sentinel.js",
   "app.js"
 ];
@@ -677,4 +679,75 @@ if (!aiSentinel || typeof aiSentinel.init !== "function" || typeof aiSentinel.ru
 }
 console.log("[PASS] AISentinelModule: Simbiose Jev + Gemini inicializada com persistência e impressão oficial -> OK");
 
-console.log("\n=== TODOS OS 36 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");
+// --- Testando CrosswordGenerator (Palavras Cruzadas Kids) ---
+console.log("\n--- Testando CrosswordGenerator ---");
+const cwGen = context.CrosswordGenerator;
+if (!cwGen || typeof cwGen.generate !== "function") {
+  console.error("ERRO: CrosswordGenerator não está definido!");
+  process.exit(1);
+}
+
+const cwTest1 = cwGen.generate({ category: "animais", wordCount: 5 });
+if (!cwTest1 || cwTest1.rows < 3 || cwTest1.cols < 3 || !Array.isArray(cwTest1.words) || cwTest1.words.length < 3) {
+  console.error("ERRO: Falha ao gerar cruzadinha padrão de animais:", cwTest1);
+  process.exit(1);
+}
+for (const w of cwTest1.words) {
+  if (!w.id || !w.word || !w.direction || !w.dica) {
+    console.error("ERRO: Palavra na cruzadinha com estrutura inválida:", w);
+    process.exit(1);
+  }
+}
+const cwCustom = cwGen.generate({ customWords: ["SOL", "LUA", "ESTRELA"] });
+if (!cwCustom || cwCustom.words.length < 2) {
+  console.error("ERRO: Falha ao gerar cruzadinha com palavras personalizadas:", cwCustom);
+  process.exit(1);
+}
+console.log(`[PASS] CrosswordGenerator: Grade interconectada de ${cwTest1.words.length} palavras com pistas ilustradas -> OK`);
+
+// --- Testando FractionsGenerator (Frações Visuais com Pizzas e Barras) ---
+console.log("\n--- Testando FractionsGenerator ---");
+const fracGen = context.FractionsGenerator;
+if (!fracGen || typeof fracGen.generate !== "function" || typeof fracGen.renderSvgPizza !== "function" || typeof fracGen.renderSvgBar !== "function") {
+  console.error("ERRO: FractionsGenerator não está definido corretamente!");
+  process.exit(1);
+}
+
+// 1. Modo Identificar
+const fracId = fracGen.generate({ mode: "identificar", shape: "misto", count: 6, difficulty: "medio" });
+if (!fracId || !Array.isArray(fracId.items) || fracId.items.length !== 6) {
+  console.error("ERRO: Falha no modo identificar do FractionsGenerator!");
+  process.exit(1);
+}
+for (const it of fracId.items) {
+  if (!it.numerator || !it.denominator || !it.svg || !it.solutionText || !it.svg.includes("<svg")) {
+    console.error("ERRO: Item fracionário inválido:", it);
+    process.exit(1);
+  }
+}
+
+// 2. Modo Colorir
+const fracColor = fracGen.generate({ mode: "colorir", shape: "pizza", count: 4, difficulty: "facil" });
+if (!fracColor || fracColor.items.length !== 4) {
+  console.error("ERRO: Falha no modo colorir do FractionsGenerator!");
+  process.exit(1);
+}
+
+// 3. Modo Comparar
+const fracComp = fracGen.generate({ mode: "comparar", shape: "barra", count: 4, difficulty: "avancado" });
+if (!fracComp || fracComp.items.length !== 4 || !["<", ">", "="].includes(fracComp.items[0].operator)) {
+  console.error("ERRO: Falha no modo comparar do FractionsGenerator!");
+  process.exit(1);
+}
+console.log("[PASS] FractionsGenerator: 3 modos (identificar, colorir, comparar) com pizzas e barras SVG -> OK");
+
+// --- Testando Alinhamento BNCC dos Novos Módulos ---
+const bnccCrossword = context.BNCCModule.getSkill("crossword", "1ano");
+const bnccFractions = context.BNCCModule.getSkill("fractions", "3ano_5ano");
+if (!bnccCrossword.code.startsWith("EF01") || !bnccFractions.code.startsWith("EF04")) {
+  console.error("ERRO: Alinhamento BNCC para Cruzadinha ou Frações incorreto:", { bnccCrossword, bnccFractions });
+  process.exit(1);
+}
+console.log(`[PASS] BNCCModule: Habilidades de Cruzadinha (${bnccCrossword.code}) e Frações (${bnccFractions.code}) mapeadas -> OK`);
+
+console.log("\n=== TODOS OS 38 MÓDULOS FORAM VERIFICADOS COM ÊXITO (EXIT CODE 0) ===");

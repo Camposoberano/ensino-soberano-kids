@@ -4,7 +4,7 @@
 **Data da Última Atualização:** 06 de Outubro de 2026  
 **Repositório:** `https://github.com/Camposoberano/ensino-soberano-kids`  
 **Branches:** `master` (principal) e `main` (sincronizada)  
-**Status dos Módulos:** 36 de 36 módulos 100% operacionais (`node test_verification.js` $\to$ Exit Code 0)  
+**Status dos Módulos:** 38 de 38 módulos 100% operacionais (`node test_verification.js` $\to$ Exit Code 0)  
 **Ambiente Local:** Porta 8085 (`http://localhost:8085`) via `server.py` ou `iniciar.bat`  
 
 ---
@@ -14,7 +14,7 @@
 O **Ensino Soberano Kids** é uma SPA (Single Page Application) estática de alto desempenho educacional voltada para a Educação Infantil e os anos iniciais do Ensino Fundamental I (1º ao 5º ano), rigorosamente alinhada à Base Nacional Comum Curricular (BNCC).
 
 A arquitetura opera prioritariamente client-side com retaguarda assíncrona local de auditoria por IA (Simbiose Jev + Gemini), contando com:
-- Geração paramétrica de 36 módulos de atividades interativas e impressas;
+- Geração paramétrica de 38 módulos de atividades interativas e impressas;
 - Sentinela de IA Híbrido: Jev (TypeSafe Sistema 1, <500ms) para validação paramétrica estrita e Gemini 2.5 Flash (Sistema 2, ~3s) para parecer pedagógico e alinhamento BNCC;
 - Renderização vetorizada em folha padrão **A4 retrato (210mm × 297mm)** com margem zero para impressão limpa;
 - Lousa Digital Interativa para uso com caneta stylus/touch em sala de aula;
@@ -85,9 +85,13 @@ A arquitetura opera prioritariamente client-side com retaguarda assíncrona loca
     - Barra de navegação adaptativa para smartphones (`< 640px`), prevenindo quebras indesejadas de cabeçalho.
     - Modais `#classroom-quiz-modal` e `#ai-audit-modal` adicionados explicitamente às classes `.no-print` e isolados de `@media print`.
 
+11. **Novos Módulos Curriculares BNCC (38 Módulos no Total):**
+    - **Cruzadinha Kids Ilustrada (`js/crossword.js`):** Gerador inteligente de palavras cruzadas com algoritmo de intersecção, bounding box automático, pistas categorizadas e modo aluno/gabarito (`EF01LP02`, `EF02LP04`).
+    - **Frações Visuais com Pizzas & Barras (`js/fractions.js`):** Renderização vetorial SVG de frações unitárias e não unitárias com 3 modos dinâmicos: identificar/escrever fração, colorir fatias e comparar frações (`EF04MA09`, `EF05MA03`).
+
 ---
 
-## 3. Inventário Técnico dos 36 Módulos
+## 3. Inventário Técnico dos 38 Módulos
 
 | # | Módulo | Arquivo | Responsabilidade |
 |---|---|---|---|
@@ -125,8 +129,10 @@ A arquitetura opera prioritariamente client-side com retaguarda assíncrona loca
 | 32 | Quiz Show para Projetores | `js/classroom-quiz.js` | Game show para sala de aula com áudio Web Audio API |
 | 33 | Catálogo Vetorial de Desenhos | `js/drawing-database.js` | 355 ilustrações vetoriais categorizadas sem duplicatas |
 | 34 | Criador de Desenho Passo a Passo | `js/step-by-step-drawing.js` | 3 modos de desenho (Passo a Passo, Grade e Colorir) |
-| 35 | Sentinela de Auditoria IA | `js/ai-sentinel.js` | Simbiose de auditoria Jev (Sistema 1) + Gemini (Sistema 2) |
-| 36 | Orquestrador da Aplicação | `js/app.js` | Gerenciamento de eventos, DOM, drawer, modal IA e impressão |
+| 35 | Cruzadinha Kids Ilustrada | `js/crossword.js` | Palavras cruzadas com intersecção e pistas infantis |
+| 36 | Frações Visuais | `js/fractions.js` | Pizzas circulares e barras retangulares em SVG (3 modos) |
+| 37 | Sentinela de Auditoria IA | `js/ai-sentinel.js` | Simbiose de auditoria Jev (Sistema 1) + Gemini (Sistema 2) |
+| 38 | Orquestrador da Aplicação | `js/app.js` | Gerenciamento de eventos, DOM, drawer, modal IA e impressão |
 
 ---
 

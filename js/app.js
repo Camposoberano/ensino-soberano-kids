@@ -39,7 +39,9 @@ window.KiddoApp = (function () {
     flashcards: { title: "Cartões de Estudo", icon: "layers" },
     boardgame: { title: "Tabuleiro Ninja A4", icon: "dices" },
     diagnostic: { title: "Avaliação BNCC", icon: "clipboard-check" },
-    certificate: { title: "Diplomas & Selos", icon: "award" }
+    certificate: { title: "Diplomas & Selos", icon: "award" },
+    crossword: { title: "Cruzadinha Kids Ilustrada", icon: "grid" },
+    fractions: { title: "Frações Visuais (Pizzas & Barras)", icon: "pie-chart" }
   };
 
   function updateHeaderActiveBadge() {
@@ -439,6 +441,27 @@ window.KiddoApp = (function () {
       const el = document.getElementById(id);
       if (el) el.addEventListener("change", () => {
         if (currentTab === "colorbymath") renderCurrentActivity();
+      });
+    });
+
+    ["crossword-category-select", "crossword-word-count"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("change", () => {
+        if (currentTab === "crossword") renderCurrentActivity();
+      });
+    });
+
+    const crosswordCustomWordsEl = document.getElementById("crossword-custom-words");
+    if (crosswordCustomWordsEl) {
+      crosswordCustomWordsEl.addEventListener("input", () => {
+        if (currentTab === "crossword") renderCurrentActivity();
+      });
+    }
+
+    ["fractions-mode-select", "fractions-shape-select", "fractions-diff-select", "fractions-count-select"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("change", () => {
+        if (currentTab === "fractions") renderCurrentActivity();
       });
     });
 
@@ -1008,6 +1031,12 @@ window.KiddoApp = (function () {
       case "colorbymath":
         renderColorByMath(contentArea);
         break;
+      case "crossword":
+        renderCrossword(contentArea);
+        break;
+      case "fractions":
+        renderFractions(contentArea);
+        break;
       case "drawing":
         renderDrawing(contentArea);
         break;
@@ -1176,6 +1205,41 @@ window.KiddoApp = (function () {
         `;
       }
 
+      case "crossword": {
+        const words = currentData?.words || [];
+        return `
+          <div class="flex flex-col gap-2">
+            <span class="font-bold text-emerald-800 text-xs">Palavras da Cruzadinha (${words.length}):</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${words.map(w => `
+                <div class="bg-white p-2 rounded-lg border border-slate-200 text-xs flex items-center justify-between">
+                  <span class="font-bold text-slate-700">#${w.id} (${w.direction === "horizontal" ? "Horizontal" : "Vertical"}):</span>
+                  <span class="font-extrabold text-emerald-700 tracking-wider">${w.word}</span>
+                </div>
+              `).join("")}
+            </div>
+            <p class="text-[11px] text-slate-500">Todas as letras estão preenchidas na folha ao clicar em 'Ver Gabarito'.</p>
+          </div>
+        `;
+      }
+
+      case "fractions": {
+        const items = currentData?.items || [];
+        return `
+          <div class="flex flex-col gap-2">
+            <span class="font-bold text-indigo-900 text-xs">Gabarito de Frações (${items.length} questões):</span>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              ${items.map(it => `
+                <div class="bg-white p-2 rounded-lg border border-slate-200 text-center text-xs">
+                  <span class="text-slate-400 font-bold block text-[10px]">Questão #${it.id}</span>
+                  <strong class="text-indigo-700 text-sm font-heading">${it.solutionText}</strong>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
       default: {
         return `
           <div class="p-3 text-center text-xs text-slate-600">
@@ -1219,7 +1283,9 @@ window.KiddoApp = (function () {
       colorbymath: { t: "Pinte por Matemática: Mosaico das Cores", i: "Resolva as operações em cada quadrinho e pinte com a cor indicada na legenda:" },
       diagnostic: { t: "Ficha de Avaliação Diagnóstica & Rubricas BNCC", i: "Instrumento pedagógico bimestral de acompanhamento e sondagem de competências:" },
       boardgame: { t: "A Trilha da Sabedoria Ninja: Jogo de Tabuleiro", i: "Jogo de tabuleiro pedagógico imprimível com desafios de raciocínio, peões e dado 3D:" },
-      drawing: { t: "Oficina de Arte: Aprenda a Desenhar & Colorir", i: "Siga o passo a passo com atenção, pratique o traçado e pinte com suas cores favoritas:" }
+      drawing: { t: "Oficina de Arte: Aprenda a Desenhar & Colorir", i: "Siga o passo a passo com atenção, pratique o traçado e pinte com suas cores favoritas:" },
+      crossword: { t: "Cruzadinha Kids: Palavras Ilustradas", i: "Descubra as palavras secretas pelas pistas ilustradas e preencha cada quadradinho com as letras certas:" },
+      fractions: { t: "Laboratório de Frações: Partes do Todo", i: "Observe as figuras divididas em partes iguais, analise as frações e resolva cada desafio:" }
     };
 
     if (defaults[tab]) {
@@ -1914,6 +1980,192 @@ window.KiddoApp = (function () {
     container.appendChild(wrapper);
   }
 
+  /* ── 25. CRUZADINHA KIDS ILUSTRADA ── */
+  function renderCrossword(container) {
+    if (!window.CrosswordGenerator) return;
+
+    const cat = document.getElementById("crossword-category-select")?.value || "animais";
+    const count = parseInt(document.getElementById("crossword-word-count")?.value, 10) || 5;
+    const customWordsRaw = document.getElementById("crossword-custom-words")?.value?.trim();
+    const customWords = customWordsRaw ? customWordsRaw.split(",").map(w => w.trim()).filter(Boolean) : null;
+
+    const data = window.CrosswordGenerator.generate({
+      category: cat,
+      wordCount: count,
+      customWords: customWords
+    });
+    currentData = data;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex flex-col items-center justify-between w-full my-auto gap-2";
+
+    // Grade da Cruzadinha
+    const boardWrapper = document.createElement("div");
+    boardWrapper.className = "crossword-board-wrapper";
+
+    const table = document.createElement("div");
+    table.className = "inline-grid gap-1 p-2.5 bg-slate-50/90 rounded-2xl border border-slate-200 shadow-xs";
+    table.style.gridTemplateColumns = `repeat(${data.cols}, 30px)`;
+
+    for (let r = 0; r < data.rows; r++) {
+      for (let c = 0; c < data.cols; c++) {
+        const cell = data.cells[r][c];
+        const cellEl = document.createElement("div");
+
+        if (cell) {
+          cellEl.className = "crossword-cell crossword-cell-active rounded-lg";
+          if (cell.number) {
+            const numEl = document.createElement("span");
+            numEl.className = "crossword-cell-number";
+            numEl.textContent = cell.number;
+            cellEl.appendChild(numEl);
+          }
+          const letterSpan = document.createElement("span");
+          letterSpan.className = `answer-val font-heading font-extrabold ${showAnswers ? "text-indigo-800" : "hidden text-indigo-800"}`;
+          letterSpan.textContent = cell.letter;
+          cellEl.appendChild(letterSpan);
+        } else {
+          cellEl.className = "crossword-cell crossword-cell-empty";
+        }
+        table.appendChild(cellEl);
+      }
+    }
+    boardWrapper.appendChild(table);
+    wrapper.appendChild(boardWrapper);
+
+    // Banco de Dicas / Pistas (Horizontais e Verticais)
+    const cluesContainer = document.createElement("div");
+    cluesContainer.className = "crossword-clues-container bg-white p-3 rounded-2xl border border-slate-200 w-full";
+
+    const horizontais = data.words.filter(w => w.direction === "horizontal");
+    const verticais = data.words.filter(w => w.direction === "vertical");
+
+    cluesContainer.innerHTML = `
+      <div class="flex flex-col gap-1.5">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700 flex items-center gap-1 font-heading">
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i> Horizontais (Deitadas)
+        </span>
+        <div class="flex flex-col gap-1">
+          ${horizontais.map(w => `
+            <div class="crossword-clue-item">
+              <span class="font-extrabold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded px-1.5 py-0.5 text-[10px] font-mono">#${w.id}</span>
+              <div>
+                <p class="font-medium text-slate-700">${w.dica}</p>
+                <span class="text-[9px] text-slate-400 font-bold">(${w.word.length} letras)</span>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5 border-l border-slate-100 pl-3">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 flex items-center gap-1 font-heading">
+          <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i> Verticais (Em pé)
+        </span>
+        <div class="flex flex-col gap-1">
+          ${verticais.map(w => `
+            <div class="crossword-clue-item">
+              <span class="font-extrabold text-emerald-900 bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5 text-[10px] font-mono">#${w.id}</span>
+              <div>
+                <p class="font-medium text-slate-700">${w.dica}</p>
+                <span class="text-[9px] text-slate-400 font-bold">(${w.word.length} letras)</span>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+
+    wrapper.appendChild(cluesContainer);
+    container.appendChild(wrapper);
+  }
+
+  /* ── 26. FRAÇÕES VISUAIS (PIZZAS & BARRAS) ── */
+  function renderFractions(container) {
+    if (!window.FractionsGenerator) return;
+
+    const mode = document.getElementById("fractions-mode-select")?.value || "identificar";
+    const shape = document.getElementById("fractions-shape-select")?.value || "misto";
+    const diff = document.getElementById("fractions-diff-select")?.value || "medio";
+    const count = parseInt(document.getElementById("fractions-count-select")?.value, 10) || 6;
+
+    const data = window.FractionsGenerator.generate({
+      mode: mode,
+      shape: shape,
+      difficulty: diff,
+      count: count
+    });
+    currentData = data;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "fractions-grid-container my-auto";
+
+    data.items.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "fraction-exercise-card shadow-xs";
+
+      if (item.mode === "identificar") {
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-extrabold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-lg px-2 py-1 font-mono">#${item.id}</span>
+            <div class="flex items-center justify-center p-1 bg-slate-50 rounded-xl border border-slate-100">
+              ${item.svg}
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Fração</span>
+            <div class="fraction-box">
+              <div class="fraction-numerator">
+                <span class="answer-val text-indigo-700 font-bold ${showAnswers ? "" : "hidden"}">${item.numerator}</span>
+              </div>
+              <div class="fraction-bar-line"></div>
+              <div class="fraction-denominator">
+                <span class="answer-val text-indigo-700 font-bold ${showAnswers ? "" : "hidden"}">${item.denominator}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (item.mode === "colorir") {
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-extrabold text-pink-900 bg-pink-50 border border-pink-200 rounded-lg px-2 py-1 font-mono">#${item.id}</span>
+            <div class="flex items-center justify-center p-1 bg-slate-50 rounded-xl border border-slate-100">
+              ${item.svg}
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <span class="text-[10px] font-bold text-slate-500 text-center">Pinte as partes:</span>
+            <div class="fraction-box bg-pink-50/60 p-1.5 rounded-xl border border-pink-200">
+              <span class="text-base font-extrabold text-pink-700 leading-none">${item.numerator}</span>
+              <div class="fraction-bar-line bg-pink-600"></div>
+              <span class="text-base font-extrabold text-pink-700 leading-none">${item.denominator}</span>
+            </div>
+            <span class="answer-val text-[10px] font-bold text-emerald-600 ${showAnswers ? "" : "hidden"}">(${item.numerator} de ${item.denominator})</span>
+          </div>
+        `;
+      } else if (item.mode === "comparar") {
+        card.innerHTML = `
+          <div class="flex items-center gap-1.5 w-full justify-between">
+            <span class="text-[10px] font-extrabold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded px-1.5 py-0.5 font-mono">#${item.id}</span>
+            <div class="flex items-center justify-center scale-90">
+              ${item.svg}
+            </div>
+            <div class="fraction-comparison-symbol">
+              <span class="answer-val font-heading text-lg ${showAnswers ? "" : "hidden"}">${item.operator}</span>
+            </div>
+            <div class="flex items-center justify-center scale-90">
+              ${item.second ? item.second.svg : ""}
+            </div>
+          </div>
+        `;
+      }
+
+      wrapper.appendChild(card);
+    });
+
+    container.appendChild(wrapper);
+  }
+
   /* ── 12.1. CRIADOR DE DESENHO & COLORIR (355 ITENS) ── */
   function renderDrawing(container) {
     if (!window.StepByStepDrawing || !window.DrawingDatabase) return;
@@ -2262,6 +2514,16 @@ window.KiddoApp = (function () {
         if (eq) eq.classList.remove("hidden");
         if (ans) ans.classList.add("hidden");
       }
+    });
+
+    document.querySelectorAll(".crossword-cell-active .answer-val").forEach(el => {
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    });
+
+    document.querySelectorAll(".fraction-exercise-card .answer-val").forEach(el => {
+      if (showAnswers) el.classList.remove("hidden");
+      else el.classList.add("hidden");
     });
 
     if (currentTab === "maze" && currentData) {
