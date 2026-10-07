@@ -27,3 +27,6 @@ Thumbs.db
 dist/
 build/
 *.tmp
+
+# Git worktrees locais
+.worktrees/
